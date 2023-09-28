@@ -12,7 +12,7 @@ phases:
       - npm i --legacy-peer-deps --force
   build:
     commands:
-      - ng build --prod --outputPath=dist/dist-calidad
+      - ng build --prod
 artifacts:
   base-directory: dist/dist-calidad
   files:
