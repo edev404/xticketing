@@ -7,11 +7,10 @@ phases:
       - npm install -g @angular/cli@14.2.12
   pre_build:
     commands:
-      - sudo npm cache clean --force
       - npm i --legacy-peer-deps
   build:
     commands:
-      - ng build --prod
+      - ng build
 artifacts:
   base-directory: dist/dist-calidad
   files:
