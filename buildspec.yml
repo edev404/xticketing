@@ -7,7 +7,7 @@ phases:
       - npm install -g @angular/cli@14.2.12
   pre_build:
     commands:
-      - npm i --legacy-peer-deps
+      - npm i --legacy-peer-deps --force
   build:
     commands:
       - ng build
