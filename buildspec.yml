@@ -12,7 +12,8 @@ phases:
       - npm i --legacy-peer-deps --force
   build:
     commands:
-      - ll
+      - node -v
+      - ng version
       - ng build --prod
 artifacts:
   base-directory: dist/dist-calidad
