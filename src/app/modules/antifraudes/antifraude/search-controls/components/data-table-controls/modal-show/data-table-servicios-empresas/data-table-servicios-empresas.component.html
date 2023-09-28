@@ -1,0 +1,58 @@
+<nz-table class="custom-card" #tableDetalle [nzData]="listOfData" [nzFrontPagination]="false"
+  [nzScroll]="{ x: '1000px' }">
+
+  <thead>
+    <tr style="background: #F5F7FA;">
+      <th nzWidth="100px" class="text-center">Estado</th>
+      <th nzWidth="100px" class="text-center">Código</th>
+      <th nzWidth="120px">Servicio</th>
+      <th nzWidth="120px">Empresas</th>
+      <th nzWidth="200px">Fecha inicio control</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let data of tableDetalle.data | paginate : { id: 'tableServicioEmpresa', itemsPerPage: numberRow, currentPage: page }">
+      <td>
+        <div class="form-check form-switch form-switch-sm m-0 mt-1" nz-tooltip
+          [nzTooltipTitle]="data.estado == 405 ? 'Activo' : 'Inactivo' ">
+          <input class="form-check-input" type="checkbox" [checked]="data.estado == 405 ? true : false" disabled>
+        </div>
+      </td>
+      <td class="text-center">{{data.id}}</td>
+      <td>{{data.servicio}} </td>
+      <td>{{data.empresa ? data.empresa : 'N/A'}}</td>
+      <td>{{data.fecha | date: 'dd/MM/yyyy h:mm a' }}</td>
+    </tr>
+  </tbody>
+
+</nz-table>
+
+<!-- PAGINADO DE LA TABLA -->
+<div class="row d-flex align-items-center mt-2">
+  <div class="col-sm-4 ps-4">
+    <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+      <div>
+        <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+      </div>
+
+      <div class="px-1">
+        <nz-form-control>
+          <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow"
+            (ngModelChange)="onChangeRowPerPage($event)">
+            <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </div>
+
+      <div>
+        <label class="label-title" style="margin-top: 7px;">entradas</label>
+      </div>
+    </nz-form-item>
+  </div>
+  <div class="col-sm d-flex justify-content-end pe-4">
+    <pagination-controls id="tableServicioEmpresa" previousLabel="Anterior" nextLabel="Siguiente"
+      (pageChange)="onChangePage($event)" (pageBoundsCorrection)="onChangePage($event)">
+    </pagination-controls>
+  </div>
+</div>

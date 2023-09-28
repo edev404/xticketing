@@ -1,0 +1,104 @@
+<div class="home-title-page" style="display: flex; justify-content: space-between; margin-top: 20px;">
+    <h1 class="title-home">Análisis del viaje</h1>
+    <div>
+        <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="closeTravel()">
+            Cancelar
+        </button>
+        <button nz-button class="button-green mx-2" [nzType]="'primary'" *ngIf="!isReport" (click)="changeRegister()">
+            Registrar
+        </button>
+    </div>
+</div>
+<!-- CABEZERA -->
+<div class="custom-card my-3 p-4">
+    <h1 class="title-home">Análisis detallado del viaje</h1>
+    <div *ngIf="currentCollection" style="display: flex; justify-content: space-between;">
+        <nz-page-header-content nz-col [nzSpan]="16">
+            <nz-descriptions nzSize="small" [nzColumn]="4">
+                <nz-descriptions-item nzTitle="Fecha" [nzSpan]="2">
+                    {{ date | date }}
+                </nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Ruta" [nzSpan]="2">
+                    {{ currentCollection.travel.route ? currentCollection.travel.route.name : 'NA' }}
+                </nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Hora del viaje" [nzSpan]="2">
+                    {{ hour }}
+                </nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Vehiculo" [nzSpan]="2">
+                    {{ currentCollection.travel.plate | uppercase }} - {{ currentCollection.travel.internalNumber | uppercase }}
+                </nz-descriptions-item>
+                <nz-descriptions-item nzTitle="conductor" [nzSpan]="2">
+                    {{ currentCollection.travel.driver | uppercase }}
+                </nz-descriptions-item>
+            </nz-descriptions>
+        </nz-page-header-content>
+        <div nz-col [nzSpan]="6">
+            <nz-statistic nzValue="EFECTIVO A COBRAR" style="display: flex;justify-content: flex-end;"></nz-statistic>
+            <nz-statistic [nzValue]="currentCollection.collect" nzPrefix="$"
+                style="margin: 0 0px; display: flex;justify-content: flex-end;"></nz-statistic>
+        </div>
+    </div>
+</div>
+<!-- TABLA 1 -->
+<div class="custom-card my-3">
+    <h1 class="title-home mx-4 mt-4">Avisos / Novedades del viaje</h1>
+    <nz-table #table1 [nzData]="listOfData01" [nzPageSize]="5" [nzScroll]="{ x: '1000px', y: '540px' }">
+        <thead>
+            <tr style="background: #F5F7FA;">
+                <th>Fecha / Hora</th>
+                <th>Descripción aviso</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of table1.data">
+                <td>{{ data.date }}</td>
+                <td class="red-color">{{ data.description }}</td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>
+<!-- TABLA 2 -->
+<div class="custom-card my-3">
+    <nz-table #table2 [nzData]="zones" [nzPageSize]="5" [nzScroll]="{ x: '1000px', y: '540px' }">
+        <thead>
+            <tr style="background: #F5F7FA;">
+                <th>Zona</th>
+                <th>Subidas</th>
+                <th>Bajadas</th>
+                <th>Bloqueos</th>
+                <th>Validador cobrados QR</th>
+                <th>Validador cobrados tarjeta</th>
+                <th>Transbordos</th>
+                <th>Efectivos calculados</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of table2.data">
+                <td>{{ data.name | uppercase }}</td>
+                <td>{{ data.ups }}</td>
+                <td>{{ data.downs }}</td>
+                <td>{{ data.blocks }}</td>
+                <td>{{ data.qrUps }}</td>
+                <td>{{ data.cardUps }}</td>
+                <td>{{ data.transferUps }}</td>
+                <td>{{ data.realityNumber }}</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+              <td>TOTALES</td>
+              <td>{{ zoneCount.ups }}</td>
+              <td>{{ zoneCount.downs }}</td>
+              <td>{{ zoneCount.blocks }}</td>
+              <td>{{ zoneCount.qrUps }}</td>
+              <td>{{ zoneCount.cardUps }}</td>
+              <td>{{ zoneCount.transferUps }}</td>
+              <td class="red-color">
+                <b>{{ zoneCount.realityNumber }}</b>
+              </td>
+            </tr>
+          </tfoot>
+    </nz-table>
+</div>
+<span class="title-inferior">*Los valores de "Subidas" y "Bajadas" es posible que no sean exactos, ya que tienen un
+    margen de error, por lo tanto los valores de "Efectivo calculado" se pueden ver afectados.</span>

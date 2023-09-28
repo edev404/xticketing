@@ -1,0 +1,303 @@
+<nz-breadcrumb style="margin-bottom: 20px;">
+  <nz-breadcrumb-item>
+      <span class="title-modulo">
+          <i nz-icon nzType="setting" style="font-size: 25px; margin-bottom: 1px;"></i>
+      </span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+      <span class="title-modulo">Administración</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+      <span class="title-submodulo">Entidades</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item *ngIf="isCreate">
+      <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">{{isEdit?'Editar entidad':'Crear entidad'}}</span>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+
+<h1 class="title-home">Entidades</h1>
+
+<div *ngIf="!isCreate" style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px; ">
+    <div style="display: flex; justify-content: space-between;margin: 0px 20px;margin-top: 20px;">
+      <form nz-form>
+        <nz-form-item>
+          <nz-form-control>
+            <nz-input-group nzPrefixIcon="search" style="color: #798CA5;" class="type-control">
+              <input nz-input name="search" type="search" id="search" placeholder="Buscar" [(ngModel)]="filterValue" (ngModelChange)="search()">
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+      <div>
+        <button nz-button class="button-green" [nzType]="'primary'" (click)="CreateOrEdit(null,true)">
+          <i nz-icon nzType="plus" nzTheme="outline" class="align-middle pb-1"></i>
+          Nuevo
+        </button>
+      </div>
+    </div>
+    <!-- table -->
+    <ng-container *ngIf="listOfData.length > 0; then data; else noData"></ng-container>
+    <ng-template #data>
+      <nz-table #basicTable [nzData]="listOfData" [nzPageSize]="5" [nzFrontPagination]="false" [nzScroll]="{ x: '2000px', y: '370px'}">
+        <thead>
+          <tr>
+              <th nzWidth="110px"></th>
+              <th nzWidth="100px">Código</th>
+              <th nzWidth="170px">Nombre de entidad</th>
+              <th nzWidth="200px">Descripción</th>
+              <th nzWidth="200px">Mensaje institucional</th>
+              <th nzWidth="170px">Correo electrónico</th>
+              <th nzWidth="150px">Teléfono</th>
+              <th nzWidth="160px">Dirección</th>
+              <th nzWidth="100px">País</th>
+              <th nzWidth="170px">Departamento</th>
+              <th nzWidth="100px">Ciudad</th>
+              <th nzWidth="100px">Sito web</th>
+              <th nzWidth="150px" nzAlign="center">¿Tiene logo?</th>
+              <th nzWidth="150px" nzAlign="center">Stock mínimo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data | paginate : { id: 'table', itemsPerPage: numberRow, currentPage: page }">
+              <td style="display: revert;">
+                  <div style="display: flex;">
+                      <div class="form-check form-switch form-switch-sm m-0 mt-1">
+                          <input style="cursor: pointer;" class="form-check-input" type="checkbox" [checked]="data.active" (click)="changeStateModal(data)" nz-tooltip="Activar/Inactivar">
+                      </div>
+                      <img draggable="false" style="cursor: pointer;" src="../../../../../assets/icon/fi_edit-2.svg" class="mx-1" (click)="CreateOrEdit(data.id,true)" nz-tooltip="Editar">
+                      <img draggable="false" style="cursor: pointer;" src="../../../../../assets/icon/fi_settings.svg" class="mx-1" (click)="configEntites(data)" nz-tooltip="Configurar">
+                  </div>
+              </td>
+              <td>{{data.code}}</td>
+              <td>{{data.name | uppercase}}</td>
+              <td>{{data.description}}</td>
+              <td>{{data.messageInstitutional}}</td>
+              <td>{{data.mail}}</td>
+              <td>{{data.phone}}</td>
+              <td>{{data.direction}}</td>
+              <td>{{data.location.country.name}}</td>
+              <td>{{data.location.department.name}}</td>
+              <td>{{data.location.city.name}}</td>
+              <td>{{data.webSite}}</td>
+              <td nzAlign="center">
+                <span class="badge text-bg-success" *ngIf="data.logo">Si</span>
+                <span class="badge text-bg-danger" *ngIf="!data.logo">No</span>
+              </td>
+              <td nzAlign="center">{{data.stocktarjetas}}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+      <!-- PAGINADO DE LA TABLA -->
+      <div class="row d-flex align-items-center" *ngIf="listOfData.length > 0">
+        <div class="col-sm-4 ps-4">
+          <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+            <div>
+              <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+            </div>
+
+            <div class="px-1">
+              <nz-form-control>
+                <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow" (ngModelChange)="onChangeRowPerPage($event)">
+                  <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </div>
+
+            <div>
+              <label class="label-title" style="margin-top: 7px;">entradas</label>
+            </div>
+          </nz-form-item>
+        </div>
+        <div class="col-sm d-flex justify-content-end pe-4">
+          <pagination-controls id="table" previousLabel="Anterior" nextLabel="Siguiente" (pageChange)="onChangePage($event)"
+            (pageBoundsCorrection)="onChangePage($event)">
+          </pagination-controls>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #noData>
+      <div nz-row class="card-aling-center mb-4">
+        <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+          <div nz-col nzXs="24" nzSm="20" nzMd="14">
+
+            <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../assets/icon/info_icon.svg" alt="icono-buscar">
+            <div nz-col nzSm="24" nzMd="18">
+              <h1 class="title-form" style="place-content: center !important;">
+                No hay datos existentes
+              </h1>
+              <h1 class="title-secundary" style="margin-top: 0px;">
+                No existen datos para visualizar en esta tabla. Puedes volver a la página principal.
+              </h1>
+              <button nz-button class=" button-green" [nzType]="'primary'" [routerLink]="['/main']">
+                Volver
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+</div>
+
+<!-- crear y editar entites -->
+<div  *ngIf="isCreate" class="p-3 vh-100" style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px; ">
+  <app-create-entites
+      (CreateOrEdit)="CreateOrEdit(null, $event)"
+      [isEdit]="isEdit"
+      [entityId]="idEntites"
+      [listEntites]="listOfData"
+  >
+  </app-create-entites>
+</div>
+
+ <!-- Modal -->
+<nz-modal [(nzVisible)]="isVisible" nzWidth="800px" (nzOnCancel)="closeEntityModal()" >
+    <div class="row-md" *nzModalContent>
+      <!-- titel -->
+      <div class="col-sm-12 mt-3">
+        <h1 class="modal-title fs-5 mb-3">Relacionar Servicios y Empresas a la entidad {{nameEntites}}</h1>
+        <div class="my-3 text-md">
+            Digite los siguientes campos
+        </div>
+      </div>
+      <nz-divider></nz-divider>
+      <!-- body -->
+      <div class="col-sm-12">
+        <!-- ENTIDAD -->
+        <div class="row mt-2 ps-3">
+          <label class="col-sm-12 pt-2 ps-2" for="nameEntidad">Entidad</label>
+          <div class="form-group col-sm-12 ps-2">
+            <input
+              type="text" name="nameEntidad" class="form-control input-field"
+              [(ngModel)]="entityForm.name"
+              [ngClass]="{'disable-input': entityForm.id != undefined}"
+              [disabled]="entityForm.id != undefined"
+            >
+          </div>
+        </div>
+        <!-- Combos -->
+        <form nz-form [formGroup]="validateForm" class="row mt-2">
+          <!--Servicios-->
+          <div class="col-sm-6">
+            <label class="label-title">Servicio</label>
+            <nz-form-item>
+              <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione un servicio!">
+                <nz-select
+                  id="perfil"
+                  nzPlaceHolder="Seleccione un servicio"
+                  formControlName="service"
+                  (ngModelChange)="onItemSelect($event)"
+                >
+                <!-- [(ngModel)]="formRelationEntity.servicesItemSelected" -->
+                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione un servicio"></nz-option>
+                <nz-option *ngFor="let service of servicesList" [nzLabel]="service.name" [nzValue]="service.id"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <!-- Empresas -->
+          <div class="col-sm-6">
+            <label class="label-title">Empresa</label>
+            <nz-form-item>
+              <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione una empresa!">
+                <nz-select style="width: 106% !important;"
+                  id="empresa"
+                  nzMode="multiple"
+                  nzPlaceHolder="Seleccione las empresa"
+                  formControlName="company"
+                  [(ngModel)]="formRelationEntity.companyItemSelected"
+                  [nzDisabled]="isDisabled"
+                  [nzMaxTagCount]="1"
+                >
+                  <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione las empresas"></nz-option>
+                  <nz-option *ngFor="let item of companiesList" [nzLabel]="getLabel(item)" [nzValue]="item"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </form>
+        <div class="row">
+          <!-- Cuenta -->
+          <div class="col-sm-10 ps-4">
+            <label class="label-title">Cuenta</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24">
+                  <input class="input-field" id="cuenta" type="text" [(ngModel)]="formRelationEntity.account"  nz-input placeholder="Ingrese un número de cuenta"/>
+                </nz-form-control>
+            </nz-form-item>
+          </div>
+          <!-- boton -->
+          <div class="col-sm-2 d-flex justify-content-start align-items-center p-0 m-0">
+            <button nz-button class=" button-green mx-1" [nzType]="'primary'" (click)="addServicesCompanyToEntidad()">
+              <i *ngIf="!isEditConfig" nz-icon nzType="plus" nzTheme="outline" class="align-middle pb-1"></i>
+              {{isEditConfig?'Editar':'Agregar'}}
+            </button>
+          </div>
+        </div>
+        <!-- tabla -->
+        <ng-container *ngIf="entityByServicesCompanies.length > 0; then dataModal; else noDataModal"></ng-container>
+        <ng-template #dataModal>
+          <div class="my-3 custom-card">
+            <nz-table #entityTable [nzData]="entityByServicesCompanies" [nzShowPagination]="false" [nzPageSize]="entityByServicesCompanies.length" [nzScroll]="{ y: '500px'}">
+              <thead>
+                <tr>
+                  <th nzWidth="100px"></th>
+                  <th>ENTIDAD</th>
+                  <th>SERVICIO</th>
+                  <th>EMPRESAS</th>
+                  <th>CUENTA</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let entity of entityTable.data">
+                    <td style="display: revert;">
+                      <div style="display: flex;">
+                        <img draggable="false" style="cursor: pointer;" src="../../../../../assets/icon/fi_trash-2.svg" class="mx-1" (click)="removeServicesToEntidad(entity)" nz-tooltip="Eliminar">
+                        <img draggable="false" style="cursor: pointer;" src="../../../../../assets/icon/fi_edit-2.svg" class="mx-1" (click)="editServicesToEntidad(entity)" nz-tooltip="Editar">
+                      </div>
+                    </td>
+                    <td>{{entity.nameEntity}}</td>
+                    <td>{{entity.namesServices}}</td>
+                    <td>{{entity.namesCompanies}}</td>
+                    <td>{{entity.account}}</td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+        </ng-template>
+
+        <ng-template #noDataModal>
+          <div nz-row class="card-aling-center mb-4">
+            <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+              <div nz-col nzXs="24" nzSm="20" nzMd="14">
+
+                <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../assets/icon/info_icon.svg" alt="icono-buscar">
+                <div nz-col nzSm="24" nzMd="18">
+                  <h1 class="title-form" style="place-content: center !important;">
+                    No hay datos existentes
+                  </h1>
+                  <h1 class="title-secundary" style="margin-top: 0px;">
+                    No existen datos para visualizar en esta tabla. Puedes volver a la página principal.
+                  </h1>
+                  <button nz-button class=" button-green" [nzType]="'primary'" (click)="closeEntityModal()">
+                    Volver
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+
+      </div>
+    </div>
+    <div *nzModalFooter class="p-0">
+      <div class="row-md">
+        <div class="col-sm-12 d-flex justify-content-end mb-3">
+          <button nz-button class=" button-black mx-1" [nzType]="'primary'" (click)="closeEntityModal();">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+</nz-modal>

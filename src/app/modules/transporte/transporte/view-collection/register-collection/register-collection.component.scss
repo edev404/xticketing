@@ -1,0 +1,50 @@
+
+@import url('../../../../../../assets/themes/white/white-theme.scss');
+
+::ng-deep .ant-statistic-content {
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 21px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+.anticon {
+    font-size: 20px;
+}
+
+.custom-card {
+    align-items: center !important;
+}
+
+.title-inferior {
+    font-family: "Taylor Sans";
+    font-style: italic;
+    font-weight: 600;
+    /* font-size: 18px; */
+    line-height: 22px;
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.01em;
+    color: #415364;
+}
+
+.title-table{
+    padding: 7px 0px 10px;
+    font-size: 18px;
+}
+
+.input-field{
+    width: 185px !important;
+    padding: 0px 8px;
+}
+.modal-title{
+    font-family: 'Taylor Sans' !important;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 22px;
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.01em;
+    color: #415364;
+  }
+  

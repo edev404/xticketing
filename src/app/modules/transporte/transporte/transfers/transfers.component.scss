@@ -1,0 +1,46 @@
+@import url('../../../../../assets/themes/white/white-theme.scss');
+
+.red-color {
+  color: #d90000 !important;
+}
+
+.boxlisttabconfigtransfer {
+  height: 100px;
+}
+
+.boxlisttabconfigtransferscroll {
+  height: 160px;
+  overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  display: block;
+  background-color: #ffffff;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 100rem;
+  background-color: #c1c1c1;
+}
+
+.itemauto {
+  height: auto !important;
+}
+
+.showtab {
+  display: block !important;
+}
+
+.hidetab {
+  display: none !important;
+}
+
+.error-form {
+  border: 1px solid #ff4d4f !important;
+}

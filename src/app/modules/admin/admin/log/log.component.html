@@ -1,0 +1,152 @@
+<!-- TABLA -->
+<div style="border: 1px solid #e9eefa; border-radius: 8px; margin: 20px 0px">
+    <!-- FILTRO TABLA -->
+    <form nz-form style="padding: 0px 24px; margin: 25px 0px" nz-col nzSpan="7">
+        <nz-form-item>
+            <nz-form-control [nzSpan]="24">
+                <nz-input-group nzPrefixIcon="search" style="color: #798CA5; justify-content: center;"
+                    class="type-control">
+                    <input nz-input id="search" name="search" type="search" autocomplete="off" [(ngModel)]="filterValue"
+                        (ngModelChange)="filterItems()" placeholder="Búsqueda">
+                </nz-input-group>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+    <ng-container *ngIf="listOfData.length > 0; then data; else noData"></ng-container>
+
+    <ng-template #data>
+        <!-- TABLA -->
+        <nz-table #basicTable [nzData]="listOfData" [nzFrontPagination]="false" [nzPageSize]="5"
+            [nzScroll]="{ x: '9000px', y: '311px'}">
+            <thead>
+                <tr style="background: #f5f7fa;">
+                    <th>.id</th>
+                    <th>user</th>
+                    <th>operation</th>
+                    <th>ip</th>
+                    <th>hour</th>
+                    <th>affectedFields</th>
+                    <th>dateTime</th>
+                    <th>nameApp</th>
+                    <th>transaction</th>
+                    <th>text</th>
+                    <th>description</th>
+                    <th>imei</th>
+                    <th>geographiUbication</th>
+                    <th>account</th>
+                    <th>cellphone</th>
+                    <th>operationResult</th>
+                    <th>destAccountEnrolled</th>
+                    <th>destAccountEnrolled</th>
+                    <th>value</th>
+                    <th>motive</th>
+                    <th>service</th>
+                    <th>previousCell</th>
+                    <th>statusPreSettlement</th>
+                    <th>statusTraceability</th>
+                    <th>card</th>
+                    <th>idDevice</th>
+                    <th>driver</th>
+                    <th>valueRecordedReceived</th>
+                    <th>valueCashCollect</th>
+                    <th>result</th>
+                    <th>missingValue</th>
+                    <th>surpus</th>
+                    <th>travel</th>
+                    <th>drive</th>
+                    <th>options</th>
+                    <th>externalTravel</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of basicTable.data | paginate : { id: 'table', itemsPerPage: numberRow, currentPage: page }">
+                    <td>{{ data.id ||'-' }}</td>
+                    <td>{{data.user||'-'}}</td>
+                    <td>{{data.operation||'-'}}</td>
+                    <td>{{data.ip||'-'}}</td>
+                    <td>{{data.hour||'-'}}</td>
+                    <td>{{data.affectedFields||'-'}}</td>
+                    <td>{{data.dateTime||'-'}}</td>
+                    <td>{{data.nameApp||'-'}}</td>
+                    <td>{{data.transaction||'-'}}</td>
+                    <td>{{data.text||'-'}}</td>
+                    <td>{{data.description||'-'}}</td>
+                    <td>{{data.imei||'-'}}</td>
+                    <td>{{data.geographiUbication||'-'}}</td>
+                    <td>{{data.account||'-'}}</td>
+                    <td>{{data.cellphone||'-'}}</td>
+                    <td>{{data.operationResult||'-'}}</td>
+                    <td>{{data.destAccountEnrolled||'-'}}</td>
+                    <td>{{data.destAccountEnrolled||'-'}}</td>
+                    <td>{{data.value||'-'}}</td>
+                    <td>{{data.motive||'-'}}</td>
+                    <td>{{data.service||'-'}}</td>
+                    <td>{{data.previousCell||'-'}}</td>
+                    <td>{{data.statusPreSettlement||'-'}}</td>
+                    <td>{{data.statusTraceability||'-'}}</td>
+                    <td>{{data.card||'-'}}</td>
+                    <td>{{data.idDevice||'-'}}</td>
+                    <td>{{data.driver||'-'}}</td>
+                    <td>{{data.valueRecordedReceived||'-'}}</td>
+                    <td>{{data.valueCashCollect||'-'}}</td>
+                    <td>{{data.result||'-'}}</td>
+                    <td>{{data.missingValue||'-'}}</td>
+                    <td>{{data.surpus||'-'}}</td>
+                    <td>{{data.travel||'-'}}</td>
+                    <td>{{data.drive||'-'}}</td>
+                    <td>{{data.options||'-'}}</td>
+                    <td>{{data.externalTravel||'-'}}</td>
+                </tr>
+            </tbody>
+        </nz-table>
+        <!-- PAGINADO DE LA TABLA -->
+        <div class="row d-flex align-items-center" *ngIf="listOfData.length > 0">
+            <div class="col-sm-4 ps-4">
+                <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+                    <div>
+                        <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+                    </div>
+
+                    <div class="px-1">
+                        <nz-form-control>
+                            <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow"
+                                (ngModelChange)="onChangeRowPerPage($event)">
+                                <nz-option *ngFor="let item of tableSizes" [nzValue]="item"
+                                    [nzLabel]="item"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </div>
+
+                    <div>
+                        <label class="label-title" style="margin-top: 7px;">entradas</label>
+                    </div>
+                </nz-form-item>
+            </div>
+            <div class="col-sm d-flex justify-content-end pe-4">
+                <pagination-controls id="table" previousLabel="Anterior" nextLabel="Siguiente"
+                    (pageChange)="onChangePage($event)" (pageBoundsCorrection)="onChangePage($event)">
+                </pagination-controls>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #noData>
+        <div nz-row class="card-aling-center mb-4">
+            <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+                <div nz-col nzXs="24" nzSm="20" nzMd="14">
+
+                    <img draggable="false" style="margin: 40px 0px 20px 0px;"
+                        src="../../../../../assets/icon/info_icon.svg" alt="icono-buscar">
+                    <div nz-col nzSm="24" nzMd="18">
+                        <h1 class="title-form" style="place-content: center !important;">
+                            No hay datos existentes
+                        </h1>
+                        <h1 class="title-secundary" style="margin-top: 0px;">
+                            No existen datos para visualizar en esta tabla.
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>

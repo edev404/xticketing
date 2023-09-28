@@ -1,0 +1,298 @@
+<nz-breadcrumb style="margin-bottom: 20px;">
+  <nz-breadcrumb-item>
+    <span class="title-modulo">Antifraudes</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item [nzOverlay]="menu">
+    <span class="title-submodulo">Fraudes</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item [nzOverlay]="submenu">
+    <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">Buscar</span>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <ul nz-menu nzSelectable>
+    <li nz-menu-item [routerLink]="['/main/antifraude/controls/search']">Antifraudes</li>
+    <li nz-menu-item [routerLink]="['/main/antifraude/fraudes/search']">Fraudes</li>
+  </ul>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #submenu="nzDropdownMenu">
+  <ul nz-menu nzSelectable>
+    <li nz-menu-item [routerLink]="['/main/antifraude/fraudes/search']">Buscar</li>
+    <li nz-menu-item [routerLink]="['/main/antifraude/fraudes/create']">Registrar</li>
+    <!-- <li nz-menu-item [routerLink]="['/main/antifraude/fraude/assign']">Asignar</li> -->
+    <li nz-menu-item [routerLink]="['/main/antifraude/fraudes/analizar']">Analizar</li>
+    <!-- <li nz-menu-item [routerLink]="['/main/antifraude/fraude/reports']">Reporte</li> -->
+  </ul>
+</nz-dropdown-menu>
+
+<div class="home-title-page" style="display: flex; justify-content: space-between;">
+  <h1 class="title-home">Búsqueda Fraudes</h1>
+  <div>
+    <nz-space>
+      <button nz-button class="button-white" nzType="primary" nz-tooltip
+        [nzTooltipTitle]="!filters ? 'Ver filtros' : 'Ocultar filtros'" (click)="filters = !filters">
+        <i nz-icon nzType="filter" nzTheme="outline"></i>
+      </button>
+      <button nz-button class="button-black" nzType="primary" (click)="clearFormQuestion()">
+        Limpiar
+      </button>
+      <button nz-button class="button-green" nzType="primary" form="CreateForm">
+        Buscar
+      </button>
+    </nz-space>
+  </div>
+</div>
+
+<nz-divider></nz-divider>
+
+<h2 class="title-secundary">Para realizar la búsqueda debe ingresar la información al menos en uno de los campos</h2>
+
+<form nz-form [formGroup]="form" id="CreateForm" autocomplete="off" (ngSubmit)="search()">
+
+  <div *ngIf="filters">
+
+    <!-- Filtros basicos -->
+    <div class="content-card">
+
+      <div style="display: flex; justify-content: space-between; margin: 15px 15px;">
+        <h1 class="title-home">Información básica</h1>
+        <button nz-button class="button-white" [ngStyle]="{'background': filterAdvanced ? '#F0FAF8' : '#fff'}"
+          form="notForm" (click)="filterAdvanced = !filterAdvanced">
+          <i nz-icon nzType="filter" [nzTheme]="'twotone'" [nzTwotoneColor]="'#00AE8D'"
+            style="vertical-align: 0.1em;"></i>Avanzada
+        </button>
+      </div>
+
+      <div class="padding-form">
+
+        <div nz-row [nzGutter]="24" nzJustify="space-around" nzAlign="middle">
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6">
+            <label class="label-title" for="fecha_ini_re">Fecha registro (desde)</label>
+            <nz-form-item>
+              <nz-form-control nz-col [nzSpan]="24" style="margin-right: 0px;">
+                <nz-date-picker [nzFormat]="'dd/MM/yyyy'" nzId="fecha_ini_re" formControlName="fecha_ini_re"
+                  nzPlaceHolder="dd/mm/aaaa">
+                </nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6">
+            <label class="label-title" for="fecha_fin_re">Fecha registro (hasta)</label>
+            <nz-form-item>
+              <nz-form-control nz-col [nzSpan]="24" style="margin-right: 0px;">
+                <nz-date-picker [nzFormat]="'dd/MM/yyyy'" nzId="fecha_fin_re" formControlName="fecha_fin_re"
+                  nzPlaceHolder="dd/mm/aaaa">
+                </nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6">
+            <label class="label-title" for="fecha_ini_ocu">Fecha probable ocurrencia (desde)</label>
+            <nz-form-item>
+              <nz-form-control nz-col [nzSpan]="24" style="margin-right: 0px;">
+                <nz-date-picker [nzFormat]="'dd/MM/yyyy'" nzId="fecha_ini_ocu" formControlName="fecha_ini_ocu"
+                  nzPlaceHolder="dd/mm/aaaa">
+                </nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6">
+            <label class="label-title" for="fecha_fin_ocu">Fecha probable ocurrencia (hasta)</label>
+            <nz-form-item>
+              <nz-form-control nz-col [nzSpan]="24" style="margin-right: 0px;">
+                <nz-date-picker [nzFormat]="'dd/MM/yyyy'" nzId="fecha_fin_ocu" formControlName="fecha_fin_ocu"
+                  nzPlaceHolder="dd/mm/aaaa">
+                </nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+        </div> <!-- Fin row -->
+
+        <div nz-row [nzGutter]="24" nzJustify="start" nzAlign="middle">
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6">
+            <label class="label-title" for="id">ID</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24">
+                <nz-input-number nzId="id" [nzStep]="1" formControlName="id"
+                  nzPlaceHolder="Ingrese ID">
+                </nz-input-number>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="10">
+            <label class="label-title" for="descripcion">Descripción</label>
+            <nz-form-item>
+              <nz-form-control nz-col [nzSpan]="24">
+                <input nz-input type="text" class="input-field" id="descripcion" formControlName="descripcion"
+                  placeholder="Describa la situación presentada" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+            <label class="label-title" for="tipo_fraude">Tipo de fraude</label>
+            <nz-form-item>
+              <nz-form-control nz-col [nzSpan]="24">
+                <nz-select nzId="tipo_fraude" formControlName="tipo_fraude"
+                  nzPlaceHolder="Seleccione el tipo de fraude">
+                  <nz-option nzValue="0" nzLabel="Todos"></nz-option>
+                  <nz-option *ngFor="let item of tpFraudes" [nzValue]="item.id"
+                    [nzLabel]="item.description"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+        </div> <!-- Fin row -->
+
+        <div nz-row [nzGutter]="24" nzJustify="start" nzAlign="middle">
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="10">
+            <label class="label-title" for="componente">Componente</label>
+            <nz-form-item>
+              <nz-form-control nz-col [nzSpan]="24">
+                <nz-select nzAutoFocus nzId="componente" formControlName="componente"
+                  nzPlaceHolder="Seleccione el componente">
+                  <nz-option nzValue="0" nzLabel="Todos"></nz-option>
+                  <nz-option *ngFor="let item of tpComponentes" [nzValue]="item.id"
+                    [nzLabel]="item.description"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="7">
+            <label class="label-title" for="fuente">Fuente</label>
+            <nz-form-item>
+              <nz-form-control nz-col [nzSpan]="24">
+                <nz-select nzAutoFocus nzId="fuente" formControlName="fuente" nzPlaceHolder="Seleccione un estado">
+                  <nz-option nzValue="0" nzLabel="Todos"></nz-option>
+                  <nz-option *ngFor="let item of tpFuentes" [nzValue]="item.id"
+                    [nzLabel]="item.description"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+        </div> <!-- Fin row -->
+
+      </div> <!-- Fin padding-form -->
+
+    </div> <!-- Fin content-card basicos -->
+
+    <!-- Filtros avanzados -->
+    <div class="content-card" *ngIf="filterAdvanced">
+
+      <div style="display: flex; justify-content: space-between; margin: 15px 15px;">
+        <h1 class="title-home">Información avanzada</h1>
+      </div>
+
+      <div class="padding-form">
+
+        <div nz-row [nzGutter]="24" nzJustify="space-around" nzAlign="middle">
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+            <label class="label-title" for="usuario">Usuario que registró</label>
+            <nz-form-item>
+              <nz-form-control nz-col [nzSpan]="24">
+                <input nz-input type="text" class="input-field" id="usuario" formControlName="usuario"
+                  placeholder="Ingrese nombre, apellido o ID del usuario" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+            <label class="label-title" for="riesgo">Riesgo</label>
+            <nz-form-item>
+              <nz-form-control nz-col [nzSpan]="24">
+                <input nz-input type="text" class="input-field" id="riesgo" formControlName="riesgo"
+                  placeholder="Ingrese el riesgo" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8">
+            <label class="label-title" for="impacto">Impacto</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24">
+                <nz-select nzId="impacto" formControlName="impacto" nzPlaceHolder="Seleccione el impacto">
+                  <nz-option nzValue="0" nzLabel="Todos"></nz-option>
+                  <nz-option *ngFor="let item of tpImpactos" [nzValue]="item.id"
+                    [nzLabel]="item.description"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+        </div> <!-- Fin row -->
+
+        <div nz-row [nzGutter]="24" nzJustify="start" nzAlign="middle">
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+            <label class="label-title" for="servicio">Servicio</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24">
+                <nz-select nzId="servicio" formControlName="servicio" nzPlaceHolder="Seleccione el servicio">
+                  <nz-option nzValue="0" nzLabel="Todos"></nz-option>
+                  <nz-option *ngFor="let item of servicesList" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+            <label class="label-title" for="empresa">Empresa</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24">
+                <nz-select nzId="empresa" formControlName="empresa" nzPlaceHolder="Seleccione la empresa">
+                  <nz-option nzValue="" nzLabel="Todos"></nz-option>
+                  <nz-option *ngFor="let item of companiesList" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+        </div> <!-- Fin row -->
+
+      </div> <!-- Fin padding-form -->
+
+    </div> <!-- Fin content-card avanzados -->
+
+    <!-- Mostrar mensaje de información si no hay data -->
+    <div class="content-card" *ngIf="!searchData && !filterAdvanced">
+
+      <div nz-col [nzSpan]="24" style="text-align: -webkit-center;">
+        <div nz-col nzXs="24" nzSm="20" nzMd="14">
+          <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../assets/icon/Featured_icon.svg" alt="icono-buscar">
+
+          <div nz-col nzSm="24" nzMd="18">
+            <h1 class="title-form" style="place-content: center !important;">
+              Ingrese un filtro en la parte superior
+            </h1>
+            <h1 class="title-secundary" style="margin-top: 0px;">
+              presione el botón "Buscar" para visualizar los datos
+            </h1>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- Fin content-card -->
+
+  </div> <!-- Fin de filtros -->
+
+</form>
+
+<!-- Data tablas -->
+<div class="content-card" *ngIf="searchData">
+
+  <app-data-tabla-fraude [fraudesData]="fraudesData"></app-data-tabla-fraude>
+
+</div> <!-- Fin content-card -->

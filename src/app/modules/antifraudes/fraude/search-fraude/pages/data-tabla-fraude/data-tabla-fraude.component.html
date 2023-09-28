@@ -1,0 +1,21 @@
+<div class="inner-content">
+
+    <nz-tabset nzType="card">
+        <nz-tab [nzTitle]="'Pendientes'" style="padding-left: 0px;">
+            <app-data-table-pendientes [fraudesPendientesData]="fraudesData"
+                                       [users]="users"
+                                       [tpPrioridad]="tpPrioridad">
+            </app-data-table-pendientes>
+        </nz-tab>
+        <nz-tab [nzTitle]="'Por analizar'">
+            <app-data-table-analizar [fraudesAnalizarData]="fraudesData"
+                                     [users]="users"
+                                     [tpPrioridad]="tpPrioridad">
+            </app-data-table-analizar>
+        </nz-tab>
+        <nz-tab [nzTitle]="'Cerrados'">
+            <app-data-table-cerrados [fraudesCerradosData]="fraudesData"></app-data-table-cerrados>
+        </nz-tab>
+    </nz-tabset>
+
+</div>

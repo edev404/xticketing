@@ -1,0 +1,410 @@
+<nz-breadcrumb style="margin-bottom: 20px;">
+    <nz-breadcrumb-item>
+        <span class="title-modulo">
+            <i nz-icon nzType="solution" style="font-size: 25px; margin-bottom: 1px;"></i>
+        </span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+        <span class="title-modulo">PQR</span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+        <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">Registro PQR</span>
+    </nz-breadcrumb-item>
+</nz-breadcrumb>
+<div class="home-title-page" style="display: flex; justify-content: space-between; ">
+    <div></div>
+    <div nz-col [nzSpan]="9">
+        <nz-form-item style="display: flex;">
+            <nz-form-label [nzSpan]="8">Empresa</nz-form-label>
+            <nz-form-control nz-col [nzSpan]="14" nzErrorTip="¡Por favor seleccione una empresa!">
+                <nz-select nzAutoFocus id="empresa" nzPlaceHolder="Seleccione una empresa" [ngModel]="selectedCompany"
+                    (ngModelChange)="setSelectedCompany($event)" #selectEmpresas>
+                    <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione una empresa"></nz-option>
+                    <nz-option *ngFor="let company of companies" [nzValue]="company['id']"
+                        nzLabel="{{company['name']}}"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+    </div>
+</div>
+<div nz-row class="card-aling-center" #messageNoCompany>
+
+    <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+        <div nz-col nzXs="24" nzSm="20" nzMd="14">
+
+            <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../assets/icon/info_icon.svg" alt="icono-buscar">
+
+            <div nz-col nzSm="24" nzMd="18">
+                <h1 class="title-form" style="place-content: center !important;">
+                    Seleccione una empresa
+                </h1>
+                <h1 class="title-secundary" style="margin-top: 0px;">
+                    Despliegue la lista de empresas y seleccione una para hacer el registro
+                </h1>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- contenedor del formulario -->
+<div #formVisible>
+    <div class="container">
+        <!-- formulario de registro -->
+        <form nz-form [formGroup]="formPqr" (ngSubmit)="enviar($event)">
+            <div class="row">
+                <div class="col-2 sub_titulo"><b>Datos solicitante</b></div>
+                <nz-divider style="margin: 10px 0 !important;"></nz-divider>
+            </div>
+            <div nz-row [nzGutter]="24" nzJustify="center" style="justify-content: space-evenly;">
+                <div nz-col [nzSpan]="8">
+                    <label for="fec_soli">{{ textoPqr("fec_soli") }}: </label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <input nz-input class="input-field" formControlName="fec_soli" [type]="tipoPqr('fec_soli')"
+                                [min]="today">
+                            <div class="control-invalid" *ngIf="controlValidPqr('fec_soli')">
+                                {{ errorMessage("fec_soli") }}
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <label for="id_pasajero">Id de usuario: </label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <input formControlName="id_pasajero" type="hidden" />
+                            <div class="d-flex">
+                                <input nz-input class="input-field" [value]="id_pasajero" [disabled]="true" />
+                                <button nz-button class="button-green" [nzType]="'primary'"
+                                    (click)="setModalVisible($event)">
+                                    Buscar
+                                </button>
+                            </div>
+                            <div class="control-invalid" *ngIf="controlValidPqr('id_pasajero')">
+                                {{ errorMessage("id_pasajero") }}
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <label for="nom_solicitante">{{ textoPqr("nom_solicitante") }}:</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <input nz-input class="input-field" formControlName="nom_solicitante"
+                                [type]="tipoPqr('nom_solicitante')" />
+                            <div class="control-invalid" *ngIf="controlValidPqr('nom_solicitante')">
+                                {{ errorMessage("nom_solicitante") }}
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+
+            <div nz-row [nzGutter]="24" nzJustify="center" style="justify-content: space-evenly;">
+                <div nz-col [nzSpan]="8">
+                    <label for="tipo_docu">{{ textoPqr("tipo_docu") }}:</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <nz-select formControlName="tipo_docu">
+                                <nz-option nzValue="" selected="" nzLabel="Seleccione"></nz-option>
+                                <nz-option *ngFor="let option of optionsTipoDoc?.data.identificationTypes"
+                                    nzValue="{{ option.id }}" [nzLabel]="option.name "></nz-option>
+                            </nz-select>
+                            <div class="control-invalid" *ngIf="controlValidPqr('tipo_docu')">
+                                {{ errorMessage("tipo_docu") }}
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <label for="nro_docu">{{ textoPqr("nro_docu") }}:</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <input nz-input class="input-field" formControlName="nro_docu"
+                                [type]="tipoPqr('nro_docu')" />
+                            <div class="control-invalid" *ngIf="controlValidPqr('nro_docu')">
+                                {{ errorMessage("nro_docu") }}
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <label for="nro_celular">{{ textoPqr("nro_celular") }}:</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <input nz-input class="input-field" formControlName="nro_celular"
+                                [type]="tipoPqr('nro_celular')" />
+                            <div class="control-invalid" *ngIf="controlValidPqr('nro_celular')">
+                                {{ errorMessage("nro_celular") }}
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+
+            <div nz-row [nzGutter]="24" nzJustify="center" style="justify-content: space-evenly;">
+                <div nz-col [nzSpan]="8">
+                    <label for="dir_solicitante">{{ textoPqr("dir_solicitante") }}:</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <input nz-input class="input-field" formControlName="dir_solicitante"
+                                [type]="tipoPqr('dir_solicitante')" />
+                            <div class="control-invalid" *ngIf="controlValidPqr('dir_solicitante')">
+                                {{ errorMessage("dir_solicitante") }}
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <label for="mail">{{ textoPqr("mail") }}:</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <input nz-input class="input-field" formControlName="mail" [type]="tipoPqr('mail')" />
+                            <div class="control-invalid" *ngIf="controlValidPqr('mail')">
+                                {{ errorMessage("mail") }}
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <label for="med_noti">{{ textoPqr("med_noti") }}:</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <nz-select formControlName="med_noti">
+                                <nz-option nzValue="" selected nzLabel="Seleccione"></nz-option>
+                                <nz-option [nzValue]="item.code" [nzLabel]="item.description" *ngFor="let item of medioNorificacion"></nz-option>
+                            </nz-select>
+                            <div class="control-invalid" *ngIf="controlValidPqr('med_noti')">
+                                {{ errorMessage("med_noti") }}
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+            <div class="row">
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-2 sub_titulo"><b>Información solicitud</b></div>
+                <!-- <div class="col-10" style="padding-left: 0px;margin-bottom: 10px">
+                    <hr>
+                </div> -->
+                <nz-divider style="margin: 10px 0 !important;"></nz-divider>
+            </div>
+            <div nz-row [nzGutter]="24" nzJustify="center" style="justify-content: space-evenly;">
+                <div nz-col [nzSpan]="8">
+                    <label for="cod_tpqr">{{ textoPqr("cod_tpqr") }}:</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <nz-select formControlName="cod_tpqr">
+                                <nz-option nzValue="" nzLabel="Seleccione"></nz-option>
+                                <nz-option *ngFor="let option of optionsTipoPqr?.data.tipos" [nzValue]="option.id"
+                                    [nzLabel]="option.descripcion"></nz-option>
+                            </nz-select>
+                            <div class="control-invalid" *ngIf="controlValidPqr('cod_tpqr')">
+                                {{ errorMessage("cod_tpqr") }}
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <div nz-col [nzSpan]="8">
+                    <label for="cod_mrec">{{ textoPqr("cod_mrec") }}:</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <nz-select formControlName="cod_mrec">
+                                <nz-option nzValue="" nzLabel="Seleccione"></nz-option>
+                                <nz-option *ngFor="let option of optionsMedioRecepcion?.data['Medio-recepcion']"
+                                    nzValue="{{ option.id }}" nzLabel="{{ option.descripcion }}"></nz-option>
+                            </nz-select>
+                            <div class="control-invalid" *ngIf="controlValidPqr('cod_mrec')">
+                                {{ errorMessage("cod_mrec") }}
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <label for="cod_mpqr">{{ textoPqr("cod_mpqr") }}:</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <nz-select formControlName="cod_mpqr" (blur)="validateCodTpqr()" #select_cod_mpqr>
+                                <nz-option nzValue="" nzLabel="Seleccione" data-cod-tpqr=""></nz-option>
+                                <nz-option *ngFor="let option of optionsMotivoPqr?.data.motivos"
+                                    nzValue="{{ option.id }}" attr.data-cod-tpqr="{{ option.codTpqr }}"
+                                    nzLabel="{{ option.descripcion }}"></nz-option>
+                            </nz-select>
+                            <div class="control-invalid" *ngIf="controlValidPqr('cod_mpqr')">
+                                {{ errorMessage("cod_mpqr") }}
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+            <div nz-row [nzGutter]="24" nzJustify="center" style="justify-content: space-evenly;">
+
+                <div nz-col [nzSpan]="8">
+                    <label for="cod_gc_pqr">{{ textoPqr("cod_gc_pqr") }}:</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <nz-select formControlName="cod_gc_pqr">
+                                <nz-option nzValue="" nzLabel="Seleccione"></nz-option>
+                                <nz-option *ngFor="let option of optionsGrupoCausal?.data.grupo_causal"
+                                    nzValue="{{ option.id }}" nzLabel="{{option.descripcion }}"></nz-option>
+                            </nz-select>
+                            <div class="control-invalid" *ngIf="controlValidPqr('cod_gc_pqr')">
+                                {{ errorMessage("cod_gc_pqr") }}
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <div nz-col [nzSpan]="8">
+                    <label for="descripcion">{{ textoPqr("descripcion") }}:</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <textarea nz-input class="input-field" rows="1" formControlName="descripcion"
+                                onblur="this.value=this.value.toUpperCase();"></textarea>
+                            <div class="control-invalid" *ngIf="controlValidPqr('descripcion')">
+                                {{ errorMessage("descripcion") }}
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <div nz-col [nzSpan]="8">
+                    <label for="file">Adjuntar archivos: </label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <div>
+                                <input type="file" class="form-control" id="file"
+                                    (change)="handlePqrRegistroFiles($event)"
+                                    accept="application/pdf, image/png, image/gif, image/jpeg, image/jpg">
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <input type="checkbox" (click)="setCheckboxValue($event)" style="display: inline;" checked>&nbsp;
+                    <label for="politicaEmpresa" style="display: inline;">{{ politicaEmpresa }}:</label>
+                    <div class="control-invalid" *ngIf="!checkboxValue">
+                        Para continuar, por favor autorice el tratamiento de datos.
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 mb-3 d-flex justify-content-center">
+                        <button nz-button class="button-green" [nzType]="'primary'">
+                            <i nz-icon nzType="setting" nzTheme="outline" class="align-middle pb-1"></i>
+                            Registrar
+                        </button>
+                        <button nz-button class="button-black" [nzType]="'primary'" (click)="reset($event)">
+                            <i nz-icon nzType="setting" nzTheme="outline" class="align-middle pb-1"></i>
+                            Restablecer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- modal busqueda de pasajero por documento -->
+<nz-modal [(nzVisible)]="modalVisibleBuscarPasajero" nzTitle="{{ 'Búsqueda por documento' }}"
+    (nzOnCancel)="modalVisibleBuscarPasajero = !modalVisibleBuscarPasajero">
+    <div *nzModalContent>
+        <div class="row">
+            <div class="col-sm">
+                <form nz-form [formGroup]="formPasajero">
+                    <nz-form-item>
+                        <nz-form-control [nzErrorTip]="errorTip">
+                            <nz-input-group nzPrefixIcon="idcard" class="type-control">
+                                <input type="text" nz-input formControlName="doc_pasajero" placeholder="Identificación">
+                            </nz-input-group>
+                        </nz-form-control>
+                    </nz-form-item>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div *nzModalFooter class="p-0">
+        <div class="row-md">
+            <div class="col-sm-12 d-flex justify-content-center mb-3">
+                <button nz-button class="button-green mx-1" [nzType]="'primary'" (click)="getPassengerByDoc()">
+                    Buscar
+                </button>
+                <button nz-button class="button-black me-1" [nzType]="'primary'" aria-label="Close"
+                    (click)="modalVisibleBuscarPasajero = !modalVisibleBuscarPasajero">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</nz-modal>
+
+
+<!-- modal con la información de los pasajeros para escoger alguno -->
+<nz-modal [(nzVisible)]="modalVisiblePasajero" nzTitle="{{ 'Usuarios' }}"
+    (nzOnCancel)="modalVisiblePasajero = !modalVisiblePasajero" [nzWidth]="900" [nzStyle]="{ top: '20px' }"
+    [nzFooter]="null">
+    <div *nzModalContent>
+        <div class="row">
+            <div class="col-sm">
+                <!-- tabla de pasajeros con infomacion basica -->
+                <nz-table #basicTable [nzTemplateMode]="true" nzShowPagination="false" nzSize="small"
+                    *ngIf="pasajeroInfo.data.Pasajeros.length > 0">
+                    <thead>
+                        <tr>
+                            <th>Id. de usuario</th>
+                            <th>Nombre</th>
+                            <th>No. de identificación</th>
+                            <th>Direccion</th>
+                            <th>Teléfono</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let pasajero of pasajeroInfo.data.Pasajeros">
+                            <td>
+                                <button nz-button class="button-green id" (click)="choosePassenger(pasajero)">
+                                    {{pasajero.id}}
+                                </button>
+                            </td>
+                            <td>{{(pasajero.firstName || '') + " " + (pasajero.secondName || '') + " " + (pasajero.lastName || '') + " " + (pasajero.secondLastName || '')}}</td>
+                            <td>{{pasajero.identification}}</td>
+                            <td>{{pasajero.address || "--"}}</td>
+                            <td>{{pasajero.cellPhone || "--"}}</td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+                <nz-table #basicTable [nzTemplateMode]="true" nzShowPagination="false" nzSize="small">
+                    <tbody *ngIf="pasajeroInfo.data.Pasajeros.length == 0">
+                        <tr>
+                            <td colspan="10">
+                                <h5>No se encontraron pasajeros con este número de identificación</h5>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+        </div>
+    </div>
+    <div *nzModalFooter class="p-0">
+        <div class="row-md">
+            <div class="col-sm-12 d-flex justify-content-center mb-3">
+                <button nz-button class="button-green mx-1" [nzType]="'primary'" (click)="null">
+                    Buscar
+                </button>
+                <button nz-button class="button-black me-1" [nzType]="'primary'" aria-label="Close"
+                    (click)="modalVisiblePasajero = !modalVisiblePasajero">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</nz-modal>

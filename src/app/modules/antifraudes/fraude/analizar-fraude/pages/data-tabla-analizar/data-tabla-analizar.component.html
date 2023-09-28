@@ -1,0 +1,22 @@
+<div class="inner-content">
+
+    <nz-tabset nzType="card" [(nzSelectedIndex)]="tabIndex">
+        <nz-tab [nzTitle]="'Casos por analizar'" style="padding-left: 0px;"
+                (nzClick)="changeTab(0)">
+            <app-data-table-casos-analizar [listOfData]="fraudesData"></app-data-table-casos-analizar>
+        </nz-tab>
+        <nz-tab [nzTitle]="'Análisis registrados'"
+                (nzClick)="changeTab(1)">
+            <app-data-table-analisis-registrados></app-data-table-analisis-registrados>
+        </nz-tab>
+        <nz-tab [nzTitle]="'Sanciones'"
+                (nzClick)="changeTab(2)">
+            <app-data-table-sancion></app-data-table-sancion>
+        </nz-tab>
+        <nz-tab [nzTitle]="'Notificaciones'"
+                (nzClick)="changeTab(3)">
+            <app-data-table-notificaciones></app-data-table-notificaciones>
+        </nz-tab>
+    </nz-tabset>
+
+</div>

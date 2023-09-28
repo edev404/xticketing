@@ -1,0 +1,171 @@
+<nz-breadcrumb style="margin-bottom: 20px;">
+  <nz-breadcrumb-item>
+    <span class="title-modulo">
+      <i nz-icon nzType="dollar" style="font-size: 25px; margin-bottom: 1px;"></i>
+    </span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-modulo">Clearing</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo">{{isSettlement ? 'Pre-liquidaciones': 'liquidaciones'}}</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">pasajes</span>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+
+<div *ngIf="!main" class="row">
+  <!-- FECHAS DE BUSQUEDA/FILTER Y BOTON DE CREAR -->
+  <div class="col-sm-12 row justify-content-between m-0 p-0" style="margin-top: 20px;">
+    <div class="col-sm-10 p-0 d-flex flex-row">
+      <h1 class="title-home mx-3 pb-4">Clearing</h1>
+      <!-- DATE RANGE PIKER -->
+      <nz-form-item class="w-50">
+        <nz-form-control nz-col [nzSpan]="24" nzErrorTip="Por favor seleciona tu rango de fechas!">
+          <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="loadData($event)" nzFormat="yyyy-MM-dd"
+            [nzPlaceHolder]="datePlaceholder"></nz-range-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <!-- DROPDOWN -->
+      <div class="dropdown" *ngIf="isSettlement">
+        <button nz-button class=" button-white" [nzType]="'primary'" data-bs-toggle="dropdown" aria-expanded="false"
+          style="margin: -1px 13px !important; width: 40px; height: 42px;">
+          <i nz-icon nzType="filter" nzTheme="outline"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li class="dropdown-item cursor-p font-g my-1" (click)="changeFilter('tod')">
+            Todas
+          </li>
+          <li class="dropdown-item cursor-p font-g my-1" (click)="changeFilter('bor')">
+            Borrador
+          </li>
+          <li class="dropdown-item cursor-p font-g my-1" (click)="changeFilter('prv')">
+            Por revisión
+          </li>
+          <li class="dropdown-item cursor-p font-g my-1" (click)="changeFilter('rec')">
+            Rechazadas
+          </li>
+          <li class="dropdown-item cursor-p font-g my-1" (click)="changeFilter('anu')">
+            Anuladas
+          </li>
+        </ul>
+      </div>
+      <span class="title-secundary m-0 p-0 d-flex align-items-center" *ngIf="isSettlement">/{{titelFilter}}</span>
+    </div>
+    <button nz-button class="col-sm-1 button-green" *ngIf="isSettlement" [nzType]="'primary'" (click)="switchPanel(true,'create',null)">
+      <i nz-icon nzType="plus" nzTheme="outline" class="align-middle pb-1"></i>
+      Nuevo
+    </button>
+  </div>
+  <!-- TABLE -->
+  <div class="col-sm-12" style="border: 1px solid #E9EEFA; border-radius: 8px;">
+    <!-- BUSQUEDA TABLA -->
+    <div style="display: flex; justify-content: space-between;margin: 0px 20px; margin-top: 20px;">
+      <form nz-form>
+        <nz-form-item>
+          <nz-form-control>
+            <nz-input-group nzPrefixIcon="search" style="color: #798CA5;" class="type-control">
+              <input nz-input name="search" type="search" id="search" [(ngModel)]="filterValue"
+                (ngModelChange)="search()" placeholder="Buscar"/>
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+    <!-- TABLA -->
+    <ng-container *ngIf="listOfData.length > 0; then data; else noData"></ng-container>
+    <ng-template #data>
+      <nz-table #basicTable [nzData]="listOfData" [nzPageSize]="5"  [nzFrontPagination]="false" [nzScroll]="{ x: '1000px', y: '300px'}">
+        <thead>
+          <tr style="background: #F5F7FA;">
+            <th nzWidth="150px"></th>
+            <th>Fecha de creación</th>
+            <th>Ciudad</th>
+            <th>Empresa</th>
+            <th>Desde / Hasta</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data | paginate : { id: 'table', itemsPerPage: numberRow, currentPage: page }">
+            <td style="display: revert;">
+              <div style="display: flex;">
+                <img draggable="false" style="cursor: pointer;" src="../../../../../../assets/icon/fi_file-text2.svg" class="mx-3"
+                  nz-tooltip="Ver detalle" (click)="switchPanel(true,'detail',data.id)">
+                <img draggable="false" style="cursor: pointer;" src="../../../../../../assets/icon/fi_eye.svg" class="mx-3"
+                  nz-tooltip="consultar hallasgos" (click)="switchPanel(true,'finding',data.id)">
+              </div>
+            </td>
+            <td>{{ data.date }}</td>
+            <td>{{ data.city.name }}</td>
+            <td>{{ data.company.name }}</td>
+            <td>{{ data.validityStartDate }} - {{ data.validityEndDate }}</td>
+            <td>{{ data.state.description | uppercase }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+      <!-- PAGINADO DE LA TABLA -->
+      <div class="row d-flex align-items-center" *ngIf="listOfData.length > 0">
+        <div class="col-sm-4 ps-4">
+          <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+            <div>
+              <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+            </div>
+
+            <div class="px-1">
+              <nz-form-control>
+                <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow" (ngModelChange)="onChangeRowPerPage($event)">
+                  <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </div>
+
+            <div>
+              <label class="label-title" style="margin-top: 7px;">entradas</label>
+            </div>
+          </nz-form-item>
+        </div>
+        <div class="col-sm d-flex justify-content-end pe-4">
+          <pagination-controls id="table" previousLabel="Anterior" nextLabel="Siguiente" (pageChange)="onChangePage($event)"
+            (pageBoundsCorrection)="onChangePage($event)">
+          </pagination-controls>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #noData>
+      <div nz-row class="card-aling-center mb-4">
+        <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+          <div nz-col nzXs="24" nzSm="20" nzMd="14">
+      
+            <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../assets/icon/info_icon.svg" alt="icono-buscar">
+            <div nz-col nzSm="24" nzMd="18">
+              <h1 class="title-form" style="place-content: center !important;">
+                No hay datos existentes
+              </h1>
+              <h1 class="title-secundary" style="margin-top: 0px;">
+                No existen datos para visualizar en esta tabla.
+              </h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>
+<!-- CREATE -->
+<div *ngIf="isCreate">
+  <app-create-passage (switchPanel)="switchPanel($event,'create',null)">
+  </app-create-passage>
+</div>
+<!-- BUSQUEDA -->
+<div *ngIf="isFinding">
+  <app-finding [presettlementId]="idPassage" [isSettlement]="isSettlement" (switchPanel)="switchPanel($event,'finding',null)">
+  </app-finding>
+</div>
+<!-- DETALLE -->
+<div *ngIf="isDetail">
+  <app-detail-passage [clearingId]="idPassage" [isSettlement]="isSettlement" (switchPanel)="switchPanel($event,'detail',null)" (switchPanelFinding)="switchFinding($event)">
+  </app-detail-passage>
+</div>

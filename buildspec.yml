@@ -1,0 +1,18 @@
+version: 0.2
+phases: 
+  install:
+    runtime-versions:
+      node-js: 16
+    commands:
+      - npm install -g @angular/cli@14.2.12
+  pre-build:
+    commands:
+      - npm i --legacy-peer-deps
+  build:
+    commands:
+      - ng build --prod
+artifacts:
+  base-directory: dist/dist-calidad
+    files:
+      - '**/*'
+      

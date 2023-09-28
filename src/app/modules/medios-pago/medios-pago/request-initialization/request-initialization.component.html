@@ -1,0 +1,162 @@
+<nz-breadcrumb style="margin-bottom: 20px;">
+  <nz-breadcrumb-item>
+    <span class="title-modulo">
+      <i nz-icon nzType="credit-card" style="font-size: 25px; margin-bottom: 1px;"></i>
+    </span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-modulo">Medios de pago</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo">Tarjetas</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">Solicitar inicialización</span>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+<div class="home-title-page" style="display: flex; justify-content: space-between; ">
+  <h1 class="title-home">Solicitar inicialización</h1>
+  <div>
+    <button nz-button class="login-form-button login-form-margin button-green" [nzType]="'primary'"
+      form="CreateForm">Solicitar
+    </button>
+  </div>
+</div>
+<div style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px; align-items: center;">
+  <form nz-form [formGroup]="validateForm" id="CreateForm" (ngSubmit)="saveData()">
+
+    <div nz-row [nzGutter]="24"
+      style="margin-top: 25px; margin-bottom: 25px; display: flex; justify-content: space-evenly;">
+
+      <div nz-col [nzSpan]="10">
+        <label class="label-title">Cantidad - stock {{ stock }}</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor ingrese una cantidad!">
+            <input class="input-field" [ngClass]="cantidadSup ? 'border-error' : ''" id="codigo" type="number" nz-input
+              formControlName="cantidad" placeholder="Ingrese una cantidad" (ngModelChange)="cambiarCantidad()" />
+          </nz-form-control>
+        </nz-form-item>
+        <!-- <p *ngIf="cantidadSup" style="color: #f58a8a; margin-top: -20px;">La cantidad debe ser inferior a la
+          seleccionada en el lote</p> -->
+      </div>
+
+      <div nz-col [nzSpan]="10">
+        <label class="label-title">Código registro</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor ingrese un código de registro!">
+            <input class="input-field" id="codigo" type="text" nz-input formControlName="registryCode"
+              placeholder="Ingrese un código de registro" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="10">
+        <label class="label-title">Tipo de tarjetas</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione un tipo!">
+            <nz-select nzAutoFocus id="servicio" formControlName="selectedRequestType"
+              nzPlaceHolder="Seleccione un tipo" (ngModelChange)="setRequestType($event)">
+              <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione un tipo"></nz-option>
+              <nz-option *ngFor="let requestType of requestTypes" [nzValue]="requestType.code"
+                nzLabel="{{requestType.label}}">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="10">
+        <label class="label-title">Lote de compra</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione un lote de compra!">
+            <nz-select nzAutoFocus id="empresa" formControlName="purchaseBatch"
+              nzPlaceHolder="Seleccione un lote de compra" (ngModelChange)="cambiarLote($event)">
+              <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione un lote compra"></nz-option>
+              <nz-option *ngFor="let purchaseBatch of purchaseBatches" [nzValue]="purchaseBatch.id"
+                [nzLabel]="'Lote (' +  purchaseBatch.id + ') - ' + 'disponibles' + '(' + purchaseBatch.restante + ')'"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="10">
+        <label class="label-title">Usuario inicializador</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione un usuario inicializador!">
+            <nz-select nzAutoFocus id="tipotarifa" formControlName="assignedUser"
+              nzPlaceHolder="Seleccione usuario inicializador">
+              <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione un usuario inicializador"></nz-option>
+              <nz-option *ngFor="let initUser of initUsers" [nzValue]="initUser.user"
+                nzLabel="{{ initUser.name + ' ' + initUser.last_name + ' - ' + initUser.profile_name }}"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="10">
+        <label class="label-title">Versión de mapping</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione una version de mapping!">
+            <nz-select nzAutoFocus id="unidad" formControlName="selectedMapping"
+              nzPlaceHolder="Seleccione una version de mapping">
+              <nz-option [nzValue]="undefined" nzLabel="Seleccione una version de mapping:"></nz-option>
+              <nz-option *ngFor="let mapping of mappingList" [nzValue]="mapping.code"
+                nzLabel="{{mapping.description}}"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="10" *ngIf='requestType && requestType!=="PASSENGER"'>
+        <label class="label-title">Compañía</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione una Compañía!">
+            <nz-select nzAutoFocus nzPlaceHolder="Seleccione una Compañía" formControlName="compania"
+              (ngModelChange)="setSelectedCompany($event)">
+              <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione una Compañía"></nz-option>
+              <nz-option *ngFor="let company of companies" [nzValue]="company.id"
+                nzLabel="{{company.name}}"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="10">
+
+        <form [formGroup]="form" *ngIf='requestType && requestType!=="PASSENGER"'>
+          <label class="label-title">Datos</label>
+          <div nz-col [nzSpan]="23" class="card-detalles"
+            style="display: flex; flex-direction: row; overflow-x: scroll ;padding-left: 10px; border: 1px; border-style: solid; border-radius: 0.25rem; border-color: #CED4DD; height: 40px; border-radius: 6px;"
+            *ngIf='requestType && requestType==="ROUTE"'>
+            <span *ngIf="routes.length == 0" style="min-width: 200px; width: 300px; max-width: 400px;">
+              Para esta compañía no existen rutas asociadas
+            </span>
+            <div *ngFor="let route of routes; let i = index"
+              style="display: flex; align-items: center; gap: 8px; height: 100%;margin-right: 15px;">
+              <!-- <input class="mycheck-md me-1" type="checkbox"/> -->
+              <label formArrayName="selectedDrivers" (change)="updateQuantity($event,route)" nz-checkbox>
+                <!-- <label formArrayName="selectedRoutes" style="width: 180px;"> -->
+              </label>
+              <span style="min-width: 200px; width: 360px; max-width: 400px;">{{route.name}}</span>
+            </div>
+          </div>
+
+          <div nz-col [nzSpan]="23"
+            style="display: flex; flex-direction: row; overflow-x: scroll;padding-left: 10px; border: 1px; border-style: solid; border-radius: 0.25rem; border-color: #CED4DD; height: 40px;border-radius: 6px;"
+            *ngIf='requestType && requestType==="DRIVER"'>
+            <span *ngIf="drivers.length == 0" style="min-width: 200px; width: 360px; max-width: 400px;">
+              Para esta compañía no existen conductores asociados
+            </span>
+            <div *ngFor="let driver of drivers; let i = index"
+              style="display: flex; align-items: center; gap: 8px; height: 100%; margin-right: 15px;">
+              <!-- <input class="mycheck-md me-1" type="checkbox"  /> -->
+              <label formArrayName="selectedDrivers" (change)="updateQuantity($event,driver)" nz-checkbox>
+              </label>
+              <span style="min-width: 200px; width: 300px; max-width: 400px;">{{driver.name}}</span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </form>
+</div>

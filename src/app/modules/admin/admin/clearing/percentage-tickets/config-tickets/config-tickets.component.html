@@ -1,0 +1,108 @@
+<div class="home-title-page mb-4" style="display: flex; justify-content: space-between; ">
+    <h1 class="title-home pt-2">Empresas de Transporte y Transbordos</h1>
+    <div>
+        <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cancelCompany()">
+            Cancelar
+        </button>
+        <button nz-button class="button-green mx-2" [nzType]="'primary'" (click)="onSubmit()">
+            Guardar
+        </button>
+    </div>
+</div>
+<nz-divider style="margin: 0px 0 !important;"></nz-divider>
+<h2 class="text-sm my-3 title-secundary">Selecciona las empresas que deseas agregar</h2>
+<!-- Empresas de transporte -->
+<div class="row my-4">
+    <div class="col-sm-12 row">
+        <div nz-col [nzSpan]="100">
+            <label>Empresas de transporte</label>
+            <nz-form-item style="display: flex;">
+                <nz-form-control nz-col [nzSpan]="14" nzErrorTip="Por favor seleciona tu empresa!">
+                    <nz-select  
+                        id="empresa"
+                        nzMode="multiple"
+                        [nzMaxTagCount]="2"
+                        [(ngModel)]="companyItemSelected"
+                        nzPlaceHolder="Seleccione una empresa"
+                        (ngModelChange)="onItemSelect($event)"
+                    >
+                        <nz-option disabled nzValue="undefined" nzLabel="Seleccionar empresa"></nz-option>
+                        <nz-option *ngFor="let company of companies" [nzValue]="company"
+                            [nzLabel]="getLabel(company)"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+    </div>
+</div>
+<!-- tablas -->
+<div class="row m-0 p-0 d-flex justify-content-between">
+    <!--ORIGIN_ROUTES-->
+    <div class="col-sm-3 px-1">
+        <nz-table #table1 [nzData]="dataTabla1" class="custom-card" [nzShowPagination]="false" [nzPageSize]="dataTabla1.length" [nzScroll]="{ y: '250px'}">
+            <thead>
+                <tr>
+                    <th>Empresa - Ruta Origen</th>
+                </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of table1.data" (click)="selectedOrigin(data)">
+                <td>{{data.companyName | uppercase}} - {{data.name | uppercase}}</td>
+              </tr>
+            </tbody>
+        </nz-table>     
+    </div>
+    <!--DESTINY_ROUTES-->
+    <div class="col-sm-9 px-1">
+        <nz-table #table2 [nzData]="dataTabla2" class="custom-card" [nzShowPagination]="false" [nzPageSize]="dataTabla2.length" [nzScroll]="{ y: '250px'}">
+            <thead>
+                <tr>
+                    <th nzWidth="200px">Empresa - Ruta Destino</th>
+                    <th nzWidth="80px">% Ruta origen</th>
+                    <th nzWidth="80px">% Ruta destino</th>
+                    <th nzWidth="60px">Vigencia desde</th>
+                    <th nzWidth="60px">Vigencia hasta</th>
+                </tr>
+            </thead>
+            <tbody *ngIf="companyItemSelected && currentOriginSelected">
+                <tr *ngFor="let row of table2.data" class="data-table-fonts">
+                    <td *ngIf="currentOriginSelected.id == row.sourceRoute!.id">
+                        {{row.destinationRoute!.companyName | uppercase}} - {{row.destinationRoute!.name | uppercase}}
+                    </td>
+                    <!-- INPUT 1 -->
+                    <td *ngIf="currentOriginSelected.id == row.sourceRoute!.id">
+                        <input
+                            type="text"
+                            min="1" max="100"
+                            #percentageOrigin="ngModel"
+                            [(ngModel)]="row.sourceRoute!.percentage"
+                            class="form-control collection-basic-font"
+                            (ngModelChange)="calculatePercentage(true, row)"
+                            [ngClass]="{'not-valid-input':percentageOrigin.value === undefined}"
+                        >
+                    </td>
+                    <!-- INPUT 2 -->
+                    <td *ngIf="currentOriginSelected.id == row.sourceRoute!.id">
+                        <input
+                            type="text"
+                            min="1" max="100"
+                            #percentageDestiny="ngModel"
+                            class="form-control collection-basic-font"
+                            [(ngModel)]="row.destinationRoute!.percentage"
+                            (ngModelChange)="calculatePercentage(false, row)"
+                            [ngClass]="{'not-valid-input':percentageDestiny.value === undefined}"
+                        >
+                    </td>
+                    <!-- FECHA INICIO -->
+                    <td *ngIf="currentOriginSelected.id == row.sourceRoute!.id">
+                        {{row.validityStartDate | date:'dd/MM/yy'}}
+                    </td>
+                    <!-- FECHA FIN -->
+                    <td *ngIf="currentOriginSelected.id == row.sourceRoute!.id">
+                       {{row.validityEndDate | date:'dd/MM/yy'}}
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div> 
+</div>

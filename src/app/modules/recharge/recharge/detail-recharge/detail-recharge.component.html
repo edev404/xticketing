@@ -1,0 +1,267 @@
+<div class="home-title-page mb-4" style="display: flex; justify-content: space-between; ">
+    <h1 class="title-home">Liquidación Recargas - {{companyName}}</h1>
+    <div>
+        <ng-container *ngIf="clearingId; then detail else notDetail "></ng-container>
+    </div>
+</div>
+<nz-divider style="margin: 0px 0 !important;"></nz-divider>
+<!-- CARDS INFO -->
+<div class="d-xl-flex p-2">
+    <nz-card nzHoverable class="w-50 w-100 my-2 mx-2" style="border-radius: 8px; border: 1px solid #CBD7E5;">
+        <div class="row">
+            <div class="col-sm-6 d-flex flex-column">
+                <span style="font-weight: bold; font-size: 90%;">{{dataTimeOfSearch.month | uppercase}},
+                    {{dataTimeOfSearch.year}}</span>
+                <label class="mt-3">Desde</label>
+                {{dataTimeOfSearch.fromDate}}, {{detailsSearch.detail.startDate | date:'dd/MM/yyyy'}}
+            </div>
+            <div class="col-sm-6 d-flex flex-column">
+                <span *ngIf="detailsSearch.state" style="font-weight: bold; font-size: 90%;">ESTADO ACTUAL,
+                    {{detailsSearch.state.description |
+                    uppercase}}.</span>
+                <label class="mt-3" [ngClass]="{'mtnd-4':!detailsSearch.state}">Hasta</label>
+                {{dataTimeOfSearch.toDate}}, {{detailsSearch.detail.endDate | date:'dd/MM/yyyy'}}
+            </div>
+        </div>
+    </nz-card>
+
+    <nz-card nzHoverable class="w-50 w-100 my-2 mx-2" style="border-radius: 8px; border: 1px solid #CBD7E5;">
+        <div class="row">
+            <div class="col-sm-4 d-flex flex-column">
+                <label class="mb-4">Valor total recaudado</label>
+                <span style="font-weight: bold;">{{(totalRecaudo ? totalRecaudo : 0) | currency}}</span>
+            </div>
+            <div class="col-sm-4 d-flex flex-column text-center">
+                <label class="mb-4">Porcentaje</label>
+                <span style="font-weight: bold;">{{detailsSearch.detail.percentage | number}}%</span>
+            </div>
+            <div class="col-sm-4 d-flex flex-column">
+                <label class="mb-4">Valor a pagar</label>
+                <span style="font-weight: bold;">{{(totalAPagar ? totalAPagar : 0) | currency}}</span>
+            </div>
+        </div>
+    </nz-card>
+</div>
+<!-- TABLAS Y INFO -->
+<div class="mx-3">
+    <nz-card style="border-radius: 8px; border: 1px solid #CBD7E5; padding: 0px !important;">
+        <div class="row">
+            <div class="col-sm-6 row">
+                <!-- INFO ENTE RECAUDAROR -->
+                <div class="col-sm-12 custom-card">
+                    <div class="d-flex">
+                        <!-- ENTE RECAUDADOR -->
+                        <div class="m-auto p-2 text-start">
+                            <label>Ente Recaudador</label>
+                            <p class="mt-2" style="font-weight: bold; color: #00AE8D;">
+                                {{detailsSearch.detail.companyName | uppercase}}</p>
+                        </div>
+                        <!-- VALOR RECAUDADO -->
+                        <div class="m-auto p-2">
+                            <label>Valor Recaudado</label>
+                            <p class="mt-2" style="font-weight: bold;">{{(totalRecaudo ? totalRecaudo : 0) |
+                                currency}}</p>
+                        </div>
+                        <!-- VALOR A PAGAR -->
+                        <div class="m-auto p-2">
+                            <label>Valor a Pagar</label>
+                            <p class="mt-2" style="font-weight: bold;">{{(totalAPagar ? totalAPagar : 0) | currency}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- TABLE LEFT -->
+                <div class="col-sm-12" style="padding: 8px 0px;">
+                    <div class="custom-card">
+                        <nz-table #basicTable [nzData]="detailsSearch.branchOffices" [nzShowPagination]="false" [nzScroll]="{ y: '69px', x: '500px'}">
+                            <thead>
+                                <tr style="background: #F5F7FA;">
+                                    <th>Sucursal</th>
+                                    <th>Valor recaudado</th>
+                                    <th>Recaudo tarjetas</th>
+                                    <th>Tarjetas/recaudado</th>
+                                    <th>Valor a Pagar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of basicTable.data" style="cursor: pointer;"
+                                    (click)="detailSelected = data; searchRowDetails()">
+                                    <td>{{data.name}}</td>
+                                    <td>{{(data.collectedValue ? data.collectedValue : 0) | currency}}</td>
+                                    <td>{{(data.collectCard ? data.collectCard : 0) | currency}}</td>
+                                    <td>{{(data.totalcollect ? data.totalcollect : 0) | currency}}</td>
+                                    <td>{{(data.valueToPay ? data.valueToPay : 0) | currency}}</td>
+                                </tr>
+                            </tbody>
+                        </nz-table>
+                    </div>
+                </div>
+            </div>
+            <!-- NG-CONTAINER {TABLE Y NO-DATA} -->
+            <div class="col-sm-6">
+                <ng-container *ngIf="detailSelected; then rowSelected; else notRowSelected">
+                </ng-container>
+            </div>
+        </div>
+    </nz-card>
+</div>
+
+<!-- NO DATA -->
+<ng-template #notRowSelected>
+    <div nz-row class="card-aling-center">
+        <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+            <div nz-col nzXs="24" nzSm="20" nzMd="14">
+                <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../assets/icon/info_icon.svg"
+                    alt="icono-buscar">
+                <div nz-col nzSm="24" nzMd="18">
+                    <h1 class="title-form" style="place-content: center !important;">
+                        Seleccione un dato de la tabla
+                    </h1>
+                    <h1 class="title-secundary" style="margin-top: 0px;">
+                        y podrá visualizar el detalle de cada uno.
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- TABLE RIGTH -->
+<ng-template #rowSelected>
+    <div class="row">
+        <div class="col-sm-12 d-flex d-flex align-items-end" style="padding: 27px 10px 10px;">
+            <button class="nav-item nav-link gray btn px-3 py-3 me-4 module-title" *ngFor="let row of groupBtn"
+                [ngClass]="{'active':periodSelected===row.id}"
+                (click)="periodSelected=row.id; setDetailsRechargeByBranchOffices()">
+                {{row.name}}
+            </button>
+        </div>
+        <div class="col-sm-12">
+            <div class="custom-card">
+                <nz-table #basicTable2 [nzData]="detailsBranchOfficesShower" [nzShowPagination]="false"
+                [nzScroll]="{ y: '69px', x: '500px'}" [nzPageSize]="detailsBranchOfficesShower.length">
+                    <thead>
+                        <tr style="background: #F5F7FA;">
+                            <th>Desde / Hasta</th>
+                            <th>Valor recaudado</th>
+                            <th>Recaudo tarjetas</th>
+                            <th>Tarjetas/recaudado</th>
+                            <th>Valor a Pagar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of basicTable2.data">
+                            <td>{{data.date}}</td>
+                            <td>{{(data.collectedValue ? data.collectedValue : 0) | currency}}</td>
+                            <td>{{(data.collectCard ? data.collectCard : 0) | currency}}</td>
+                            <td>{{(data.totalcollect ? data.totalcollect : 0) | currency}}</td>
+                            <td>{{(data.valueToPay ? data.valueToPay : 0) | currency}}</td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #detail>
+    <div [ngSwitch]="detailsSearch.state.code" class="no-margin no-padding">
+        <!--CASE BORRADOR-->
+        <div *ngSwitchCase="'B'">
+            <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="changeState('P')">
+                Enviar a Revisión
+            </button>
+
+            <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="changeState('B')">
+                Guardar Borrador
+            </button>
+
+            <button nz-button class="button-black mx-2" [nzType]="'primary'">
+                Hallazgo
+            </button>
+
+            <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cancelDetail()">
+                Cancelar
+            </button>
+        </div>
+
+        <!--CASE POR REVISION-->
+        <div *ngSwitchCase="'P'">
+            <button nz-button class="button-white mx-2" (click)="switchFinding()">
+                Hallazgo
+            </button>
+
+            <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="changeState('R')">
+                Rechazar
+            </button>
+
+            <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="changeState('AN')">
+                Anular
+            </button>
+
+            <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cancelDetail()">
+                Cancelar
+            </button>
+
+            <button nz-button class="button-green mx-2" [nzType]="'primary'" (click)="changeState('C')">
+                Aprobar
+            </button>
+        </div>
+
+        <!--CASE RECHAZADA-->
+        <div *ngSwitchCase="'R'">
+            <button nz-button class="button-white mx-2" (click)="switchFinding()">
+                Hallazgo
+            </button>
+
+            <button nz-button class="button-black x-2" [nzType]="'primary'" (click)="changeState('AN')">
+                Anular
+            </button>
+
+            <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cancelDetail()">
+                Cancelar
+            </button>
+
+            <button nz-button class="button-green x-2" [nzType]="'primary'" (click)="changeState('P')">
+                Enviar a Revisión
+            </button>
+        </div>
+
+        <!--CASE APROBADA-->
+        <div *ngSwitchCase="'C'">
+            <button nz-button class="button-white mx-2" (click)="switchFinding()">
+                Hallazgo
+            </button>
+
+            <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cancelDetail()">
+                Cancelar
+            </button>
+        </div>
+
+        <!--CASE ANULADA-->
+        <div *ngSwitchCase="'AN'">
+            <button nz-button class="button-white mx-2" (click)="switchFinding()">
+                Hallazgo
+            </button>
+
+            <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cancelDetail()">
+                Cancelar
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #notDetail>
+    <div>
+        <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cancelDetail()">
+            Cancelar
+        </button>
+
+        <button nz-button class="button-green mx-2" [nzType]="'primary'" (click)="submit('P', 'H')">
+            Enviar a Revisión
+        </button>
+
+        <button nz-button class="button-green mx-2" [nzType]="'primary'" (click)="submit('B','H')">
+            Guardar Borrador
+        </button>
+    </div>
+</ng-template>

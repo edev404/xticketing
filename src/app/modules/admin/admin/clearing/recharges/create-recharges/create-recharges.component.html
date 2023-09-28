@@ -1,0 +1,175 @@
+<!-- TITEL AND BUTTONS -->
+<div class="home-title-page mb-4" style="display: flex; justify-content: space-between; ">
+  <h1 class="title-home">{{isEdit?'Editar configuración % recargas':'Crear configuración % recargas'}}</h1>
+  <div>
+    <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cancelCompany()">
+      Cancelar
+    </button>
+    <button *ngIf="!isEdit" nz-button class="button-green mx-2" [nzType]="'primary'" (click)="saveData()">
+      Guardar
+    </button>
+    <button *ngIf="isEdit" nz-button class="button-green mx-2" [nzType]="'primary'" (click)="saveData()">
+      Editar
+    </button>
+  </div>
+</div>
+<nz-divider style="margin: 0px 0 !important;"></nz-divider>
+<h2 class="text-sm my-3 title-secundary">Inserte los valores correspondientes para agregar al listado</h2>
+<!-- FORM 1 -->
+<div class="row my-3">
+  <!-- CODIGO -->
+  <div class="col-sm-4">
+    <label>Código</label>
+    <input type="text" class="form-control input-field" id="codeLabel" required name="codeLabel"
+      (focus)="formInvalid.codeInvalid = false"
+      placeholder="Ingrese un código" [(ngModel)]="recharge.code" #code="ngModel"
+      [ngClass]="{'not-valid-input':formInvalid.codeInvalid,'disable-input':recharge.id != undefined}"
+      [disabled]="recharge.id != undefined"
+      (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57"
+      />
+    <span *ngIf="formInvalid.codeInvalid" class="messagewarning">
+      ¡Por favor ingrese un código!
+    </span>
+  </div>
+  <!-- MONBRE -->
+  <div class="col-sm-4">
+    <label>Nombre</label>
+    <input type="text" class="form-control input-field" id="nameLabel" required name="nameLabel"
+      (focus)="formInvalid.nameInvalid = false"
+      placeholder="Ingrese un nombre" [(ngModel)]="recharge.name"
+      [ngClass]="{'not-valid-input':formInvalid.nameInvalid}"
+    />
+    <span *ngIf="formInvalid.nameInvalid" class="messagewarning">
+      ¡Por favor ingrese un nombre!
+    </span>
+  </div>
+  <!-- CIUDAD -->
+  <div class="col-sm-4">
+    <label>Ciudad</label>
+    <select class="form-control collection-basic-font" id="city" required name="city" [(ngModel)]="recharge.cityId"
+      [ngClass]="{'disabled-select':recharge.id != undefined}" [disabled]="recharge.id != undefined">
+      <option disabled [value]="undefined">Seleccione una ciudad</option>
+      <option *ngFor="let row of cities" [ngValue]="row.id">{{row.name}}</option>
+    </select>
+  </div>
+</div>
+<!-- FORM 2 -->
+<div class="row my-5">
+  <!-- ENTE RECAUDADOR -->
+  <div class="col-sm-4 ">
+    <label for="collector" class="my-label-form">Ente Recaudador</label>
+    <select class="form-control" id="collector" name="collector" [(ngModel)]="collectorSelectedCB" #collector="ngModel">
+      <option disabled value="undefined">Seleccione un ente recaudador</option>
+      <option *ngFor="let row of collectors" [ngValue]="row">{{row.name}}</option>
+    </select>
+  </div>
+  <!-- PORCENTAJE -->
+  <div class="col-sm-2 ">
+    <label for="percentage" class="my-label-form">Porcentaje</label>
+    <input type="text" min="1" max="100" [(ngModel)]="collectorSelected.percentage" #percentage="ngModel"
+      name="percentage" id="percentage" class="form-control input-field" (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57"
+      placeholder="Ingrese un porcentaje">
+  </div>
+  <!-- VIGENCIA DESDE -->
+  <div class="col-sm-2 ">
+    <label for="fromDate" class="my-label-form">Vigencia inicial</label>
+    <nz-date-picker type="date" id="fromDate" name="fromDate" nzPlaceHolder="Vigenca Inicial" class=" input-field"
+    [(ngModel)]="collectorSelected.validityStartDate" #fromDate="ngModel">
+    </nz-date-picker>
+  </div>
+  <!-- VIGENCIA HASTA -->
+  <div class="col-sm-2 ">
+    <label for="toDate" class="my-label-form">Vigencia final</label>
+    <nz-date-picker type="date" id="toDate" nzPlaceHolder="Vigencia final" class=" input-field" name="toDate"
+    [(ngModel)]="collectorSelected.validityEndDate" #toDate="ngModel">
+    </nz-date-picker>
+  </div>
+  <!-- BUTTON -->
+  <div class="col-sm-2 mt-3 pt-1">
+    <button nz-button class="button-green" [nzType]="'primary'" (click)="addCollector()">
+      <span nz-icon nzType="plus" nzTheme="outline" class="align-middle pb-1"></span>
+      Agregar
+    </button>
+  </div>
+</div>
+<!-- TABLE -->
+<ng-container
+  *ngIf="recharge && recharge.rechargeCollectors && recharge.rechargeCollectors.length > 0; then withData; else notData ">
+</ng-container>
+<ng-template #withData>
+  <nz-table #rechargesTable [nzData]="recharge.rechargeCollectors!" [nzFrontPagination]="false" [nzPageSize]="5"
+    [nzScroll]="{y: '300px'}">
+    <thead>
+      <tr style="background: #F5F7FA;">
+        <th nzWidth="20px"></th>
+        <th nzWidth="100px">Ente Recaudador</th>
+        <th nzWidth="25px">Porcentaje</th>
+        <th nzWidth="50px">Vigencia desde</th>
+        <th nzWidth="50px">Vigencia hasta</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let data of rechargesTable.data | paginate : { id: 'table', itemsPerPage: numberRow, currentPage: page }">
+        <td style="display: revert;">
+          <div style="display: flex; justify-content: space-between;">
+            <div class="form-check form-switch form-switch-sm m-0 mt-1">
+              <input class="form-check-input" type="checkbox" [checked]="data.status" (click)="changeStateModal(data)" nz-tooltip="Activar/Inactivar">
+            </div>
+            <img draggable="false" style="cursor: pointer;" src="../../../../../../../assets/icon/fi_edit-2.svg"
+              (click)="editRechargeCollector(data)" nz-tooltip="Editar">
+          </div>
+        </td>
+        <td>{{ data.collectorName || '-' }}</td>
+        <td>{{ data.percentage || '- ' }}%</td>
+        <td>{{ data.validityStartDate | date:'dd/MM/yyyy'}}</td>
+        <td>{{ data.validityEndDate | date:'dd/MM/yyyy'}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <!-- PAGINADO DE LA TABLA -->
+  <div class="row d-flex align-items-center" *ngIf="recharge.rechargeCollectors!.length > 0">
+    <div class="col-sm-4 ps-4">
+      <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+        <div>
+          <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+        </div>
+
+        <div class="px-1">
+          <nz-form-control>
+            <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow"
+              (ngModelChange)="onChangeRowPerPage($event)">
+              <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </div>
+
+        <div>
+          <label class="label-title" style="margin-top: 7px;">entradas</label>
+        </div>
+      </nz-form-item>
+    </div>
+    <div class="col-sm d-flex justify-content-end pe-4">
+      <pagination-controls id="table" previousLabel="Anterior" nextLabel="Siguiente" (pageChange)="onChangePage($event)"
+        (pageBoundsCorrection)="onChangePage($event)">
+      </pagination-controls>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #notData>
+  <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+    <div nz-col nzXs="24" nzSm="20" nzMd="14">
+      <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../../../assets/icon/Featured_icon.svg"
+        alt="icono-buscar">
+      <div nz-col nzSm="24" nzMd="18">
+        <h3 class="title-form" style="place-content: center !important;">
+          No hay datos para mostrar
+        </h3>
+        <h3 class="title-secundary" style="margin-top: 0px;">
+          No existen recargas registradas.
+        </h3>
+      </div>
+    </div>
+  </div>
+</ng-template>

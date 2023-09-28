@@ -1,0 +1,358 @@
+<nz-breadcrumb style="margin-bottom: 20px;">
+  <nz-breadcrumb-item>
+    <span class="title-modulo">
+      <i nz-icon nzType="credit-card" style="font-size: 25px; margin-bottom: 1px;"></i>
+    </span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-modulo">Medios de pago</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo">Tarjetas</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">Dashboards</span>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+<div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="24" nzXl="24">
+  <div nz-row class="contenendor-cards" style="justify-content: space-evenly;" nzXs="24" nzSm="24" nzMd="24" nzLg="24"
+    nzXl="24" nzBorderless>
+    <div nz-col [nzSpan]="4">
+      <nz-card nzHoverable class="cards"
+        (click)="openModalDetail('stock',cardsDashboard[0] ? cardsDashboard[0].total : 0,(cardsDashboard[0] ? cardsDashboard[0].total : 0) <  (adminData[0] ? adminData[0].stocktarjetas : 0))">
+        <div class="d-flex justify-content-center">
+          <span class="text-dark d-flex flex-column">
+            En stock
+            <div style="display: flex; justify-content: start;">
+              <div class="icons-list">
+                <i nz-icon [nzType]="'dollar'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#CBD7E5'"></i>
+              </div>
+              <p style="font-size: 21px; font-weight: 400;">
+                <ng-container *ngIf="cardsDashboard[0].total <= adminData[0].stocktarjetas">
+                  <span class="text-red">
+                    {{cardsDashboard[0] ? cardsDashboard[0].total : 0}}
+                  </span>
+                </ng-container>
+                <ng-container *ngIf="(cardsDashboard[0] ? cardsDashboard[0].total : 0) > (adminData[0] ? adminData[0].stocktarjetas : 0)">
+                  <span class="text-dark">
+                    {{cardsDashboard[0] ? cardsDashboard[0].total : 0}}
+                  </span>
+                </ng-container>
+              </p>
+            </div>
+          </span>
+        </div>
+
+      </nz-card>
+    </div>
+
+    <div nz-col [nzSpan]="4">
+      <nz-card nzHoverable class="cards" (click)="openModalDetail('initialized',cardsDashboard[1] ? cardsDashboard[1].total : 0)">
+        <div class="d-flex justify-content-center">
+          <span class="text-dark d-flex flex-column">
+            Inicializadas
+            <div style="display: flex; justify-content: start;">
+              <div class="icons-list">
+                <i nz-icon [nzType]="'dollar'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#CBD7E5'"></i>
+              </div>
+              <p class="text-dark" style="font-size: 21px; font-weight: 400;">
+                {{cardsDashboard[1] ? cardsDashboard[1].total : 0}}</p>
+            </div>
+          </span>
+        </div>
+      </nz-card>
+    </div>
+
+    <div nz-col [nzSpan]="4">
+      <nz-card nzHoverable class="cards" (click)="openModalDetail('distributed',cardsDashboard[2] ? cardsDashboard[2].total : 0)">
+        <div class="d-flex justify-content-center">
+          <span class="text-dark d-flex flex-column">
+            Distribuidas
+            <div style="display: flex; justify-content: start;">
+              <div class="icons-list">
+                <i nz-icon [nzType]="'dollar'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#CBD7E5'"></i>
+              </div>
+              <p class="text-dark" style="font-size: 21px; font-weight: 400;">
+                {{cardsDashboard[2] ? cardsDashboard[2].total : 0}}</p>
+            </div>
+          </span>
+        </div>
+
+      </nz-card>
+    </div>
+
+    <div nz-col [nzSpan]="4">
+      <!--  (click)="openModalDetail('actived',cardsDashboard[3] ? cardsDashboard[3].total : 0)" -->
+      <nz-card nzHoverable class="cards" (click)="openModalDetail('actived',cardsDashboard[3] ? cardsDashboard[3].total : 0)">
+        <div class="d-flex justify-content-center">
+          <span class="text-dark d-flex flex-column">
+            Vendidas
+            <div style="display: flex; justify-content: start;">
+              <div class="icons-list">
+                <i nz-icon [nzType]="'dollar'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#CBD7E5'"></i>
+              </div>
+              <p class="text-dark" style="font-size: 21px; font-weight: 400;">{{cardsDashboard[3] ? cardsDashboard[3].total : 0}}</p>
+            </div>
+          </span>
+        </div>
+      </nz-card>
+    </div>
+
+    <div nz-col [nzSpan]="4">
+      <nz-card nzHoverable class="cards" (click)="openModalDetail('total',cardsDashboard[4] ? cardsDashboard[4].total : 0)">
+        <div class="d-flex justify-content-center">
+          <span class="text-dark d-flex flex-column">
+            Total
+            <div style="display: flex; justify-content: start;">
+              <div class="icons-list">
+                <i nz-icon [nzType]="'dollar'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#CBD7E5'"></i>
+              </div>
+              <p class="text-dark" style="font-size: 21px; font-weight: 400;">{{cardsDashboard[4] ? cardsDashboard[4].total : 0}}</p>
+            </div>
+          </span>
+        </div>
+      </nz-card>
+    </div>
+  </div>
+</div>
+
+<!-- TABLE FILTER -->
+<form nz-form style="padding: 0px 24px; margin: 25px 0px;" nz-col nzSpan="24">
+  <div nz-col nzSpan="10">
+    <nz-form-item>
+      <nz-form-control [nzSpan]="22">
+        <nz-input-group nzPrefixIcon="search" style="color: #798CA5; justify-content: center;" class="type-control">
+          <input nz-input name="search" appUppercase type="search" id="search" placeholder="Búsqueda"
+            [(ngModel)]="filterValue">
+        </nz-input-group>
+      </nz-form-control>
+      <button style="place-self: center; margin-left: 10px;" nz-button (click)="ngOnChanges()"
+        class="button-green" [nzType]="'primary'" form="CreateForm">Buscar
+      </button>
+    </nz-form-item>
+  </div>
+</form>
+<div style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px;">
+
+  <ng-container *ngIf="mostrarData">
+    <!-- TABLE FILTER -->
+    <form nz-form style="padding: 0px 24px; margin: 25px 0px" nz-col nzSpan="7">
+      <nz-form-item>
+        <nz-form-control [nzSpan]="24">
+          <nz-input-group nzPrefixIcon="search" style="color: #798CA5; justify-content: center;" class="type-control">
+            <input nz-input id="search" name="search" type="search" autocomplete="off" [(ngModel)]="filterValueTable"
+              (ngModelChange)="search()" placeholder="Busqueda por ID Tarjeta">
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+    <!-- TABLE RECHARGE -->
+    <nz-table #rechargesTable [nzData]="dataTable" [nzFrontPagination]="false" [nzPageSize]="5"
+      [nzScroll]="{ x: '1000px', y: '345px'}">
+      <thead>
+        <tr style="background: #F5F7FA;">
+          <th nzWidth="160px" *ngFor="let item of columns">
+            {{
+            item.label
+            }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let data of rechargesTable.data | paginate : { id: 'table', itemsPerPage: numberRow, currentPage: page }">
+          <td>
+            <a class="link-historial" (click)="openModal()">
+              Historial
+            </a>
+          </td>
+          <td>
+            {{ data.id || 'N/A'}}
+          </td>
+          <td>
+            {{ data.status || 'N/A' }}
+          </td>
+          <td>
+            {{ data.provider || 'N/A'}}
+          </td>
+          <td>
+            {{ data.purchase_date || 'N/A' }}
+          </td>
+          <td>
+            {{ data.lote || 'N/A'}}
+          </td>
+          <td>
+            {{ data.init_request_date || 'N/A'}}
+          </td>
+          <td>
+            N/A 
+          </td>
+          <td>
+            {{ data.idLote  || 'N/A' }}
+          </td>
+          <td>
+            {{ !data.activation_date ?  'N/A' : data.activation_date}}
+          </td>
+          <td>
+            {{ data.account || 'N/A'}}
+          </td>
+          <td>
+            {{ data.card_type || 'N/A'}}
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <!-- PAGINADO DE LA TABLA -->
+    <div class="row d-flex align-items-center">
+      <div class="col-sm-4 ps-4">
+        <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+          <div>
+            <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+          </div>
+
+          <div class="px-1">
+            <nz-form-control>
+              <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow" (ngModelChange)="onChangeRowPerPage($event)">
+                <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </div>
+
+          <div>
+            <label class="label-title" style="margin-top: 7px;">entradas</label>
+          </div>
+        </nz-form-item>
+      </div>
+      <div class="col-sm d-flex justify-content-end pe-4">
+        <pagination-controls id="table" previousLabel="Anterior" nextLabel="Siguiente" (pageChange)="onChangePage($event)"
+          (pageBoundsCorrection)="onChangePage($event)">
+        </pagination-controls>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!mostrarData">
+    <div nz-col [nzSpan]="24" style="text-align: -webkit-center;">
+      <div nz-col [nzSpan]="12">
+
+        <img draggable="false" style="margin: 20px 0px;" src="../../../../../assets/icon/Featured_icon.svg" alt="icono-buscar">
+
+        <div nz-col [nzSpan]="18">
+          <h1 class="title-form" style="justify-content: center !important;">No hay datos para mostrar</h1>
+          <h1 class="title-secundary">Debe digitar al menos 3 caracteres para buscar por un número de tarjeta o
+            número
+            de cuenta.</h1>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+</div>
+
+<!-- Modal -->
+<nz-modal [(nzVisible)]="isVisible" nzWidth="500px" (nzOnCancel)="closeModal()">
+  <div class="row-md" *nzModalContent>
+    <!-- titel -->
+    <div class="col-sm-12 mt-3">
+      <h1 class="modal-title fs-5 mb-3">Historial</h1>
+      <div class="my-3 text-md">
+        ID Tarjeta - {{selectedCard.number}}
+      </div>
+    </div>
+    <!-- tabla -->
+    <div class="row my-3">
+      <nz-table class="custom-card" #entityTable [nzData]="historyTable" [nzPageSize]="5" [nzFrontPagination]="false" [nzScroll]="{y: '300px'}">
+        <thead>
+          <tr style="background: #F5F7FA;">
+            <th>Fecha y hora</th>
+            <th>Evento</th>
+            <th>Detalle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of entityTable.data">
+            <ng-container *ngIf="item.fechaRegistro != undefined">
+              <td>{{ item.fechaRegistro | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ item.evento }}</td>
+              <td>{{ item.detalle }}</td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </nz-table>
+      
+    </div>
+  </div>
+  <div *nzModalFooter class="p-0">
+    <div class="row-md">
+      <div class="col-sm-12 d-flex justify-content-center mb-3">
+        <!-- <button nz-button class=" button-black mx-1" [nzType]="'primary'" (click)="isVisible=false;closeModal()">
+          Cancelar
+        </button> -->
+        <button nz-button class=" button-green mx-1" [nzType]="'primary'" (click)="isVisible=false;closeModal()">
+          Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-modal>
+
+
+<!-- Modal -->
+<nz-modal [(nzVisible)]="isVisibleModel" nzWidth="500px" (nzOnCancel)="isVisibleModel = false" [nzFooter]="null">
+  <div class="row-md" *nzModalContent>
+    <div class="col-sm-12 mt-3">
+      <h1 class="modal-title fs-5 mb-3">{{ detailTitle! }}</h1>
+      <div class="my-3 text-md">
+        Cantidad de {{ detailTitle! | lowercase }} -
+        <ng-container *ngIf="dangerClass; else notDangerClass">
+          <span class="text-red">
+            {{ detailNumber }}
+          </span>
+        </ng-container>
+
+        <ng-template #notDangerClass>
+          {{ detailNumber }}
+        </ng-template>
+
+      </div>
+      <div class="row my-3" style="height: auto;max-height: 120px; overflow-y: scroll;">
+        <div *ngIf="detailType == 'stock'">
+          <div *ngFor="let purchaseBatch of purchaseBatches" class="d-flex col-12">
+            <div class="col-6">{{purchaseBatch.provider ? (purchaseBatch.provider | capitaleze) : 'N/A'}}</div>
+            <div class="col-6 text-right">{{purchaseBatch.available_cards ? purchaseBatch.available_cards : 0}}</div>
+          </div>
+        </div>
+        <div *ngIf="detailType == 'initialized'" class="col-12">
+          <div *ngFor="let initializationBatch of initializationBatches" class="d-flex col-12">
+            <div class="col-6">{{initializationBatch.label ? (initializationBatch.label | capitaleze) : 'N/A'}}</div>
+            <div class="col-6 text-right">{{initializationBatch.available_quantity ? initializationBatch.available_quantity : 0}}</div>
+          </div>
+        </div>
+        <div *ngIf="detailType == 'distributed'">
+          <div *ngFor="let distributionBatch of distributionBatches" class="d-flex col-12">
+            <div class="col-6">{{distributionBatch.company ? (distributionBatch.company | capitaleze) : 'N/A'}}</div>
+            <div class="col-6 text-right">{{distributionBatch.quantity ? distributionBatch.quantity : 0}}</div>
+          </div>
+        </div>
+        <div *ngIf="detailType == 'actived'">
+          <div class="d-flex justify-content-between col-12" *ngFor="let item of activeResponse">
+            <div class="col-6">{{ item.tipo_tarjeta }}</div>
+            <div class="col-6 text-right">{{item.nro_tarjetas ? item.nro_tarjetas : 0}}</div>
+          </div>
+          <!-- <div class="d-flex justify-content-between col-12">
+            <div class="col-6">Conductores</div>
+            <div class="col-6 text-right">{{activeResponse.nro_tarjetas ? activeResponse.nro_tarjetas : 0}}</div>
+          </div>
+          <div class="d-flex justify-content-between col-12">
+            <div class="col-6">Rutas</div>
+            <div class="col-6 text-right">{{activeResponse.nro_tarjetas ? activeResponse.nro_tarjetas : 0}}</div>
+          </div> -->
+          <!-- <div class="d-flex justify-content-between col-12">
+            <div class="col-6">Otras</div>
+            <div class="col-6 text-right">{{activeResponse.other ? activeResponse.other : 0}}</div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</nz-modal>

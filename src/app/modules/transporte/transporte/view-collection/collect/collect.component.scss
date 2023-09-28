@@ -1,0 +1,105 @@
+nz-input-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0px 14px;
+  border-radius: 8px;
+}
+
+.anticon {
+  font-size: 20px;
+}
+
+.title-home {
+  font-family: 'Taylor Sans';
+  font-style: italic;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.01em;
+  color: #415364;
+}
+
+.home-title-page {
+  position: static;
+  width: 100%;
+  height: 40px;
+  left: 0px;
+  top: 0px;
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+  margin: 5px 0px;
+}
+
+.custom-card {
+  align-items: center !important; 
+  margin-top: 25px !important;
+}
+
+nz-select {
+  border: 1px solid #AEBBCE;
+  box-sizing: border-box;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 6px 0px;
+  font-family: 'Taylor Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+  color: #798CA5;
+}
+
+
+input {
+  border: 1px solid #AEBBCE;
+  box-sizing: border-box;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 46px;
+  font-family: 'Taylor Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+  color: #798CA5;
+}
+
+textarea {
+  border: 1px solid #AEBBCE;
+  box-sizing: border-box;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 56px;
+  font-family: 'Taylor Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+  color: #798CA5;
+}
+
+.title-inferior {
+  font-family: "Taylor Sans";
+  font-style: italic;
+  font-weight: 600;
+  /* font-size: 18px; */
+  line-height: 22px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.01em;
+  color: #415364;
+}

@@ -1,0 +1,341 @@
+<nz-collapse [nzBordered]="false" nzExpandIconPosition="right">
+  <nz-collapse-panel #p [nzHeader]="p && p.nzActive ? '' : expandedHeader" [nzActive]="'active'"
+    [nzExpandedIcon]="expandedIcon">
+
+    <ng-template #expandedIcon let-active>
+      <span nz-icon nzType="up" nzTheme="outline" class="ant-collapse-arrow" [nzRotate]="p.nzActive ? 0 : -180"
+        [ngClass]="{'padding-20':p.nzActive}"></span>
+    </ng-template>
+
+    <ng-template #expandedHeader>
+      <span class="card-font">Registrar análisis</span>
+      <span class="card-font">Registrar sanción</span>
+      <span class="card-font">Enviar notificación</span>
+    </ng-template>
+
+    <nz-tabset nzType="card" [(nzSelectedIndex)]="tabIndex">
+
+      <nz-tab [nzTitle]="'Registrar análisis'" (nzClick)="changeTab(0)" style="padding-left: 0px;">
+        <form nz-form [formGroup]="formAnalisis" id="CreateForm" autocomplete="off">
+
+          <div class="content-card">
+
+            <h1 class="title-home mb-4">Análisis</h1>
+
+            <div nz-row [nzGutter]="24">
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+                <label class="label-title" for="fkCausa">Posible causa</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione la posible causa!">
+                    <nz-select  nzId="fkCausa" formControlName="fkCausa"
+                      nzPlaceHolder="Seleccione la posible causa">
+                      <nz-option *ngFor="let item of tpCausas" [nzValue]="item.id"
+                        [nzLabel]="item.description"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="16">
+                <label class="label-title" for="detCausa">Detalles de la posible causa</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor ingrese detalles de la posible causa!">
+                    <input nz-input class="input-field" type="text" id="detCausa" formControlName="detCausa"
+                      placeholder="Ingrese detalles de la posible causa" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div> <!-- Fin row -->
+
+            <div nz-row [nzGutter]="24">
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+                <label class="label-title" for="fkResolucion">Resolución</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione la resolución!">
+                    <nz-select  nzId="fkResolucion" formControlName="fkResolucion"
+                      (ngModelChange)="enableAccionEjecutar($event)" nzPlaceHolder="Seleccione la resolución">
+                      <nz-option *ngFor="let item of tpResolucion" [nzValue]="item.id"
+                        [nzLabel]="item.description"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+                <label class="label-title" for="fkAccion">Acción para ejecutar</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione la acción para ejecutar!">
+                    <nz-select  nzId="fkAccion" formControlName="fkAccion"
+                      (ngModelChange)="enableConclusion($event)" nzPlaceHolder="Seleccione la acción para ejecutar">
+                      <nz-option *ngFor="let item of tpAccionesEjecutar" [nzValue]="item.id"
+                        [nzLabel]="item.description" [nzDisabled]="item.disabled"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+                <label class="label-title" for="conclusion">Conclusión</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor ingrese la conclusión!">
+                    <input nz-input type="text" class="input-field" id="conclusion" formControlName="conclusion"
+                      (input)="validarConclusion()" placeholder="Ingrese la conclusión" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div> <!-- Fin row -->
+
+          </div><!-- Fin content-card -->
+
+        </form>
+      </nz-tab>
+
+      <nz-tab [nzTitle]="'Registrar sanción'" (nzClick)="changeTab(1)">
+        <form nz-form [formGroup]="formSancion" id="CreateForm" autocomplete="off">
+
+          <div class="content-card">
+
+            <h1 class="title-home mb-4">Sanción</h1>
+
+            <div nz-row [nzGutter]="24">
+              <div nz-col [nzXs]="24" [nzSm]="10" [nzMd]="8">
+                <label class="label-title" for="fkSancion">Sanción</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione la sanción a registrar!">
+                    <nz-select  nzId="fkSancion" formControlName="fkSancion"
+                      nzPlaceHolder="Seleccione la sanción a registrar">
+                      <nz-option *ngFor="let item of tpSancion" [nzValue]="item.id"
+                        [nzLabel]="item.description"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+
+              <div nz-col [nzXs]="24" [nzSm]="14" [nzMd]="16">
+                <label class="label-title" for="detSancion">Detalle de la sanción a ejecutar</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24"
+                    nzErrorTip="¡Por favor ingrese el detalle de la sanción a ejecutar!">
+                    <input nz-input type="text" class="input-field" id="detSancion" formControlName="detSancion"
+                      placeholder="Ingrese detalle de la sanción a ejecutar" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div> <!-- Fin row -->
+
+            <div nz-row [nzGutter]="24">
+              <div nz-col [nzXs]="24" [nzSm]="10" [nzMd]="8">
+                <label class="label-title" for="fkApliSancion">Aplicar sanción a</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24"
+                    nzErrorTip="¡Por favor seleccione a qué o a quién se le aplicará la sanción!">
+                    <nz-select  nzId="fkApliSancion" nzMode="multiple" formControlName="fkApliSancion"
+                      nzPlaceHolder="Seleccione a qué o a quién se le aplicará la sanción">
+                      <nz-option *ngFor="let item of tpAplicarSancion" [nzValue]="item.id"
+                        [nzLabel]="item.description"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+
+              <div nz-col [nzXs]="24" [nzSm]="14" [nzMd]="16">
+                <label class="label-title" for="observacion">Observaciones</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24">
+                    <input nz-input type="text" class="input-field" id="observacion" formControlName="observacion"
+                      placeholder="Ingrese las observaciones relacionadas con la sanción ingresada" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div> <!-- Fin row -->
+
+          </div>
+
+        </form>
+      </nz-tab>
+
+      <nz-tab [nzTitle]="'Enviar notificación'" *ngIf="users.length > 0" (nzClick)="changeTab(2)">
+        <form nz-form [formGroup]="formNotificacion" id="CreateForm" autocomplete="off">
+
+          <div class="content-card">
+
+            <div style="display: flex; justify-content: space-between; margin: 15px 15px;">
+              <h1 class="title-home mb-4">Enviar notificación</h1>
+              <div>
+                <button nz-button class="button-green" [nzType]="'primary'"
+                  form="notForm" (click)="renderFileInTemplateDownloads()">
+                  <i nz-icon nzType="printer" nzTheme="outline" style="vertical-align: 0em;"></i> Imprimir
+                </button>
+                <button nz-button class="button-black mx-2" [nzType]="'primary'"
+                  form="notForm">
+                  <i nz-icon nzType="upload" nzTheme="outline" style="vertical-align: 0em;"></i> Exportar
+                </button>
+                <button nz-button class="button-black" [nzType]="'primary'"
+                  form="notForm" (click)="sendNotificacion(true)">
+                  Guardar en borrador
+                </button>
+              </div>
+            </div>
+
+            <div nz-row [nzGutter]="24">
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+                <label class="label-title" for="fkPlantilla">Plantilla</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione la plantilla!">
+                    <nz-select  nzId="fkPlantilla" formControlName="fkPlantilla"
+                      (ngModelChange)="changeAsuntoCuerpo(formNotificacion.controls['fkPlantilla'].value)"
+                      nzPlaceHolder="Seleccione la plantilla de la notificación">
+                      <nz-option *ngFor="let item of tpPlantilla" [nzValue]="item.id"
+                        [nzLabel]="item.nombre"></nz-option>
+                      <nz-option nzValue="0" [nzLabel]="'Ninguna'"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+                <label class="label-title" for="fkMedio">Medio</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione el medio!">
+                    <nz-select  nzId="fkMedio" formControlName="fkMedio"
+                      nzPlaceHolder="Seleccione el medio para enviar la notificación">
+                      <nz-option *ngFor="let item of tpMedio" [nzValue]="item.id"
+                        [nzLabel]="item.description"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div> <!-- Fin row -->
+
+            <div nz-row [nzGutter]="24">
+              <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="16">
+                <label class="label-title" for="usuarios">Usuarios destinatarios</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione los usuarios destinatarios!">
+                    <nz-select   nzCustomContent nzMode="multiple" nzId="usuarios"
+                      [nzCustomTemplate]="usuarioTemplate" formControlName="usuarios"
+                      nzPlaceHolder="Seleccione los usuarios destinatarios">
+                      <nz-option *ngFor="let item of users" [nzLabel]="item.nombre"
+                        [nzValue]="item.username"></nz-option>
+                    </nz-select>
+                    <ng-template #usuarioTemplate let-selected>
+                      <span nz-icon nzType="user"></span>
+                      <span style="font-weight: 700 !important;"> ID: </span> {{ selected.nzValue }}
+                      <span style="font-weight: 700 !important;"> Nombre: </span> {{ selected.nzLabel }}
+                    </ng-template>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div> <!-- Fin row -->
+
+            <div nz-row [nzGutter]="24">
+              <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="16">
+                <label class="label-title" for="asunto">Asunto</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor ingrese el asunto!">
+                    <input nz-input type="text" class="input-field" id="asunto" formControlName="asunto"
+                      placeholder="Ingrese el asunto del mensaje" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div> <!-- Fin row -->
+
+            <div nz-row [nzGutter]="24">
+              <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="16">
+                <label class="label-title" for="cuerpoMensaje">Cuerpo del mensaje</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor ingrese el asunto!">
+                    <textarea nz-input rows="5" class="textarea" formControlName="cuerpoMensaje"
+                      placeholder="Ingrese el mensaje que quiere enviar a través de la notificación">
+                    </textarea>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div> <!-- Fin row -->
+
+          </div>
+        </form>
+
+      </nz-tab>
+
+      <!-- <nz-tab [nzTitle]="'Cerrar caso'" (nzClick)="changeTab(3)">
+        <form nz-form [formGroup]="formCerrarCaso" id="CreateForm" autocomplete="off">
+
+          <div class="content-card">
+
+            <h1 class="title-home mb-4">Análisis</h1>
+
+            <div nz-row [nzGutter]="24">
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+                <label class="label-title" for="fraude">¿Se detectó un fraude?</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione una opción!">
+                    <nz-select
+                               nzId="fraude"
+                               formControlName="fraude"
+                               nzPlaceHolder="Seleccione una opción">
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="16">
+                <label class="label-title" for="conclusion">Conclusiones del caso</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor ingrese las conclusiones!">
+                    <input nz-input
+                           type="text"
+                           id="conclusion"
+                           formControlName="conclusion"
+                           placeholder="Ingrese las conclusiones del caso a cerrar"/>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+
+            <div nz-row [nzGutter]="24">
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+                <label class="label-title" for="requiere_control">¿Se sugiere algún control?</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione una opción!">
+                    <nz-select
+                               nzId="requiere_control"
+                               formControlName="requiere_control"
+                               nzPlaceHolder="Seleccione una opción">
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="16">
+                <label class="label-title" for="especificacion">Especificaciones del control sugerido</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor ingrese la información del control a sugerir!">
+                    <input nz-input
+                           type="text"
+                           id="especificacion"
+                           formControlName="especificacion"
+                           placeholder="Ingrese la información del control a sugerir"/>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+
+          </div>
+
+        </form>
+      </nz-tab> -->
+
+    </nz-tabset>
+
+  </nz-collapse-panel>
+</nz-collapse>
+
+<!-- Modal -->
+<nz-modal [(nzVisible)]="isVisiblePDF" nzWidth="1200px" nzHeigth="500px" [nzFooter]="null"
+  (nzOnCancel)="closeModalShow()">
+  <div class="row-md" *nzModalContent>
+    <pdf-viewer *ngIf="urlFile != ''" [src]="urlFile" [render-text]="true" [original-size]="false"
+      style="width: 1150px; height: 500px"></pdf-viewer>
+  </div>
+</nz-modal>

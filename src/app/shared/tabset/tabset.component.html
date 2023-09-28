@@ -1,0 +1,4 @@
+<nz-tabset nzType="card" (nzSelectedIndexChange)="tabSelected($event)">
+    <nz-tab *ngFor="let report of reports" [nzTitle]="report.name"></nz-tab>
+  </nz-tabset>
+  

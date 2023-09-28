@@ -1,0 +1,56 @@
+.taylorfontbold{
+    font-family: 'Taylor Sans';
+    font-style: italic;
+    font-size: 24px;
+    line-height: 28px;
+}
+
+.button-green{
+    background: #00AE8D;
+    border-radius: 8px;
+    border-color: #00AE8D !important;
+    height: 40px;
+    font-family: 'Taylor Sans';
+    font-style: italic;
+    font-weight: 600;
+    font-size: 15px;
+    margin: 0px 10px;
+}
+
+.button-black{
+    background: #415364;
+    border-radius: 8px;
+    border-color: #415364 !important;
+    height: 40px;
+    font-family: 'Taylor Sans';
+    font-style: italic;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.button-white{
+    background: #fff;
+    border-radius: 8px;
+    border-color: #00AE8D !important;
+    height: 40px;
+    font-family: 'Taylor Sans';
+    font-style: italic;
+    font-weight: 600;
+    font-size: 15px;
+    color: #00AE8D;
+}
+
+.module-title{
+    background-color: white;
+    border: none;
+    font-family: 'Taylor Sans';
+    font-style: italic;
+    font-size: 14px;
+    line-height: 20px;
+    color: #009F7C;
+  
+}
+
+.module-title:hover{
+    color: #415364;
+}

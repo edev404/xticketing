@@ -1,0 +1,11 @@
+input, select {
+    height: 46px;
+}
+
+input:disabled,
+select:disabled{
+    background: #E9EEFA;
+    color: #798CA5 !important;
+    border: 1px solid #BDC8D9 !important;
+    border-radius: 6px !important;
+}

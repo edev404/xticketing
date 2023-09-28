@@ -1,0 +1,108 @@
+<!-- CONTENEDOR DE LOS FILTROS PARA EMPRESAS Y FECHAS -->
+<div class="filtro">
+    <!-- FITRO DE EMPRESAS -->
+    <nz-select nzPlaceHolder="Seleccione la empresa para filtrar" (ngModelChange)="cambioEnElSelect($event)"
+        [(ngModel)]="empresa">
+        <nz-option [nzValue]="null" nzLabel="Seleccione una empresa"></nz-option>
+        <nz-option *ngFor="let item of empresasCopy" [nzLabel]="item" [nzValue]="item"></nz-option>
+    </nz-select>
+    <!-- FITRO DE FECHAS -->
+    <nz-select nzPlaceHolder="Seleccione una fecha para filtrar" (ngModelChange)="cambioEnElSelectFecha($event)"
+        [(ngModel)]="fechaCopyVig">
+        <nz-option [nzValue]="null" nzLabel="Seleccione una fecha"></nz-option>
+        <nz-option *ngFor="let item of fechasCopy" [nzLabel]="item" [nzValue]="item"></nz-option>
+    </nz-select>
+</div>
+
+<!-- CONTENEDOR DE CARDS Y GRAFICAS -->
+<div class="contenedor-dash">
+    <!-- CONTENDEDOR DE LAS CADS PARA MOSTRAR LA INFORMACIÓN -->
+    <div class="contenedor-card">
+        <!-- CARD PARA MOSTRAR EL TOTAL DE CREDITOS -->
+        <div class="card">
+            <div class="card-estadisticas">
+                <div class="card-estadisticas-body">
+                    <span>{{ deuda != 0 ? "-" + deuda : 0 }}</span>
+                    <h2> Total creditos </h2>
+                </div>
+            </div>
+        </div>
+        <!-- CARD PARA MOSTRAR EL TOTAL DE PASAJEROS -->
+        <div class="card">
+            <div class="card-estadisticas">
+                <div class="card-estadisticas-body">
+                    <span>{{ cantidadPasajeros }}</span>
+                    <h2> Número de pasajeros </h2>
+                </div>
+            </div>
+        </div>
+        <!-- CARD PARA MOSTRAR EL TOTAL DE RECAUDO -->
+        <div class="card">
+            <div class="card-estadisticas">
+                <div class="card-estadisticas-body">
+                    <span>{{ totalRecaudado | currency }}</span>
+                    <h2> Total recaudado </h2>
+                </div>
+            </div>
+        </div>
+        <!-- CARD PARA MOSTRAR LA FECHA DEL VIAJE -->
+        <div class="card">
+            <div class="card-estadisticas">
+                <div class="card-estadisticas-body">
+                    <span>{{ fecha }}</span>
+                    <h2>Fecha y hora</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- CONTENEDOR PARA LAS GRAFICAS 1 -->
+    <div class="contenedor-graficas">
+        <!-- GRAFICA DE TORTA 1 -->
+        <div id="chart" class="cards">
+            <apx-chart [series]="chartOptions.series!" [chart]="chartOptions.chart!" [labels]="chartOptions.labels!"
+                [colors]="chartOptions.colors!" [title]="chartOptions.title!"></apx-chart>
+        </div>
+        <!-- GRAFICA DE TORTA 2 -->
+        <div id="chart" class="torta">
+            <apx-chart [series]="chartOptions2.series!" [chart]="chartOptions2.chart!" [labels]="chartOptions2.labels!"
+                [colors]="chartOptions2.colors!" [title]="chartOptions2.title!"></apx-chart>
+        </div>
+    </div>
+    <!-- CONTENEDOR PARA LAS GRAFICAS 2 -->
+    <div class="contenedor-graficas-2">
+        <!-- TABLA -->
+        <div style="display: flex; flex-direction: column; align-items: flex-end;">
+            <nz-table style="width: 100%;" #basicTable [nzData]="listOfDataFilter" [nzFrontPagination]="false"
+                [nzPageSize]="5" [nzScroll]="{ x: '1000px'}">
+                <thead>
+                    <tr style="background: #F5F7FA;">
+                        <th>Fecha</th>
+                        <th>Bus</th>
+                        <th># de viaje</th>
+                        <th># de pasajeros</th>
+                        <th>Valor pagado</th>
+                        <th>Total creditos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="cursor: pointer;" (click)="filtrarPorViaje(data.id_viaje)"
+                        [class]="data.id_viaje == selectedViajeId ? 'celda' : '' "
+                        *ngFor="let data of basicTable.data | paginate : { id: 'table', itemsPerPage: numberRow, currentPage: page }">
+                        <td>{{ data.fecha }}</td>
+                        <td>{{ data.id_vehiculo }}</td>
+                        <td>{{ data.id_viaje }}</td>
+                        <td>{{ data.numero_pasajeros }}</td>
+                        <td>{{ data.total_pagado }}</td>
+                        <td>{{ data.deuda }}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+            <!-- PAGINADO DE LA TABLA -->
+            <section>
+                <pagination-controls id="table" previousLabel="Anterior" nextLabel="Siguiente"
+                    (pageChange)="onChangePage($event)" (pageBoundsCorrection)="onChangePage($event)">
+                </pagination-controls>
+            </section>
+        </div>
+    </div>
+</div>

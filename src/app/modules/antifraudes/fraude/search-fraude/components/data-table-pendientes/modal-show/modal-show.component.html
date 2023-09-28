@@ -1,0 +1,231 @@
+
+<nz-modal [(nzVisible)]="isModalShow" [nzWidth]="'60rem'" nzCentered="true" [nzFooter]="null" (nzOnCancel)="closeModal()">
+  <ng-container *nzModalContent>
+    
+    <form nz-form [formGroup]="form">
+  
+      <div>
+        <h1 class="title-home">Información del posible fraude</h1>
+        <nz-tabset nzType="card">
+
+          <!-- DETALLE -->
+          <nz-tab nzTitle="Detalle" style="padding-left: 0px;" >
+            <div nz-row [nzGutter]="24">
+              <div nz-col [nzSpan]="24">
+                <h1 class="sub-title">Información básica</h1>
+              </div>
+            </div>
+      
+            <div nz-row [nzGutter]="24" nzJustify="start" nzAlign="middle" style="margin-top: 10px;">
+      
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12" [nzLg]="8">
+                <label class="label-title" for="fecha_ini_re">Fecha registro</label>
+                <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24" style="margin-right: 0px;">
+                    <nz-date-picker [nzFormat]="'dd/MM/yyyy'"
+                                    nzId="fecha_ini_re"
+                                    formControlName="fecha_creacion">
+                    </nz-date-picker>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+      
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12" [nzLg]="8">
+                <label class="label-title" for="fecha_fin_re">Fecha probable ocurrencia</label>
+                <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24" style="margin-right: 0px;">
+                    <nz-date-picker [nzFormat]="'dd/MM/yyyy'"
+                                    nzId="fecha_fin_re"
+                                    formControlName="fecha_probable_ocurrencia">
+                    </nz-date-picker>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+      
+            </div> <!-- Fin row -->
+      
+            <div nz-row [nzGutter]="24" nzJustify="start" nzAlign="middle">
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="4">
+                <label class="label-title" for="estado">Estado</label>
+                <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24">
+                    <nz-select 
+                              nzId="estado"
+                              formControlName="estado_anti">
+                      <nz-option  [nzValue]="form.controls['estado_anti'].value" [nzLabel]="form.controls['estado_anti'].value"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+      
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="4">
+                <label class="label-title" for="id">ID</label>
+                <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24">
+                    <input nz-input
+                           type="text"
+                           class="input-field"
+                           id="descripcion"
+                           formControlName="id"/>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+      
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+                <label class="label-title" for="descripcion">Descripción</label>
+                <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24">
+                    <input nz-input
+                          type="text"
+                          class="input-field"
+                          id="descripcion"
+                          formControlName="descripcion"/>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+      
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+                <label class="label-title" for="tipo_fraude">Tipo de fraude</label>
+                <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24">
+                    <nz-select 
+                              nzId="tipo_fraude"
+                              formControlName="tipo_fraude">
+                      <nz-option [nzValue]="form.controls['tipo_fraude'].value" [nzLabel]="form.controls['tipo_fraude'].value"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+      
+            </div> <!-- Fin row -->
+      
+            <div nz-row [nzGutter]="24" nzJustify="start" nzAlign="middle" style="padding-bottom: 1rem;">
+      
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+                <label class="label-title" for="componente">Componente</label>
+                <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24">
+                    <nz-select 
+                              nzAutoFocus 
+                              nzId="componente"
+                              formControlName="componente">
+                      <nz-option [nzValue]="form.controls['componente'].value" [nzLabel]="form.controls['componente'].value"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+      
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+                <label class="label-title" for="fuente">Fuente</label>
+                <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24">
+                    <nz-select 
+                              nzAutoFocus 
+                              nzId="fuente"
+                              formControlName="fuente">
+                      <nz-option [nzValue]="form.controls['fuente'].value" [nzLabel]="form.controls['fuente'].value"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+      
+            </div> <!-- Fin row -->
+      
+            <div nz-row [nzGutter]="24">
+      
+              <div nz-col [nzSpan]="24">
+                <h1 class="sub-title" style="padding-bottom: 1rem;">Información avanzada</h1>
+              </div>
+      
+            </div>
+      
+            <div nz-row [nzGutter]="24" nzJustify="start" nzAlign="middle">
+      
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+                <label class="label-title" for="nomUsuario">Usuario que registró</label>
+                <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24">
+                    <input nz-input
+                          type="text"
+                          class="input-field"
+                          id="nomUsuario"
+                          formControlName="nomUsuario"/>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+      
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+                <label class="label-title" for="riesgo">Riesgo</label>
+                <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24">
+                    <input nz-input
+                          type="text"
+                          class="input-field"
+                          id="riesgo"
+                          formControlName="riesgo"/>
+                    <nz-option [nzValue]="form.controls['riesgo'].value" [nzLabel]="form.controls['riesgo'].value"></nz-option>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8">
+                <label class="label-title" for="impacto">Impacto</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24">
+                    <nz-select  
+                              nzId="impacto"
+                              formControlName="impacto">
+                      <nz-option [nzValue]="form.controls['impacto'].value" [nzLabel]="form.controls['impacto'].value"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+      
+            </div> <!-- Fin row -->
+      
+            <div nz-row [nzGutter]="24" nzJustify="start" nzAlign="middle">
+      
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+                <label class="label-title" for="servicio">Servicio</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24">
+                    <nz-select 
+                              nzId="servicio"
+                              formControlName="servicio">
+                      <nz-option [nzValue]="form.controls['servicio'].value" [nzLabel]="form.controls['servicio'].value"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+      
+              <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+                <label class="label-title" for="empresa">Empresa</label>
+                <nz-form-item>
+                  <nz-form-control nz-col nzMd="24">
+                    <nz-select 
+                              nzId="empresa"
+                              formControlName="empresa">
+                      <nz-option [nzValue]="form.controls['empresa'].value" [nzLabel]="form.controls['empresa'].value"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+      
+            </div> <!-- Fin row -->
+          </nz-tab>
+
+        </nz-tabset>
+      </div>
+
+      <div nz-col [nzSpan]="24" style="display: flex; justify-content: center; padding: 2rem 0rem 1rem 0rem;">
+        <button nz-button 
+                class="button-green" 
+                [nzType]="'primary'"
+                (click)="closeModal()">
+          Aceptar
+        </button>
+      </div>
+
+    </form>
+
+  </ng-container>
+</nz-modal>

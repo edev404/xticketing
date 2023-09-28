@@ -1,0 +1,196 @@
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #00AE8D !important;
+}
+
+.ant-menu-inline .ant-menu-item::after {
+  border-right: 3px solid #00AE8D;
+}
+
+.ant-menu-item-selected {
+  font-weight: bold;
+  color: #00AE8D;
+}
+
+.item--active {
+  font-weight: bold;
+  color: #00AE8D;
+}
+
+li {
+  //color: #798CA5;
+  font-family: 'Taylor Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+li:hover {
+  color: #00AE8D !important;
+}
+
+.ant-layout {
+  background: white !important;
+}
+
+.logo {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0px 20px;
+  margin-top: 15px;
+}
+
+.icon-menu {
+  position: static;
+  width: 100px;
+  height: 36px;
+  left: 16px;
+  top: 0px;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+  margin: 0px 0px;
+}
+
+nz-header {
+  background: #fff;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-hedear {
+  display: flex;
+}
+
+[nz-form] {
+  max-width: 600px;
+}
+
+nz-date-picker ::ng-deep .ant-calendar-picker {
+  width: 100%;
+}
+
+nz-date-picker,
+nz-time-picker {
+  width: 100%;
+}
+
+nz-content {
+  margin: 0 16px;
+}
+
+nz-breadcrumb {
+  margin: 16px 0;
+}
+
+nz-form-label {
+  font-family: 'Taylor Sans';
+  font-style: italic;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+  color: #556A83;
+  margin: 5px 8px;
+}
+
+nz-select {
+  background: #E9EEFA;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 6px 0px;
+  border: none;
+  font-family: 'Taylor Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+  color: #798CA5; 
+}
+
+
+.input-sesion {
+  background: #FFFF;
+  border-radius: 6px;
+}
+
+nz-sider {
+  background-color: white;
+
+}
+
+nz-form-item {
+  padding-left: 20px;
+  margin: 15px 0px;
+
+}
+
+nz-input-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px 14px;
+  background: #E9EEFA;
+  border-radius: 6px;
+}
+
+input {
+  background: #E9EEFA;
+
+}
+
+nz-footer {
+  height: 80px;
+  left: 0px;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0px 16px;
+  margin-top: 100px;
+}
+
+.inner-content {
+  padding: 24px;
+  background: #fff;
+  min-height: 762px;
+  border: 1px solid #E9EEFA;
+  box-sizing: border-box;
+  border-radius: 8px;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.text-side-bar {
+  //color: #798CA5;
+  font-family: 'Taylor Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.separador {
+  width: 1px;
+  height: 24px;
+  background: #AEBBCE;
+  border-radius: 1px;
+  margin: 0px 16px;
+}
+
+::ng-deep .ant-modal-content {
+  border-radius: 8px;
+}

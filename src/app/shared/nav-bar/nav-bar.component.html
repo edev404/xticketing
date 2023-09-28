@@ -1,0 +1,44 @@
+<div class="d-flex align-items-center py-2">
+  <!-- collapsed -->
+  <div class="flex-md-fill">
+    <img class="trigger" src="../../../assets/icon/menu.svg" (click)="sidebar(isCollapsed = !isCollapsed)">
+    <img [src]="imgLogo.logoUrl" *ngIf="imgLogo.logoUrl" alt="logo" style="width: 156px; height: 39px">
+  </div>
+  <!-- select, separator, avatar y dropdown -->
+  <div class="flex-fill d-flex align-items-center justify-content-sm-end pe-2">
+    <!-- select entidades -->
+    <nz-form-item style="width: 56%;" class="m-0">
+      <label class="label me-2 d-flex align-items-center">Entidad</label>
+      <nz-form-control>
+        <nz-select  nzAutoFocus class="select-nav"
+        nzServerSearch [ngModel]="selectedEntity" [nzBorderless]="entities.length <= 1||disabledSelect" (ngModelChange)="setSelectedEntity($event)"
+          [disabled]="entities.length <= 1||disabledSelect" [ngClass]="{'disabled-select': entities.length <= 1||disabledSelect}">
+          <nz-option [nzValue]="undefined" nzLabel="Seleccione un entidad"></nz-option>
+          <nz-option *ngFor="let entity of entities" [nzValue]="entity" nzLabel="{{entity.entities[0].name}}"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <!-- separator -->
+    <div class="d-flex align-items-center">
+      <p class="separador"></p>
+    </div>
+    <!-- avatar y dropdown -->
+    <div class="input-sesion" style="display: flex; align-items: center;">
+      <nz-avatar [nzText]="user" style="color:#FFFFFF; background-color:#00AE8D; margin-right: 10px;">
+      </nz-avatar>
+
+      <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
+        <i nz-icon nzType="down"></i>
+      </a>
+      <nz-dropdown-menu #menu="nzDropdownMenu">
+        <ul nz-menu>
+          <!-- <li nz-menu-item><i nz-icon nzType="form" nzTheme="outline" style="margin-right: 5px;"></i> Cambio contraseña</li> -->
+          <li nz-menu-item (click)="changueTwoPassword(true)"><i nz-icon nzType="form" nzTheme="outline" style="margin-right: 5px;"></i> Cambio segunda contraseña</li>
+          <!-- <li nz-menu-item><i nz-icon nzType="setting" nzTheme="outline" style="margin-right: 5px;"></i> Configuración</li> -->
+          <li nz-menu-divider></li>
+          <li nz-menu-item (click)=closeSession()><i nz-icon nzType="api" nzTheme="outline" style="margin-right: 5px;"></i> Cerrar sesión</li>
+        </ul>
+      </nz-dropdown-menu>
+    </div>
+  </div>
+</div>

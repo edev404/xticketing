@@ -1,0 +1,22 @@
+/** Cambiar color del checkbox inhabilitado */
+.form-check-input:checked{
+  background-color: #00AE8D !important;
+  border-color: #00AE8D !important;
+}
+.form-check-input{
+  background-color: #F87171 !important;
+  border-color: #F87171 !important;
+}
+/** Quitar la opacidad al campo checkbox deshabilitado */
+.form-check-input:disabled {
+  opacity: 1 !important;
+}
+/** Espacio del checkbox del estado*/
+.form-switch {
+  padding-left: 3em;
+}
+
+// Tamaño minimo de la tabla
+:host ::ng-deep .ant-spin-container {
+  // min-height: 25rem !important;
+}

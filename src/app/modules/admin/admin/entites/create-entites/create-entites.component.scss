@@ -1,0 +1,40 @@
+@import url('../../../../../../assets/themes/white/white-theme.scss');
+
+.uploadFile {
+    border: none;
+    background: none;
+    color: inherit;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+}
+
+.adjunto {
+    background: white !important;
+}
+
+.messagewarning {
+    color: #ff4d4f;
+}
+
+.invalidInput {
+    border: 1px solid #ff4d4f;
+    box-sizing: border-box;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 46px;
+    font-family: 'Taylor Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: -0.01em;
+    color: #798CA5;
+}
+
+::placeholder {
+    color: #AEBBCE;
+}

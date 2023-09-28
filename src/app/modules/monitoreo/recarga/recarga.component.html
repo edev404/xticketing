@@ -1,0 +1,70 @@
+<!-- CONTENEDOR DE LOS FILTROS PARA EMPRESAS Y FECHAS -->
+<div class="filtro">
+    <!-- FITRO DE EMPRESAS -->
+    <nz-select nzPlaceHolder="Seleccione la empresa para filtrar" (ngModelChange)="cambioEnElSelect($event)"
+        [(ngModel)]="empresa">
+        <nz-option [nzValue]="null" nzLabel="Seleccione una empresa"></nz-option>
+        <nz-option *ngFor="let item of empresasCopy" [nzLabel]="item" [nzValue]="item"></nz-option>
+    </nz-select>
+    <!-- FITRO DE FECHAS -->
+    <nz-select nzPlaceHolder="Seleccione una fecha para filtrar" (ngModelChange)="cambioEnElSelectFecha($event)"
+        [(ngModel)]="fechaCopyVig">
+        <nz-option [nzValue]="null" nzLabel="Seleccione una fecha"></nz-option>
+        <nz-option *ngFor="let item of fechasCopy" [nzLabel]="item" [nzValue]="item"></nz-option>
+    </nz-select>
+</div>
+<!-- CONTENEDOR DE CARDS Y GRAFICAS -->
+<div class="contenedor-dash">
+    <!-- CONTENDEDOR DE LAS CADS PARA MOSTRAR LA INFORMACIÓN -->
+    <section class="contenedor">
+        <div class="contenedor-card">
+            <div style="width: 280px; display: flex; justify-content: center; align-items: center;">
+                <!-- <img [src]="imgLogo.logoUrl" *ngIf="imgLogo.logoUrl" alt="logo" style="width: 210px; height: 60px" alt=""> -->
+            </div>
+            <!-- CARD PARA MOSTRAR LA CANTIDAD DE RECARGAS -->
+            <div class="card">
+                <div class="card-estadisticas">
+                    <div class="card-estadisticas-body">
+                        <span>{{ cantidad }}</span>
+                        <h2>Cantidad recargas</h2>
+                    </div>
+                </div>
+            </div>
+            <!-- CARD PARA MOSTRAR EL TOTAL DE DINERO REGISTRADO EN RECARGAS -->
+            <div class="card">
+                <div class="card-estadisticas">
+                    <div class="card-estadisticas-body">
+                        <span>{{ recargas | currency }}</span>
+                        <h2> Total recargas </h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+      <!-- CONTENEDOR PARA LAS GRAFICAS 1 -->
+    <div class="contenedor-graficas">
+        <!-- GRAFICO DE BARRAS VERTICAL -->
+        <div id="chart">
+            <apx-chart [series]="chartOptions.series!" [chart]="chartOptions.chart!"
+                [dataLabels]="chartOptions.dataLabels!" [plotOptions]="chartOptions.plotOptions!"
+                [yaxis]="chartOptions.yaxis!" [xaxis]="chartOptions.xaxis!" [legend]="chartOptions.legend!"
+                [colors]="chartOptions.colors!" [grid]="chartOptions.grid!" [title]="chartOptions.title!"></apx-chart>
+        </div>
+        <!-- GRAFICO DE TORTA -->
+        <div id="chart">
+            <apx-chart [series]="chartOptions2.series!" [chart]="chartOptions2.chart!" [labels]="chartOptions2.labels!"
+                [title]="chartOptions2.title!" [colors]="chartOptions2.colors!"></apx-chart>
+        </div>
+    </div>
+      <!-- CONTENEDOR PARA LAS GRAFICAS 2 -->
+    <div class="contenedor-graficas-2">
+        <!-- GRAFICO DE BARRAS HORIZONTAL -->
+        <div id="chart">
+            <apx-chart [series]="chartOptions3.series!" [chart]="chartOptions3.chart!"
+                [dataLabels]="chartOptions3.dataLabels!" [plotOptions]="chartOptions3.plotOptions!"
+                [yaxis]="chartOptions3.yaxis!" [xaxis]="chartOptions3.xaxis!" [legend]="chartOptions3.legend!"
+                [colors]="chartOptions3.colors!" [grid]="chartOptions3.grid!"
+                [title]="chartOptions3.title!"></apx-chart>
+        </div>
+    </div>
+</div>

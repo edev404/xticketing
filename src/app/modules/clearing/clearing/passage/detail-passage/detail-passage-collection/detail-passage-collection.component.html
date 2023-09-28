@@ -1,0 +1,922 @@
+<!-- CARD HEADER -->
+<nz-card nzHoverable class="my-3 mx-2" style="border-radius: 8px; border: 1px solid #CBD7E5;">
+    <div class="row">
+        <p class="col-sm-6 text-md">
+            {{dataTimeOfSearch.month | uppercase}}, {{dataTimeOfSearch.year}}
+        </p>
+        <p class="col-sm-6 text-md" style="color: #008160;">
+            {{pressettlementFilter.company.name}}
+        </p>
+        <p class="col-sm-6">
+            <b class="text-md">Desde&nbsp;&nbsp;</b>
+            <span class="text-xs">{{dataTimeOfSearch.fromDate}}, {{pressettlementFilter.fromDate |
+                date:'dd/MM/yyyy'}}</span>
+        </p>
+        <p class="col-sm-6">
+            <b class="text-md">Hasta&nbsp;&nbsp;</b>
+            <span class="text-xs">{{dataTimeOfSearch.toDate}}, {{pressettlementFilter.toDate |
+                date:'dd/MM/yyyy'}}</span>
+        </p>
+    </div>
+</nz-card>
+<!-- TABLES -->
+<div class="row mx-2">
+    <div class="custom-card p-0">
+        <!-- NAV Y MENU BUTTONS -->
+        <div class="col-sm-12 ps-2 row">
+            <div class="col-sm-4 my-2 d-flex align-items-center">
+                <button nz-button class="button-white me-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <img draggable="false" src="../../../../../../../../assets/icon/fi_maximize-2.svg">
+                </button>
+                <button class="nav-item nav-link gray btn px-3 me-4 module-title" *ngFor="let row of groupBtn"
+                    [ngClass]="{'active':periodSelected===row.id}"
+                    (click)="periodSelected=row.id;checkPeriodSelected();clearingCollectsData.periodSelected = row.id; setDataDateByRoutes()">
+                    {{row.name}}
+                </button>
+            </div>
+            <div class="col-sm-8 d-flex justify-content-end align-items-center">
+                <span class="align-bottom">Para ver el <b>detalle</b> de <b>rutas, viajes, vehículos
+                        y
+                        pasajes</b> de un dato especifico debe seleccionar el que desea ver.</span>
+            </div>
+        </div>
+        <!-- TABLES -->
+        <!-- MAIN TABLE -->
+        <div class="col-sm-12 p-0 mx-0 mt-2 row" *ngIf="!clearingCollectsData.collectSelected">
+            <div class="col-sm-12 p-0 m-0">
+                <nz-table #tableMain [nzData]="clearingCollectsData.collectsShower" [nzShowPagination]="false"
+                    [nzScroll]="{ x:'1000px', y: '225px'}" [nzPageSize]="clearingCollectsData.collectsShower.length">
+                    <thead>
+                        <!-- HEADER 1 -->
+                        <tr>
+                            <th nzWidth="180px">Desde - Hasta</th>
+                            <th nzWidth="100px">Tarjeta</th>
+                            <th nzWidth="100px">QR</th>
+                            <th nzWidth="100px">Efectivo</th>
+                            <th nzWidth="150px">Total Recaudado</th>
+                            <th nzWidth="200px">Valor recuperado descuento</th>
+                            <th nzWidth="100px">Total a repartir</th>
+                        </tr>
+                        <!-- HEADER 2 -->
+                        <tr>
+                            <th>{{dataGeneralCollect.date}}</th>
+                            <th>
+                                <div class="row p-0 m-0">
+                                    <p class="col-sm-12 p-0 m-0">{{dataGeneralCollect.cardValue | currency}}</p>
+                                    <p class="col-sm-12 p-0 m-0 ft-ligth">({{dataGeneralCollect.cardCant}})</p>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="row p-0 m-0">
+                                    <p class="col-sm-12 p-0 m-0">{{dataGeneralCollect.qrValue | currency}}</p>
+                                    <p class="col-sm-12 p-0 m-0 ft-ligth">({{dataGeneralCollect.qrCant}})</p>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="row p-0 m-0">
+                                    <p class="col-sm-12 p-0 m-0">{{dataGeneralCollect.cashValue | currency}}</p>
+                                    <p class="col-sm-12 p-0 m-0 ft-ligth">({{dataGeneralCollect.cashCant}})</p>
+                                </div>
+                            </th>
+                            <th class="align-top">{{dataGeneralCollect.totalCollected | currency}}</th>
+                            <th class="align-top">{{dataGeneralCollect.discountValue | currency}}</th>
+                            <th>
+                                <div class="row p-0 m-0">
+                                    <p class="col-sm-12 p-0 m-0">{{dataGeneralCollect.distributionTotal | currency}}</p>
+                                    <p class="col-sm-12 p-0 m-0 ft-ligth">({{dataGeneralCollect.totalCant}})</p>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of tableMain.data" style="cursor: pointer;"
+                            (click)="clearingCollectsData.collectSelected = data; searchRouteDetails()">
+                            <td>{{data.date}}</td>
+                            <td>
+                                <div class="row p-0 m-0">
+                                    <p class="col-sm-12 p-0 m-0">{{data.cardValue | currency}}</p>
+                                    <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.cardCant}})</p>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row p-0 m-0">
+                                    <p class="col-sm-12 p-0 m-0">{{data.qrValue | currency}}</p>
+                                    <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.qrCant}})</p>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row p-0 m-0">
+                                    <p class="col-sm-12 p-0 m-0">{{data.cashValue | currency}}</p>
+                                    <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.cashCant}})</p>
+                                </div>
+                            </td>
+                            <td class="align-top">{{data.totalCollected | currency}}</td>
+                            <td class="align-top">{{data.discountValue | currency}}</td>
+                            <td>
+                                <div class="row p-0 m-0">
+                                    <p class="col-sm-12 p-0 m-0">{{data.distributionTotal | currency}}</p>
+                                    <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.totalCant}})</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+            <!-- INFO TABLE MANI -->
+            <div class="col-sm-12 my-2 d-flex justify-content-end align-items-end">
+                <span>
+                    El <b class="text-green">valor</b> que aparece entre <b>parentesis ( )</b> equivale al <b>número de
+                        pasajeros</b>
+                </span>
+            </div>
+        </div>
+        <!-- TABLE ROUTES -->
+        <div class="col-sm-12 p-0 m-0 my-2 row" *ngIf="clearingCollectsData.collectSelected">
+            <div class="col-sm-12 pe-0 row">
+                <!-- TABLE MAIN SHORT
+                <div class="col-sm-3">
+                    <div class="custom-card h-100">
+                        <nz-table #tableMainShort [nzData]="dataDateShower" [nzShowPagination]="false"
+                            [nzScroll]="{y: '170px'}" [nzPageSize]="dataDateShower.length">
+                            <thead>
+                                <tr>
+                                    <th nzWidth="180px">Desde - Hasta</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of tableMainShort.data" style="cursor: pointer;">
+                                    <td>{{data.date}}</td>
+                                </tr>
+                            </tbody>
+                        </nz-table>
+                    </div>
+                </div> -->
+                <!-- TABLE ROUTES -->
+                <div class="col-sm p-0 m-0 row custom-card" style="margin: 0px 0px 0px 5px !important;">
+                    <!-- TITLE TABLE ROUTES -->
+                    <div class="col-sm-12 my-2 row">
+                        <div class="col-sm-4 d-flex justify-content-start align-items-center">
+                            <button nz-button class="button-black mx-2" [nzType]="'primary'"
+                                (click)="clearingCollectsData.collectSelected = undefined ; clearingCollectsData.routesCollectSelected = undefined;clearingCollectsData.passenger = undefined;clearingCollectsData.travelCollectSelected = undefined ; clearingCollectsData.vehicleCollectSelected = undefined">
+                                Regresar
+                            </button>
+                            <h1 class="title-home align-middle">Rutas</h1>
+                        </div>
+                        <div class="col-sm-8 d-flex justify-content-end align-items-center">
+                            <span>
+                                El <b class="text-green">valor</b> que aparece entre <b>parentesis ( )</b> equivale al
+                                <b>número de pasajeros.</b>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- TABLE ROUTES -->
+                    <div class="col-sm-12 p-0 m-0">
+                        <nz-table #tableRutas [nzData]="clearingCollectsData.routesShower" [nzShowPagination]="false"
+                            [nzScroll]="{ x:'2000px', y:'300px'}"
+                            [nzPageSize]="clearingCollectsData.routesShower.length">
+                            <thead>
+                                <tr>
+                                    <th>Fechas</th>
+                                    <th>Ruta</th>
+                                    <th>Tarjeta</th>
+                                    <th>QR</th>
+                                    <th>Efectivo</th>
+                                    <th>Total Recaudado</th>
+                                    <th>Valor recuperado descuento</th>
+                                    <th>Total a repartir</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of tableRutas.data" style="cursor: pointer;"
+                                    (click)="clearingCollectsData.routesCollectSelected = data; searchTravelVehicleDetails()">
+                                    <td>
+                                        {{data.date}}
+                                    </td>
+                                    <td>
+                                        {{data.routeName}}
+                                    </td>
+                                    <td>
+                                        <div class="row p-0 m-0">
+                                            <p class="col-sm-12 p-0 m-0">{{data.cardValue | currency}}</p>
+                                            <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.cardCant}})</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="row p-0 m-0">
+                                            <p class="col-sm-12 p-0 m-0">{{data.qrValue | currency}}</p>
+                                            <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.qrCant}})</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="row p-0 m-0">
+                                            <p class="col-sm-12 p-0 m-0">{{data.cashValue | currency}}</p>
+                                            <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.cashCant}})</p>
+                                        </div>
+                                    </td>
+                                    <td class="align-top">{{data.totalCollected | currency}}</td>
+                                    <td class="align-top">{{data.discountValue | currency}}</td>
+                                    <td>
+                                        <div class="row p-0 m-0">
+                                            <p class="col-sm-12 p-0 m-0">{{data.distributionTotal | currency}}</p>
+                                            <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.totalCant}})</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </nz-table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 pe-0 row" *ngIf="clearingCollectsData.routesCollectSelected">
+                <div class="col-sm-12 pe-0 mt-2">
+                    <div class="custom-card d-flex">
+                        <div [ngClass]="{'w-50': !resizeLeft && !resizeRight,'w-80': resizeLeft && !resizeRight,'w-20':resizeRight}"
+                            style="border-right: 1px solid #CBD7E5; border-radius: 8px;">
+                            <!-- TABLE VIAJES -->
+                            <div>
+                                <div class="ms-2 mt-2 d-flex justify-content-between">
+                                    <h1 class="title-home align-middle">Viajes</h1>
+                                    <div
+                                        *ngIf="clearingCollectsData.travelCollectSelected || clearingCollectsData.vehicleCollectSelected">
+                                        <div *ngIf="!resizeRight">
+                                            <img draggable="false"
+                                                src="../../../../../../../../assets/icon/fi_chevrons-right.svg"
+                                                *ngIf="!resizeLeft"
+                                                (click)="resizeLeft = !resizeLeft; resizeLeft = true ">
+                                            <img draggable="false"
+                                                src="../../../../../../../../assets/icon/fi_chevrons-left.svg"
+                                                *ngIf="resizeLeft"
+                                                (click)="resizeLeft = !resizeLeft; resizeLeft = false ">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <nz-table #tableViajes [nzData]="clearingCollectsData.travelsShower"
+                                        [nzShowPagination]="false" [nzScroll]="{ x:'1000px', y:'300px'}"
+                                        [nzPageSize]="clearingCollectsData.travelsShower.length">
+                                        <thead>
+                                            <tr>
+                                                <th>Viajes</th>
+                                                <th *ngIf="!resizeRight">Tarjeta</th>
+                                                <th *ngIf="!resizeRight">QR</th>
+                                                <th *ngIf="!resizeRight">Efectivo</th>
+                                                <th *ngIf="!resizeRight">Total Recaudado</th>
+                                                <th *ngIf="!resizeRight">Valor recuperado descuento</th>
+                                                <th *ngIf="!resizeRight">Total a repartir</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let data of tableViajes.data" style="cursor: pointer;"
+                                                (click)="clearingCollectsData.travelCollectSelected = data; clearingCollectsData.vehicleCollectSelected = undefined;searchPassengerDetails(true)">
+                                                <td>
+                                                    {{data.date | date:'hh:mm:ss aa'}}
+                                                </td>
+                                                <td *ngIf="!resizeRight">
+                                                    <div class="row p-0 m-0">
+                                                        <p class="col-sm-12 p-0 m-0">{{data.cardValue | currency}}</p>
+                                                        <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.cardCant}})</p>
+                                                    </div>
+                                                </td>
+                                                <td *ngIf="!resizeRight">
+                                                    <div class="row p-0 m-0">
+                                                        <p class="col-sm-12 p-0 m-0">{{data.qrValue | currency}}</p>
+                                                        <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.qrCant}})</p>
+                                                    </div>
+                                                </td>
+                                                <td *ngIf="!resizeRight">
+                                                    <div class="row p-0 m-0">
+                                                        <p class="col-sm-12 p-0 m-0">{{data.cashValue | currency}}</p>
+                                                        <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.cashCant}})</p>
+                                                    </div>
+                                                </td>
+                                                <td *ngIf="!resizeRight" class="align-top">{{data.totalCollected |
+                                                    currency}}</td>
+                                                <td *ngIf="!resizeRight" class="align-top">{{data.discountValue |
+                                                    currency}}</td>
+                                                <td *ngIf="!resizeRight">
+                                                    <div class="row p-0 m-0">
+                                                        <p class="col-sm-12 p-0 m-0">{{data.distributionTotal |
+                                                            currency}}</p>
+                                                        <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.totalCant}})</p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </nz-table>
+                                </div>
+                            </div>
+                            <!-- TABLE Vehículos -->
+                            <div>
+                                <h1 class="title-home align-middle ms-2 mt-2">Vehículos</h1>
+                                <div>
+                                    <nz-table #tableVehiculos [nzData]="clearingCollectsData.vehiclesShower"
+                                        [nzShowPagination]="false" [nzScroll]="{ x:'1000px', y:'300px'}"
+                                        [nzPageSize]="clearingCollectsData.vehiclesShower.length">
+                                        <thead>
+                                            <tr>
+                                                <th>Vehículos</th>
+                                                <th *ngIf="!resizeRight">Tarjeta</th>
+                                                <th *ngIf="!resizeRight">QR</th>
+                                                <th *ngIf="!resizeRight">Efectivo</th>
+                                                <th *ngIf="!resizeRight">Total Recaudado</th>
+                                                <th *ngIf="!resizeRight">Valor recuperado descuento</th>
+                                                <th *ngIf="!resizeRight">Total a repartir</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let data of tableVehiculos.data" style="cursor: pointer;"
+                                                (click)="clearingCollectsData.vehicleCollectSelected = data; clearingCollectsData.travelCollectSelected = undefined;searchPassengerDetails(false)">
+                                                <td>
+                                                    {{data.internalNumber}} - {{data.plate}}
+                                                </td>
+                                                <td *ngIf="!resizeRight">
+                                                    <div class="row p-0 m-0">
+                                                        <p class="col-sm-12 p-0 m-0">{{data.cardValue | currency}}</p>
+                                                        <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.cardCant}})</p>
+                                                    </div>
+                                                </td>
+                                                <td *ngIf="!resizeRight">
+                                                    <div class="row p-0 m-0">
+                                                        <p class="col-sm-12 p-0 m-0">{{data.qrValue | currency}}</p>
+                                                        <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.qrCant}})</p>
+                                                    </div>
+                                                </td>
+                                                <td *ngIf="!resizeRight">
+                                                    <div class="row p-0 m-0">
+                                                        <p class="col-sm-12 p-0 m-0">{{data.cashValue | currency}}</p>
+                                                        <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.cashCant}})</p>
+                                                    </div>
+                                                </td>
+                                                <td *ngIf="!resizeRight" class="align-top">{{data.totalCollected |
+                                                    currency}}</td>
+                                                <td *ngIf="!resizeRight" class="align-top">{{data.discountValue |
+                                                    currency}}</td>
+                                                <td *ngIf="!resizeRight">
+                                                    <div class="row p-0 m-0">
+                                                        <p class="col-sm-12 p-0 m-0">{{data.distributionTotal |
+                                                            currency}}</p>
+                                                        <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.totalCant}})</p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </nz-table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            [ngClass]="{'w-50': !resizeLeft && !resizeRight,'w-20': resizeLeft && !resizeRight,'w-80':resizeRight}">
+                            <ng-container *ngIf="clearingCollectsData.travelCollectSelected || clearingCollectsData.vehicleCollectSelected; 
+                                then rowSelectedTemplate; else notRowSelected">
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- NO DATA -->
+<ng-template #notRowSelected>
+    <div nz-row class="card-aling-center">
+        <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+            <div nz-col nzXs="24" nzSm="20" nzMd="14">
+                <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../assets/icon/info_icon.svg"
+                    alt="icono-buscar">
+                <div nz-col nzSm="24" nzMd="18">
+                    <h1 class="title-form" style="place-content: center !important;">
+                        Seleccione un dato de la tabla
+                    </h1>
+                    <h1 class="title-secundary" style="margin-top: 0px;">
+                        y podrá visualizar el detalle de cada uno.
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- TABLE TEMPLET SELECT -->
+<ng-template #rowSelectedTemplate>
+    <div class="ms-2 mt-2 d-flex justify-content-between">
+        <div *ngIf="clearingCollectsData.travelCollectSelected || clearingCollectsData.vehicleCollectSelected">
+            <div *ngIf="!resizeLeft">
+                <img draggable="false" src="../../../../../../../../assets/icon/fi_chevrons-right.svg"
+                    *ngIf="resizeRight" (click)="resizeRight = !resizeRight; resizeRight = false ">
+                <img draggable="false" src="../../../../../../../../assets/icon/fi_chevrons-left.svg"
+                    *ngIf="!resizeRight" (click)="resizeRight = !resizeRight; resizeRight = true ">
+            </div>
+        </div>
+        <h1 class="title-home align-middle me-2">Pasajeros</h1>
+    </div>
+    <nz-table #tablePasajeros [nzData]="clearingCollectsData.passenger" [nzShowPagination]="false"
+        [nzScroll]="{ x:'1000px', y:'279px'}" [nzPageSize]="clearingCollectsData.passenger.length">
+        <thead>
+            <tr>
+                <th nzWidth="150px">Identificaci&oacute;n</th>
+                <th nzWidth="150px" *ngIf="!resizeLeft">Cuenta</th>
+                <th nzWidth="150px" *ngIf="!resizeLeft">Nombre</th>
+                <th nzWidth="180px" *ngIf="!resizeLeft">Forma de pago</th>
+                <th nzWidth="180px" *ngIf="!resizeLeft">Valor cobrado</th>
+                <th nzWidth="170px" *ngIf="!resizeLeft">¿Aplic&oacute; a descuento?</th>
+                <th nzWidth="170px" *ngIf="!resizeLeft">Valor descontado</th>
+                <th nzWidth="170px" *ngIf="!resizeLeft">¿Es un transbordo?</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of tablePasajeros.data" style="cursor: pointer;">
+                <td>CC. {{data.identification}}</td>
+                <td *ngIf="!resizeLeft">{{data.account || '-'}}</td>
+                <td *ngIf="!resizeLeft">{{data.name}}</td>
+                <td *ngIf="!resizeLeft">{{data.paymentType}}</td>
+                <td *ngIf="!resizeLeft">{{data.value | currency}}</td>
+                <td *ngIf="!resizeLeft" [nzAlign]="'center'">
+                    <span class="badge text-bg-success" *ngIf="data.hadDiscount === true">Si</span>
+                    <span class="badge text-bg-danger" *ngIf="data.hadDiscount === false">No</span>
+                </td>
+                <td *ngIf="!resizeLeft">{{data.discountValue ? data.discountValue : 0}}</td>
+                <td *ngIf="!resizeLeft" [nzAlign]="'center'">
+                    <span class="badge text-bg-success" *ngIf="data.isTransfer === true">Si</span>
+                    <span class="badge text-bg-danger" *ngIf="data.isTransfer === false">No</span>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</ng-template>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header" style="border: none !important;">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- TABLES -->
+                <div class="row mx-2">
+                    <div class="custom-card p-0">
+                        <!-- NAV Y MENU BUTTONS -->
+                        <div class="col-sm-12 ps-2 row">
+                            <div class="col-sm-4 my-2 d-flex align-items-center">
+                                <button nz-button class="button-white me-3" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                    <img draggable="false" src="../../../../../../../../assets/icon/fi_maximize-2.svg">
+                                </button>
+                                <button class="nav-item nav-link gray btn px-3 me-4 module-title"
+                                    *ngFor="let row of groupBtn" [ngClass]="{'active':periodSelected===row.id}"
+                                    (click)="periodSelected=row.id;checkPeriodSelected();clearingCollectsData.periodSelected = row.id; setDataDateByRoutes()">
+                                    {{row.name}}
+                                </button>
+                            </div>
+                            <div class="col-sm-8 d-flex justify-content-end align-items-center">
+                                <span class="align-bottom">Para ver el <b class="text-green">detalle</b> de <b>rutas,
+                                        viajes, Vehículos
+                                        y
+                                        pasajes</b> de un dato especifico debe seleccionar el que desea ver.</span>
+                            </div>
+                        </div>
+                        <!-- TABLES -->
+                        <!-- MAIN TABLE -->
+                        <div class="col-sm-12 p-0 mx-0 mt-2 row" *ngIf="!clearingCollectsData.collectSelected">
+                            <div class="col-sm-12 p-0 m-0">
+                                <nz-table #tableMain [nzData]="clearingCollectsData.collectsShower"
+                                    [nzShowPagination]="false" [nzScroll]="{ x:'1000px', y: '225px'}"
+                                    [nzPageSize]="clearingCollectsData.collectsShower.length">
+                                    <thead>
+                                        <!-- HEADER 1 -->
+                                        <tr>
+                                            <th nzWidth="180px">Desde - Hasta</th>
+                                            <th nzWidth="100px">Tarjeta</th>
+                                            <th nzWidth="100px">QR</th>
+                                            <th nzWidth="100px">Efectivo</th>
+                                            <th nzWidth="150px">Total Recaudado</th>
+                                            <th nzWidth="200px">Valor recuperado descuento</th>
+                                            <th nzWidth="100px">Total a repartir</th>
+                                        </tr>
+                                        <!-- HEADER 2 -->
+                                        <tr>
+                                            <th>{{dataGeneralCollect.date}}</th>
+                                            <th>
+                                                <div class="row p-0 m-0">
+                                                    <p class="col-sm-12 p-0 m-0">{{dataGeneralCollect.cardValue |
+                                                        currency}}</p>
+                                                    <p class="col-sm-12 p-0 m-0 ft-ligth">
+                                                        ({{dataGeneralCollect.cardCant}})</p>
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="row p-0 m-0">
+                                                    <p class="col-sm-12 p-0 m-0">{{dataGeneralCollect.qrValue |
+                                                        currency}}</p>
+                                                    <p class="col-sm-12 p-0 m-0 ft-ligth">
+                                                        ({{dataGeneralCollect.qrCant}})</p>
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="row p-0 m-0">
+                                                    <p class="col-sm-12 p-0 m-0">{{dataGeneralCollect.cashValue |
+                                                        currency}}</p>
+                                                    <p class="col-sm-12 p-0 m-0 ft-ligth">
+                                                        ({{dataGeneralCollect.cashCant}})</p>
+                                                </div>
+                                            </th>
+                                            <th class="align-top">{{dataGeneralCollect.totalCollected | currency}}</th>
+                                            <th class="align-top">{{dataGeneralCollect.discountValue | currency}}</th>
+                                            <th>
+                                                <div class="row p-0 m-0">
+                                                    <p class="col-sm-12 p-0 m-0">{{dataGeneralCollect.distributionTotal
+                                                        | currency}}</p>
+                                                    <p class="col-sm-12 p-0 m-0 ft-ligth">
+                                                        ({{dataGeneralCollect.totalCant}})</p>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let data of tableMain.data" style="cursor: pointer;"
+                                            (click)="clearingCollectsData.collectSelected = data; searchRouteDetails()">
+                                            <td>{{data.date}}</td>
+                                            <td>
+                                                <div class="row p-0 m-0">
+                                                    <p class="col-sm-12 p-0 m-0">{{data.cardValue | currency}}</p>
+                                                    <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.cardCant}})</p>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="row p-0 m-0">
+                                                    <p class="col-sm-12 p-0 m-0">{{data.qrValue | currency}}</p>
+                                                    <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.qrCant}})</p>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="row p-0 m-0">
+                                                    <p class="col-sm-12 p-0 m-0">{{data.cashValue | currency}}</p>
+                                                    <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.cashCant}})</p>
+                                                </div>
+                                            </td>
+                                            <td class="align-top">{{data.totalCollected | currency}}</td>
+                                            <td class="align-top">{{data.discountValue | currency}}</td>
+                                            <td>
+                                                <div class="row p-0 m-0">
+                                                    <p class="col-sm-12 p-0 m-0">{{data.distributionTotal | currency}}
+                                                    </p>
+                                                    <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.totalCant}})</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </nz-table>
+                            </div>
+                            <!-- INFO TABLE MANI -->
+                            <div class="col-sm-12 my-2 d-flex justify-content-end align-items-end">
+                                <span>
+                                    El <b class="text-green">valor</b> que aparece entre <b>parentesis ( )</b> equivale
+                                    al <b>número de
+                                        pasajeros</b>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- TABLE ROUTES -->
+                        <div class="col-sm-12 p-0 m-0 my-2 row" *ngIf="clearingCollectsData.collectSelected">
+                            <div class="col-sm-12 pe-0 row">
+                                <!-- TABLE MAIN SHORT -->
+                                <!-- <div class="col-sm-3">
+                                    <div class="custom-card h-100">
+                                        <nz-table #tableMainShort [nzData]="dataDateShower" [nzShowPagination]="false"
+                                            [nzScroll]="{y: '170px'}" [nzPageSize]="dataDateShower.length">
+                                            <thead>
+                                                <tr>
+                                                    <th nzWidth="180px">Desde - Hasta</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let data of tableMainShort.data" style="cursor: pointer;">
+                                                    <td>{{data.date}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </nz-table>
+                                    </div>
+                                </div> -->
+                                <!-- TABLE ROUTES -->
+                                <div class="col-sm p-0 m-0 row custom-card" style="margin: 0px 0px 0px 5px !important;">
+                                    <!-- TITLE TABLE ROUTES -->
+                                    <div class="col-sm-12 my-2 row">
+                                        <div class="col-sm-4 d-flex justify-content-start align-items-center">
+                                            <button nz-button class="button-black mx-2" [nzType]="'primary'"
+                                                (click)="clearingCollectsData.collectSelected = undefined ; clearingCollectsData.routesCollectSelected = undefined;clearingCollectsData.passenger = undefined;clearingCollectsData.travelCollectSelected = undefined ; clearingCollectsData.vehicleCollectSelected = undefined">
+                                                Regresar
+                                            </button>
+                                            <h1 class="title-home align-middle">Rutas</h1>
+                                        </div>
+                                        <div class="col-sm-8 d-flex justify-content-end align-items-center">
+                                            <span>
+                                                El <b class="text-green">valor</b> que aparece entre <b>parentesis (
+                                                    )</b> equivale al
+                                                <b>número de pasajeros.</b>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <!-- TABLE ROUTES -->
+                                    <div class="col-sm-12 p-0 m-0">
+                                        <nz-table #tableRutas [nzData]="clearingCollectsData.routesShower"
+                                            [nzShowPagination]="false" [nzScroll]="{ x:'1000px', y:'300px'}"
+                                            [nzPageSize]="clearingCollectsData.routesShower.length">
+                                            <thead>
+                                                <tr>
+                                                    <th>Fechas</th>
+                                                    <th>Ruta</th>
+                                                    <th>Tarjeta</th>
+                                                    <th>QR</th>
+                                                    <th>Efectivo</th>
+                                                    <th>Total Recaudado</th>
+                                                    <th>Valor recuperado descuento</th>
+                                                    <th>Total a repartir</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let data of tableRutas.data" style="cursor: pointer;"
+                                                    (click)="clearingCollectsData.routesCollectSelected = data; searchTravelVehicleDetails()">
+                                                    <th>{{data.date}}</th>
+                                                    <td>
+                                                        {{data.routeName}}
+                                                    </td>
+                                                    <td>
+                                                        <div class="row p-0 m-0">
+                                                            <p class="col-sm-12 p-0 m-0">{{data.cardValue | currency}}
+                                                            </p>
+                                                            <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.cardCant}})
+                                                            </p>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row p-0 m-0">
+                                                            <p class="col-sm-12 p-0 m-0">{{data.qrValue | currency}}</p>
+                                                            <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.qrCant}})</p>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row p-0 m-0">
+                                                            <p class="col-sm-12 p-0 m-0">{{data.cashValue | currency}}
+                                                            </p>
+                                                            <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.cashCant}})
+                                                            </p>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-top">{{data.totalCollected | currency}}</td>
+                                                    <td class="align-top">{{data.discountValue | currency}}</td>
+                                                    <td>
+                                                        <div class="row p-0 m-0">
+                                                            <p class="col-sm-12 p-0 m-0">{{data.distributionTotal |
+                                                                currency}}</p>
+                                                            <p class="col-sm-12 p-0 m-0 ft-ligth">({{data.totalCant}})
+                                                            </p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </nz-table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12 pe-0 row" *ngIf="clearingCollectsData.routesCollectSelected">
+                                <div class="col-sm-12 pe-0 mt-2">
+                                    <div class="custom-card d-flex">
+                                        <div [ngClass]="{'w-50': !resizeLeft && !resizeRight,'w-80': resizeLeft && !resizeRight,'w-20':resizeRight}"
+                                            style="border-right: 1px solid #CBD7E5; border-radius: 8px;">
+                                            <!-- TABLE VIAJES -->
+                                            <div>
+                                                <div class="ms-2 mt-2 d-flex justify-content-between">
+                                                    <h1 class="title-home align-middle">Viajes</h1>
+                                                    <div
+                                                        *ngIf="clearingCollectsData.travelCollectSelected || clearingCollectsData.vehicleCollectSelected">
+                                                        <div *ngIf="!resizeRight">
+                                                            <img draggable="false"
+                                                                src="../../../../../../../../assets/icon/fi_chevrons-right.svg"
+                                                                *ngIf="!resizeLeft"
+                                                                (click)="resizeLeft = !resizeLeft; resizeLeft = true ">
+                                                            <img draggable="false"
+                                                                src="../../../../../../../../assets/icon/fi_chevrons-left.svg"
+                                                                *ngIf="resizeLeft"
+                                                                (click)="resizeLeft = !resizeLeft; resizeLeft = false ">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <nz-table #tableViajes [nzData]="clearingCollectsData.travelsShower"
+                                                        [nzShowPagination]="false" [nzScroll]="{ x:'1000px', y:'300px'}"
+                                                        [nzPageSize]="clearingCollectsData.travelsShower.length">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Viajes</th>
+                                                                <th *ngIf="!resizeRight">Tarjeta</th>
+                                                                <th *ngIf="!resizeRight">QR</th>
+                                                                <th *ngIf="!resizeRight">Efectivo</th>
+                                                                <th *ngIf="!resizeRight">Total Recaudado</th>
+                                                                <th *ngIf="!resizeRight">Valor recuperado descuento</th>
+                                                                <th *ngIf="!resizeRight">Total a repartir</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let data of tableViajes.data"
+                                                                style="cursor: pointer;"
+                                                                (click)="clearingCollectsData.travelCollectSelected = data; clearingCollectsData.vehicleCollectSelected = undefined;searchPassengerDetails(true)">
+                                                                <td>
+                                                                    {{data.date | date:'hh:mm:ss aa'}}
+                                                                </td>
+                                                                <td *ngIf="!resizeRight">
+                                                                    <div class="row p-0 m-0">
+                                                                        <p class="col-sm-12 p-0 m-0">{{data.cardValue |
+                                                                            currency}}</p>
+                                                                        <p class="col-sm-12 p-0 m-0 ft-ligth">
+                                                                            ({{data.cardCant}})</p>
+                                                                    </div>
+                                                                </td>
+                                                                <td *ngIf="!resizeRight">
+                                                                    <div class="row p-0 m-0">
+                                                                        <p class="col-sm-12 p-0 m-0">{{data.qrValue |
+                                                                            currency}}</p>
+                                                                        <p class="col-sm-12 p-0 m-0 ft-ligth">
+                                                                            ({{data.qrCant}})</p>
+                                                                    </div>
+                                                                </td>
+                                                                <td *ngIf="!resizeRight">
+                                                                    <div class="row p-0 m-0">
+                                                                        <p class="col-sm-12 p-0 m-0">{{data.cashValue |
+                                                                            currency}}</p>
+                                                                        <p class="col-sm-12 p-0 m-0 ft-ligth">
+                                                                            ({{data.cashCant}})</p>
+                                                                    </div>
+                                                                </td>
+                                                                <td *ngIf="!resizeRight" class="align-top">
+                                                                    {{data.totalCollected | currency}}</td>
+                                                                <td *ngIf="!resizeRight" class="align-top">
+                                                                    {{data.discountValue | currency}}</td>
+                                                                <td *ngIf="!resizeRight">
+                                                                    <div class="row p-0 m-0">
+                                                                        <p class="col-sm-12 p-0 m-0">
+                                                                            {{data.distributionTotal |
+                                                                            currency}}</p>
+                                                                        <p class="col-sm-12 p-0 m-0 ft-ligth">
+                                                                            ({{data.totalCant}})</p>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </nz-table>
+                                                </div>
+                                            </div>
+                                            <!-- TABLE Vehículos -->
+                                            <div>
+                                                <h1 class="title-home align-middle ms-2 mt-2">Vehículos</h1>
+                                                <div>
+                                                    <nz-table #tableVehiculos
+                                                        [nzData]="clearingCollectsData.vehiclesShower"
+                                                        [nzShowPagination]="false" [nzScroll]="{ x:'1000px', y:'300px'}"
+                                                        [nzPageSize]="clearingCollectsData.vehiclesShower.length">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Vehículos</th>
+                                                                <th *ngIf="!resizeRight">Tarjeta</th>
+                                                                <th *ngIf="!resizeRight">QR</th>
+                                                                <th *ngIf="!resizeRight">Efectivo</th>
+                                                                <th *ngIf="!resizeRight">Total Recaudado</th>
+                                                                <th *ngIf="!resizeRight">Valor recuperado descuento</th>
+                                                                <th *ngIf="!resizeRight">Total a repartir</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let data of tableVehiculos.data"
+                                                                style="cursor: pointer;"
+                                                                (click)="clearingCollectsData.vehicleCollectSelected = data; clearingCollectsData.travelCollectSelected = undefined;searchPassengerDetails(false)">
+                                                                <td>
+                                                                    {{data.internalNumber}} - {{data.plate}}
+                                                                </td>
+                                                                <td *ngIf="!resizeRight">
+                                                                    <div class="row p-0 m-0">
+                                                                        <p class="col-sm-12 p-0 m-0">{{data.cardValue |
+                                                                            currency}}</p>
+                                                                        <p class="col-sm-12 p-0 m-0 ft-ligth">
+                                                                            ({{data.cardCant}})</p>
+                                                                    </div>
+                                                                </td>
+                                                                <td *ngIf="!resizeRight">
+                                                                    <div class="row p-0 m-0">
+                                                                        <p class="col-sm-12 p-0 m-0">{{data.qrValue |
+                                                                            currency}}</p>
+                                                                        <p class="col-sm-12 p-0 m-0 ft-ligth">
+                                                                            ({{data.qrCant}})</p>
+                                                                    </div>
+                                                                </td>
+                                                                <td *ngIf="!resizeRight">
+                                                                    <div class="row p-0 m-0">
+                                                                        <p class="col-sm-12 p-0 m-0">{{data.cashValue |
+                                                                            currency}}</p>
+                                                                        <p class="col-sm-12 p-0 m-0 ft-ligth">
+                                                                            ({{data.cashCant}})</p>
+                                                                    </div>
+                                                                </td>
+                                                                <td *ngIf="!resizeRight" class="align-top">
+                                                                    {{data.totalCollected | currency}}</td>
+                                                                <td *ngIf="!resizeRight" class="align-top">
+                                                                    {{data.discountValue | currency}}</td>
+                                                                <td *ngIf="!resizeRight">
+                                                                    <div class="row p-0 m-0">
+                                                                        <p class="col-sm-12 p-0 m-0">
+                                                                            {{data.distributionTotal |
+                                                                            currency}}</p>
+                                                                        <p class="col-sm-12 p-0 m-0 ft-ligth">
+                                                                            ({{data.totalCant}})</p>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </nz-table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            [ngClass]="{'w-50': !resizeLeft && !resizeRight,'w-20': resizeLeft && !resizeRight,'w-80':resizeRight}">
+                                            <ng-container *ngIf="clearingCollectsData.travelCollectSelected || clearingCollectsData.vehicleCollectSelected; 
+                                then rowSelectedTemplate; else notRowSelected">
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- NO DATA -->
+                <ng-template #notRowSelected>
+                    <div nz-row class="card-aling-center">
+                        <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+                            <div nz-col nzXs="24" nzSm="20" nzMd="14">
+                                <img draggable="false" style="margin: 40px 0px 20px 0px;"
+                                    src="../../../../../assets/icon/info_icon.svg" alt="icono-buscar">
+                                <div nz-col nzSm="24" nzMd="18">
+                                    <h1 class="title-form" style="place-content: center !important;">
+                                        Seleccione un dato de la tabla
+                                    </h1>
+                                    <h1 class="title-secundary" style="margin-top: 0px;">
+                                        y podrá visualizar el detalle de cada uno.
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+                <!-- TABLE TEMPLET SELECT -->
+                <ng-template #rowSelectedTemplate>
+                    <div class="ms-2 mt-2 d-flex justify-content-between">
+                        <div
+                            *ngIf="clearingCollectsData.travelCollectSelected || clearingCollectsData.vehicleCollectSelected">
+                            <div *ngIf="!resizeLeft">
+                                <img draggable="false" src="../../../../../../../../assets/icon/fi_chevrons-right.svg"
+                                    *ngIf="resizeRight" (click)="resizeRight = !resizeRight; resizeRight = false ">
+                                <img draggable="false" src="../../../../../../../../assets/icon/fi_chevrons-left.svg"
+                                    *ngIf="!resizeRight" (click)="resizeRight = !resizeRight; resizeRight = true ">
+                            </div>
+                        </div>
+                        <h1 class="title-home align-middle me-2">Pasajeros</h1>
+                    </div>
+                    <nz-table #tablePasajeros [nzData]="clearingCollectsData.passenger" [nzShowPagination]="false"
+                        [nzScroll]="{ x:'1000px', y:'279px'}" [nzPageSize]="clearingCollectsData.passenger.length">
+                        <thead>
+                            <tr>
+                                <th nzWidth="150px">Identificaci&oacute;n</th>
+                                <th nzWidth="150px" *ngIf="!resizeLeft">Cuenta</th>
+                                <th nzWidth="150px" *ngIf="!resizeLeft">Nombre</th>
+                                <th nzWidth="180px" *ngIf="!resizeLeft">Forma de pago</th>
+                                <th nzWidth="180px" *ngIf="!resizeLeft">Valor cobrado</th>
+                                <th nzWidth="170px" *ngIf="!resizeLeft">¿Aplic&oacute; a descuento?</th>
+                                <th nzWidth="170px" *ngIf="!resizeLeft">Valor descontado</th>
+                                <th nzWidth="170px" *ngIf="!resizeLeft">¿Es un transbordo?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of tablePasajeros.data" style="cursor: pointer;">
+                                <td>CC. {{data.identification}}</td>
+                                <td *ngIf="!resizeLeft">{{data.account || '-'}}</td>
+                                <td *ngIf="!resizeLeft">{{data.name}}</td>
+                                <td *ngIf="!resizeLeft">{{data.paymentType}}</td>
+                                <td *ngIf="!resizeLeft">{{data.value | currency}}</td>
+                                <td *ngIf="!resizeLeft" [nzAlign]="'center'">
+                                    <span class="badge text-bg-success" *ngIf="data.hadDiscount === true">Si</span>
+                                    <span class="badge text-bg-danger" *ngIf="data.hadDiscount === false">No</span>
+                                </td>
+                                <td *ngIf="!resizeLeft">{{data.discountValue ? data.discountValue : 0}}</td>
+                                <td *ngIf="!resizeLeft" [nzAlign]="'center'">
+                                    <span class="badge text-bg-success" *ngIf="data.isTransfer === true">Si</span>
+                                    <span class="badge text-bg-danger" *ngIf="data.isTransfer === false">No</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </nz-table>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

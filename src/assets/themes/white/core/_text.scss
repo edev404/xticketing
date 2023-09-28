@@ -1,0 +1,67 @@
+.font-g {
+  font-family: 'Taylor Sans';
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.text-sm {
+  font-family: 'Taylor Sans' !important;
+  font-size: 16px;
+  line-height: 22px;
+}
+.text-md {
+  font-family: 'Taylor Sans' !important;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.text-xs {
+  font-family: 'Taylor Sans' !important;
+  font-size: 18px;
+  line-height: 22px;
+  letter-spacing: -0.01em;
+}
+
+.text-bg-danger{
+  background-color: #FEF2F2 !important;
+  padding: 2px 12px !important;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 18px;
+  color: #EF4444 !important;
+}
+
+.text-bg-warning{
+  background-color: #FFF8E1 !important;
+  padding: 2px 12px !important;
+
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 18px;
+  color: #FFB600 !important;
+}
+
+.text-bg-success{
+  background-color: #F0FAF8 !important;
+  padding: 2px 12px !important;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 18px;
+  color: #00AE8D !important;
+}
+
+.text-decoration-link {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -1%;
+  color: #00AE8D;
+  text-decoration: #00AE8D underline;
+}
+
+

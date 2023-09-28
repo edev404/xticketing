@@ -1,0 +1,344 @@
+<nz-breadcrumb style="margin-bottom: 20px;">
+  <nz-breadcrumb-item>
+    <span class="title-modulo">Antifraudes</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item [nzOverlay]="menu">
+    <span class="title-submodulo">Fraudes</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item [nzOverlay]="submenu">
+    <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">Registrar</span>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <ul nz-menu nzSelectable routerLinkActive="item--active">
+    <li nz-menu-item [routerLink]="['/main/antifraude/controls/search']">Antifraudes</li>
+    <li nz-menu-item [routerLink]="['/main/antifraude/fraudes/search']">Fraudes</li>
+  </ul>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #submenu="nzDropdownMenu">
+  <ul nz-menu nzSelectable routerLinkActive="item--active">
+    <li nz-menu-item [routerLink]="['/main/antifraude/fraudes/search']">Buscar</li>
+    <li nz-menu-item [routerLink]="['/main/antifraude/fraudes/create']">Registrar</li>
+    <!-- <li nz-menu-item [routerLink]="['/main/antifraude/fraude/assign']">Asignar</li> -->
+    <li nz-menu-item [routerLink]="['/main/antifraude/fraudes/analizar']">Analizar</li>
+    <!-- <li nz-menu-item [routerLink]="['/main/antifraude/fraude/reports']">Reporte</li> -->
+  </ul>
+</nz-dropdown-menu>
+
+ <div *ngIf="!cargarFormulario" style="border: 1px solid #e9eefa; border-radius: 8px; margin: 20px 0px">
+    <!-- FILTRO TABLA -->
+    <form nz-form style="padding: 0px 24px; margin: 25px 0px" nz-col nzSpan="7">
+      <nz-form-item>
+        <nz-form-control [nzSpan]="24">
+          <nz-input-group nzPrefixIcon="search" style="color: #798CA5; justify-content: center;" class="type-control">
+            <input nz-input id="search" name="search" type="search" autocomplete="off" [(ngModel)]="filterValueTable"
+              (ngModelChange)="search()" placeholder="Búsqueda">
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  <!-- TABLA -->
+  <div style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px;">
+    <nz-table #basicTable [nzData]="controlesActivos" [nzFrontPagination]="false" [nzPageSize]="5"
+      [nzScroll]="{ x: '1000px'}">
+      <thead>
+        <tr style="background: #F5F7FA;">
+          <th></th>
+          <th>Identificador</th>
+          <th>Servicio</th>
+          <!-- <th>Empresas</th> -->
+          <th>Causa</th>
+          <th>Plataforma</th>
+          <th>Control asociado a</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let data of basicTable.data | paginate : { id: 'table', itemsPerPage: numberRow, currentPage: page }">
+          <td>
+            <div class="d-flex justify-content-center align-items-center">
+              <img draggable="false" style="cursor: pointer;" src="../../../../../assets/icon/fi_settings.svg"
+                class="mx-1" (click)="habilitarRegistro(data)" nz-tooltip="Configurar">
+            </div>
+          </td>
+          <td>{{ data.id }}</td>
+          <td>{{ data.nServicio }}</td>
+          <!-- <td>{{ data.nEmpresa }}</td> -->
+          <td>{{ data.causa }}</td>
+          <td>{{ data.plataforma }}</td>
+          <td>{{ data.nUsuario ? data.nUsuario : data.nTarjeta ? data.nTarjeta : data.nPasajero }}</td>
+          <td style="display: flex; gap: 5px;">
+            <ng-container *ngIf="data.estado == 1">
+              <span class="btn-state-active">Vigente</span>
+            </ng-container>
+            <ng-container *ngIf="data.estado == 0">
+              <span>No vigente</span>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <!-- PAGINADO DE LA TABLA -->
+    <div class="row d-flex align-items-center" *ngIf="controlesActivos.length > 0">
+      <div class="col-sm-4 ps-4">
+        <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+          <div>
+            <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+          </div>
+
+          <div class="px-1">
+            <nz-form-control>
+              <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow"
+                (ngModelChange)="onChangeRowPerPage($event)">
+                <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </div>
+
+          <div>
+            <label class="label-title" style="margin-top: 7px;">entradas</label>
+          </div>
+        </nz-form-item>
+      </div>
+      <div class="col-sm d-flex justify-content-end pe-4">
+        <pagination-controls id="table" previousLabel="Anterior" nextLabel="Siguiente"
+          (pageChange)="onChangePage($event)" (pageBoundsCorrection)="onChangePage($event)">
+        </pagination-controls>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!mostrarData">
+    <div nz-row class="card-aling-center mb-4">
+      <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+        <div nz-col nzXs="24" nzSm="20" nzMd="14">
+
+          <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../assets/icon/info_icon.svg"
+            alt="icono-buscar">
+          <div nz-col nzSm="24" nzMd="18">
+            <h1 class="title-form" style="place-content: center !important;">
+              No hay datos existentes
+            </h1>
+            <h1 class="title-secundary" style="margin-top: 0px;">
+              No existen datos para visualizar en esta tabla. Puedes volver a la página principal.
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<ng-container *ngIf="cargarFormulario">
+  <div class="home-title-page" style="display: flex; justify-content: space-between;">
+    <h1 class="title-home">Registro posible fraude</h1>
+    <div>
+      <nz-space>
+        <button nz-button class="button-white" nzType="primary" (click)="clearFormQuestion()">
+          Limpiar
+        </button>
+        <button nz-button class="button-black" style="margin: 0px 0px 0px 7px;" nzType="primary" form="CreateForm" (click)="cargarFormulario = false">
+          cancelar
+        </button>
+        <button nz-button class="button-green" nzType="primary" form="CreateForm">
+          Registrar
+        </button>
+      </nz-space>
+    </div>
+  </div>
+
+  <nz-divider></nz-divider>
+
+  <h2 class="title-secundary">Ingrese la siguiente información para registrar un posible fraude.</h2>
+
+  <form nz-form [formGroup]="form" id="CreateForm" autocomplete="off" (ngSubmit)="save()">
+
+    <!-- Filtros basicos -->
+    <div class="content-card">
+
+      <div style="display: flex; justify-content: space-between; margin: 15px 15px;">
+        <h1 class="title-home">Información básica</h1>
+      </div>
+
+      <div class="padding-form">
+
+        <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8" [nzLg]="6">
+          <div nz-row [nzGutter]="24" nzJustify="space-around" nzAlign="middle">
+
+            <div nz-col nzSpan="24">
+              <label class="label-title" for="fecha_probable_ocurrencia">Fecha probable ocurrencia</label>
+              <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24" [nzErrorTip]="errores">
+                  <nz-date-picker [nzFormat]="'dd/MM/yyyy'" nzId="fecha_probable_ocurrencia"
+                    formControlName="fecha_probable_ocurrencia" nzPlaceHolder="dd/mm/aaaa">
+                  </nz-date-picker>
+                  <ng-template #errores let-control>
+                    <ng-container *ngIf="control.hasError('required')">¡Por favor seleccione la fecha!</ng-container>
+                    <ng-container *ngIf="control.hasError('fechaMayor')">¡La fecha no puede ser mayor a la fecha
+                      actual!</ng-container>
+                  </ng-template>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+          </div> <!-- Fin row -->
+        </div> <!-- Fin col -->
+
+        <div nz-row [nzGutter]="24" nzJustify="start" nzAlign="middle">
+
+          <div nz-col [nzXs]="24" [nzSm]="isIDMax ? 12 : 24" [nzMd]="isIDMax ? 10 : 24" [nzLg]="8" *ngIf="isIDMax">
+            <label class="label-title" for="id">ID</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor ingrese el ID!" [ngClass]="true ? 'disabled-input' : ''">
+                <nz-input-number nzId="id" formControlName="id" [nzStep]="1" nzPlaceHolder="Ingrese ID">
+                </nz-input-number>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzXs]="24" [nzSm]="isIDMax ? 12 : 24" [nzMd]="isIDMax ? 14 : 24" [nzLg]="16">
+            <label class="label-title" for="descripcion">Descripción</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor ingrese la situación presentada!">
+                <input nz-input type="text" class="input-field" id="descripcion" formControlName="descripcion"
+                  placeholder="Describa la situación presentada" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+        </div> <!-- Fin row -->
+
+        <div nz-row [nzGutter]="24" nzJustify="space-around" nzAlign="middle">
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+            <label class="label-title" for="fk_tipo_fraude">Tipo de fraude</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione el tipo de fraude!">
+                <nz-select nzId="fk_tipo_fraude" formControlName="fk_tipo_fraude"
+                  nzPlaceHolder="Seleccione el tipo de fraude">
+                  <nz-option *ngFor="let item of tpFraudes" [nzValue]="item.id"
+                    [nzLabel]="item.description"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+<!--  [ngClass]="true ? 'disabled-select' : ''" -->
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+            <label class="label-title" for="fk_componente">Componente</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione el componente!">
+                <nz-select nzId="fk_componente" formControlName="fk_componente"
+                  nzPlaceHolder="Seleccione el componente">
+                  <nz-option *ngFor="let item of tpComponentes" [nzValue]="item.id"
+                    [nzLabel]="item.description"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8">
+            <label class="label-title" for="fk_fuente">Fuente</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione la fuente!">
+                <nz-select nzId="fk_fuente" formControlName="fk_fuente" nzPlaceHolder="Seleccione la fuente">
+                  <nz-option *ngFor="let item of tpFuentes" [nzValue]="item.id"
+                    [nzLabel]="item.description"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+        </div> <!-- Fin row -->
+
+      </div> <!-- Fin padding-form -->
+
+    </div> <!-- Fin content-card basico -->
+
+    <!-- Filtros avanzados -->
+    <div class="content-card">
+
+      <div style="display: flex; justify-content: space-between; margin: 15px 15px;">
+        <h1 class="title-home">Información avanzada</h1>
+      </div>
+
+      <div class="padding-form">
+
+        <div nz-row [nzGutter]="24" nzJustify="space-around" nzAlign="middle">
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="14" [nzLg]="16">
+            <label class="label-title" for="riesgo">Riesgo</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor ingrese el riesgo!">
+                <input nz-input type="text" class="input-field" id="riesgo" formControlName="riesgo"
+                  placeholder="Ingrese el posible riesgo si no se hace nada" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="10" [nzLg]="8">
+            <label class="label-title" for="fk_impacto">Impacto</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione el impacto!">
+                <nz-select nzId="fk_impacto" formControlName="fk_impacto" nzPlaceHolder="Seleccione el impacto">
+                  <nz-option *ngFor="let item of tpImpactos" [nzValue]="item.id"
+                    [nzLabel]="item.description"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+        </div> <!-- Fin row -->
+
+        <div nz-row [nzGutter]="24" nzJustify="start" nzAlign="middle">
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+            <label class="label-title" for="fk_servicio">Servicio</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione el servicio!">
+                <nz-select [ngClass]="true ? 'disabled-select' : ''" nzId="fk_servicio" formControlName="fk_servicio" nzPlaceHolder="Seleccione el servicio">
+                  <nz-option [nzValue]="'N/A'" nzLabel="N/A"></nz-option>
+                  <nz-option nzValue="0" nzLabel="Todos"></nz-option>
+                  <nz-option *ngFor="let item of servicesList" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <!-- <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+            <label class="label-title" for="fk_empresa">Empresa</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione la empresa!">
+                <nz-select [ngClass]="true ? 'disabled-select' : ''" nzId="fk_empresa" formControlName="fk_empresa" nzPlaceHolder="Seleccione la empresa">
+                  <nz-option [nzValue]="'N/A'" nzLabel="N/A"></nz-option>
+                  <nz-option nzValue="0" nzLabel="Todos"></nz-option>
+                  <nz-option *ngFor="let item of companiesList" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div> -->
+
+          <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+            <label class="label-title" for="fkControlActivo">Controles activos</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione el control activo!">
+                <nz-select [ngClass]="true ? 'disabled-select' : ''" nzId="fkControlActivo" formControlName="fkControlActivo"
+                  nzPlaceHolder="Seleccione el control activo">
+                  <nz-option *ngFor="let item of controlesActivos" [nzValue]="item.id"
+                    [nzLabel]="item.id + ' - ' + item.causa"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+        </div> <!-- Fin row -->
+
+
+      </div> <!-- Fin padding-form -->
+
+    </div><!-- Fin content-card avanzado -->
+
+  </form>
+</ng-container>

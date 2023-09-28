@@ -1,0 +1,132 @@
+<div class="home-title-page mb-4" style="display: flex; justify-content: space-between; ">
+    <h1 class="title-home">Liquidación pasajes - {{companyName}}</h1>
+    <div>
+        <ng-container *ngIf="clearingId; then detail else notDetail"></ng-container>
+    </div>
+</div>
+<nz-divider style="margin: 20px 0px !important;"></nz-divider>
+<nz-tabset nzType="card">
+    <nz-tab nzTitle="Repartición">
+        <app-detail-passage-distributions
+            [detailsSearch]="detailsSearch.distributions"
+            [pressettlementFilter]="pressettlementFilter"
+            [dataTimeOfSearch]="dataTimeOfSearch"
+        ></app-detail-passage-distributions>
+    </nz-tab>
+    <nz-tab nzTitle="Recaudo">
+        <app-detail-passage-collection
+            [clearingCollectsData]="detailsSearch.collect"
+            [pressettlementFilter]="pressettlementFilter"
+            [dataTimeOfSearch]="dataTimeOfSearch"
+        ></app-detail-passage-collection>
+    </nz-tab>
+    <nz-tab nzTitle="Detalle">
+        <app-detail-passage-general
+            [clearingDetailsData]="detailsSearch.detail"
+            [pressettlementFilter]="pressettlementFilter"
+            [dataTimeOfSearch]="dataTimeOfSearch"
+        ></app-detail-passage-general>
+    </nz-tab>
+</nz-tabset>
+<ng-template #detail>
+    <div [ngSwitch]="detailsSearch.state.code" class="no-margin no-padding">
+      <!--CASE BORRADOR-->
+      <div *ngSwitchCase="'B'">
+        <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="changeState('P')">
+            Enviar a Revisión
+        </button>
+  
+        <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="changeState('B')">
+            Guardar Borrador
+        </button>
+  
+        <button nz-button class="button-black mx-2" [nzType]="'primary'">
+            Hallazgo
+        </button>
+  
+        <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cancelDetail()">
+            Cancelar
+        </button>
+      </div>
+  
+      <!--CASE POR REVISION-->
+      <div *ngSwitchCase="'P'">
+        <button nz-button class="button-white mx-2" (click)="switchFinding()">
+            Hallazgo
+        </button>
+  
+        <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="changeState('R')">
+            Rechazar
+        </button>
+  
+        <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="changeState('AN')">
+            Anular
+        </button>
+        
+        <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cancelDetail()">
+            Cancelar
+        </button>
+        
+        <button nz-button class="button-green mx-2" [nzType]="'primary'" (click)="changeState('C')">
+            Aprobar
+        </button>
+      </div>
+  
+      <!--CASE RECHAZADA-->
+      <div *ngSwitchCase="'R'">
+        <button nz-button class="button-white mx-2" (click)="switchFinding()">
+            Hallazgo
+        </button>
+        
+        <button nz-button class="button-black x-2" [nzType]="'primary'" (click)="changeState('AN')">
+            Anular
+        </button>
+        
+        <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cancelDetail()">
+            Cancelar
+        </button>
+        
+        <button nz-button class="button-green x-2" [nzType]="'primary'" (click)="changeState('P')">
+            Enviar a Revisión
+        </button>
+      </div>
+  
+      <!--CASE APROBADA-->
+      <div *ngSwitchCase="'C'">
+        <button nz-button class="button-white mx-2" (click)="switchFinding()">
+            Hallazgo
+        </button>
+  
+        <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cancelDetail()">
+            Cancelar
+        </button>
+      </div>
+  
+      <!--CASE ANULADA-->
+      <div *ngSwitchCase="'AN'">
+        <button nz-button class="button-white mx-2" (click)="switchFinding()">
+            Hallazgo
+        </button>
+  
+        <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cancelDetail()">
+            Cancelar
+        </button>
+      </div>
+    </div>
+</ng-template>
+
+<ng-template #notDetail>
+    <div>
+        <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cancelDetail()">
+            Cancelar
+        </button>
+
+        <button nz-button class="button-green mx-2" [nzType]="'primary'" (click)="submit('P', 'H')">
+            Enviar a Revisión
+        </button>
+
+        <button nz-button class="button-green mx-2" [nzType]="'primary'" (click)="submit('B','H')">
+            Guardar Borrador
+        </button>
+    </div>
+</ng-template>

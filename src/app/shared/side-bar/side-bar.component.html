@@ -1,0 +1,99 @@
+<nz-layout>
+  <nz-sider nzCollapsible nzWidth="240px" [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
+    <ul nz-menu nzMode="inline">
+      <!-- logo y busqueda -->
+      <div class="sticky-top py-2" style="background: #FFFFFF;">
+        <div class="logo" *ngIf="!isCollapsed">
+          <a>
+            <img draggable="false" class="icon-menu" src="http://set-archivos-test.s3.amazonaws.com/logos/polis.png" alt="logo" [routerLink]="'/main'">
+          </a>
+        </div>
+        <div class="logo" *ngIf="isCollapsed">
+          <a>
+            <img draggable="false" src="../../../assets/Frame.svg" alt="logo" [routerLink]="'/main'">
+          </a>
+        </div>
+        <form nz-form *ngIf="!isCollapsed">
+          <nz-form-item>
+            <nz-form-control [nzSpan]="22">
+              <nz-input-group nzPrefixIcon="search" style="color: #798CA5; justify-content: center;" class="type-control">
+                <input nz-input name="text" type="text" id="text" placeholder="Buscar" [(ngModel)]="filtrar" (ngModelChange)="filtrarSidebar()">
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+        <form nz-form *ngIf="isCollapsed">
+          <nz-form-item>
+            <nz-form-control [nzSpan]="16">
+              <nz-input-group nzPrefixIcon="search" style="color: #798CA5; justify-content: center;" class="type-control">
+                <input nz-input name="text" type="text" id="text" placeholder="Buscar">
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </div>
+      <!-- items y modulos -->
+      <li nz-menu-item>
+        <a [routerLink]="['/main']" routerLinkActive="item--active" [routerLinkActiveOptions]="{exact: true}">
+          <i nz-icon [nzType]="'home'" style="font-size: 20px;"></i>
+          <span class="text-side-bar">Inicio</span>
+        </a>
+      </li>
+      <!-- MODULOS DINAMICOS -->
+      <li nz-submenu routerLinkActive="item--active" *ngFor="let module of navModules; let i = index"
+        [(nzOpen)]="openMap['sub'+i]" (nzOpenChange)="openHandler('sub'+i)">
+        <!-- MODULOS PADRES -->
+        <span title class="w-100">
+          <i nz-icon [nzType]="module.icon" style="font-size: 20px;"></i>
+          <span>{{module.name}}</span>
+        </span>
+        <!-- MODULOS HIJOS -->
+        <ul *ngIf="module.id != 13 && module.id != 14 && module.id != 10 && module.id != 4">
+          <li nz-menu-item [routerLink]="['/main/'+module.path+'/'+categories.path]"
+            *ngFor="let categories of module.categories" (click)="setPermisos(module.path+'/'+categories.path)">
+            {{categories.category || categories.name}}
+          </li>
+        </ul>
+        <!-- PARA VISUALIZAR LOS MODULOS NIETOS DE LOS HIJOS -->
+        <!-- MODLUO DE TARJETAS -->
+        <ul *ngIf="module.id == 13 || module.id == 10 || module.id == 4">
+          <ng-container *ngFor="let categories of module.categories">
+            <li *ngIf="categories.id == 141 || categories.id == 80 || categories.id == 81 || categories.id == 179 || categories.id == 174" nz-submenu
+              routerLinkActive="item--active" [nzTitle]="categories.name">
+              <ul>
+                <li nz-menu-item [routerLink]="['/main/'+module.path+'/'+categories.path+'/'+subAction.path]"
+                  *ngFor="let subAction of categories.subActions" (click)="setPermisos(module.path+'/'+categories.path+'/'+subAction.path)">
+                  {{subAction.name}}
+                </li>
+              </ul>
+            </li>
+            <li *ngIf="categories.id != 141 && categories.id != 80 && categories.id != 81 && categories.id != 179 && categories.id != 174" nz-menu-item
+              [routerLink]="['/main/'+module.path+'/'+categories.path]" (click)="setPermisos(module.path+'/'+categories.path)">
+              {{categories.category || categories.name}}
+            </li>
+          </ng-container>
+        </ul>
+        <!-- MODULO ANTIFRAUDE -->
+        <ul *ngIf="module.id == 14">
+          <ng-container *ngFor="let categories of module.categories">
+            <li nz-submenu routerLinkActive="item--active" [nzTitle]="categories.name">
+              <ul>
+                <li nz-menu-item [routerLink]="['/main/'+module.path+'/'+categories.path+'/'+subAction.path]"
+                  *ngFor="let subAction of categories.subActions"
+                  (click)="optionSelect(categories.path, subAction.path); setPermisos(module.path+'/'+categories.path+'/'+subAction.path)">
+                  {{subAction.name}}
+                </li>
+              </ul>
+            </li>
+          </ng-container>
+        </ul>
+      </li>
+      <nz-footer class="sticky-bottom" *ngIf="!isCollapsed" style="padding: 0px 0px 0px 27px;">
+        <img draggable="false" src="../../../assets/Logo company.svg" alt="">
+      </nz-footer>
+      <nz-footer class="sticky-bottom" style="padding: 0px 0px 0px 27px; background: #FFFFFF; width: 100%;" *ngIf="isCollapsed">
+        <img draggable="false" src="../../../assets/Logo_company_2.svg" alt="">
+      </nz-footer>
+    </ul>
+  </nz-sider>
+</nz-layout>

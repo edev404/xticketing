@@ -1,0 +1,384 @@
+<div class="p-3" style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px; ">
+    <div class="home-title-page mb-2" style="display: flex; justify-content: space-between; "> 
+        <h1 class="title-home">Móvil</h1>
+      <div>
+       <button nz-button class="login-form-button login-form-margin button-green" [nzType]="'primary'" (click)="saveData()">
+            Guardar
+       </button>
+     </div>
+    </div>
+    <nz-divider style="margin: 0px 0 !important;"></nz-divider>
+    <h2 class="text-sm mt-3 title-secundary">Digite los siguientes campos</h2>
+    <div>
+        <div class="row">
+            <!-- Primer columna -->
+            <div class="col-sm-6">
+                <nz-card nzHoverable style="border-radius: 8px; border: 1px solid #CBD7E5; height: auto;">
+                    <h3 class="text-sm title-home">Time out:</h3> 
+                    <!-- Inactividad cuenta -->
+                    <label class="mt-1 pr-0">Inactividad cuenta:</label>
+                    <div class="row">
+                        <div class="form-group col-lg-2 col-sm-4">
+                            <input type="number" 
+                                class="form-control input-field"
+                                name="tiempo_inactividad_cta" 
+                                [(ngModel)]="mobileForm.inactivityTimeCta"
+                                #tiempo_inactividad_cta="ngModel" 
+                                pattern="[0-9]{1,200}" 
+                                required>
+                            <span *ngIf="tiempo_inactividad_cta.touched && !tiempo_inactividad_cta.valid" class="messagewarning">
+                                Valor inválido
+                            </span>
+                        </div>
+
+                        <div class="form-group col-lg-5 col-sm-8">
+                            <select class="form-control" 
+                                    [(ngModel)]="mobileForm.inactivityUnitCta" 
+                                    name="selectUnityCta"
+                                    #selectUnityCta="ngModel"  
+                                    required>
+                                <option disabled value="undefined">Seleccionar unidad</option>
+                                <option *ngFor="let time of timeUnity" value="{{time.value}}">{{time.key}}</option>
+                            </select>
+                            <span *ngIf="selectUnityCta.touched && !selectUnityCta.valid && selectUnityCta.value == undefined" class="messagewarning">
+                                Valor inválido
+                            </span>
+                        </div>
+
+                        <div class="form-group col-lg-1 svg-icon">
+                            <img draggable="false" 
+                                src="../../../../../../assets/icon/fi_help-circle.svg"
+                                nz-tooltip nzTooltipTitle="Tiempo de inactividad máximo." 
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Inactividad clave 4 digitos -->
+                    <label class="mt-1 pr-0">Inactividad clave 4 dígitos:</label>
+                    <div class="row">
+                        <div class="form-group col-lg-2 col-sm-4">
+                            <input type="number" 
+                                class="form-control input-field"
+                                name="tiempo_inactividad_clave" 
+                                [(ngModel)]="mobileForm.inactivityTimeKey"
+                                #tiempo_inactividad_clave="ngModel" 
+                                pattern="[0-9]{1,4}"
+                                required>
+                            <span *ngIf="tiempo_inactividad_clave.touched && !tiempo_inactividad_clave.valid" class="messagewarning">
+                                Valor inválido
+                            </span>
+                        </div>
+
+                        <div class="form-group col-lg-5 col-sm-8">
+                            <select class="form-control" 
+                                    [(ngModel)]="mobileForm.inactivityUnitKey" 
+                                    name="selectUnityClave"
+                                    #selectUnityClave="ngModel"  
+                                    required>
+                                <option disabled value="undefined">Seleccionar unidad</option>
+                                <option *ngFor="let time of timeUnity" value="{{time.value}}">{{time.key}}</option>
+                            </select>
+                            <span *ngIf="selectUnityClave.touched && !selectUnityClave.valid && selectUnityClave.value == undefined" class="messagewarning">
+                                Valor inválido
+                            </span>
+                        </div>
+                        
+                        <div class="form-group col-lg-1 svg-icon">
+                            <img draggable="false" 
+                                src="../../../../../../assets/icon/fi_help-circle.svg"
+                                nz-tooltip nzTooltipTitle="Tiempo de inactividad máximo de la cuenta a partir de los últimos 4 dígitos." 
+                            >
+                        </div>
+
+                    </div>
+                </nz-card>
+                <nz-card nzHoverable class="mt-2" style="border-radius: 8px; border: 1px solid #CBD7E5; height: auto;">
+                    <h3 class="text-sm title-home">Límites:</h3>   
+                    <!-- Maximo monto recarga -->
+                    <label class="mt-1 pr-0">Máximo monto recarga:</label>
+                    <div class="row">
+                        <div class="form-group col-lg-4 col-sm-8">
+                            <input type="number" 
+                                class="form-control input-field"
+                                name="max_monto_recarga" 
+                                [(ngModel)]="mobileForm.maxRechargeLoad"
+                                #max_monto_recarga="ngModel" 
+                                pattern="[0-9]{1,}"
+                                required
+                                placeholder="Monto máximo recarga">
+                            <span *ngIf="max_monto_recarga.touched && !max_monto_recarga.valid" class="messagewarning">
+                                Valor inválido
+                            </span>
+                        </div>
+                        
+                        <div class="form-group col-lg-3 d-flex justify-content-end">
+                            <label for="">Pesos por día</label>
+                        </div>
+
+                        <div class="form-group col-lg-1 svg-icon">
+                            <img draggable="false" 
+                                src="../../../../../../assets/icon/fi_help-circle.svg"
+                                nz-tooltip nzTooltipTitle="Monto máximo en recarga permitido." 
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Maximo saldo permitido cuenta -->
+                    <label class="mt-1 pr-0">Máximo saldo permitido cuenta:</label>
+                    <div class="row">
+                        <div class="form-group col-lg-5">
+                            <input type="number" 
+                                class="form-control input-field"
+                                name="max_saldo_cuenta" 
+                                [(ngModel)]="mobileForm.maxBalanceAccount"
+                                #max_saldo_cuenta="ngModel" 
+                                pattern="[0-9]{1,}"
+                                required
+                                placeholder="Monto saldo permitido">
+                            <span *ngIf="max_saldo_cuenta.touched && !max_saldo_cuenta.valid" class="messagewarning">
+                                Valor inválido
+                            </span>
+                        </div>
+
+                        <div class="form-group col-lg-2 d-flex justify-content-end">
+                            <label for="">Pesos</label>
+                        </div>
+
+                        <div class="form-group col-lg-2">
+                            <img draggable="false" 
+                                src="../../../../../../assets/icon/fi_help-circle.svg"
+                                nz-tooltip nzTooltipTitle="Máximo saldo disponible en la cuenta." 
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Maximo transacciones -->
+                    <label class="mt-1 pr-0">Máximo transacciones:</label>
+                    <div class="row">
+                        <div class="form-group col-lg-2">
+                            <select class="form-control"
+                                [(ngModel)]="mobileForm.maxNumberTrx" 
+                                name="max_numerotrx"
+                                #max_numerotrx="ngModel">
+                                <option *ngFor="let in of numbers(100); let i = index" value="{{i+1}}">{{i+1}}</option>
+                            </select>
+                            <span *ngIf="max_numerotrx.touched && !max_numerotrx.valid" class="messagewarning">
+                                Valor inválido
+                            </span>
+                        </div>
+
+                        <div class="form-group col-lg-5 d-flex justify-content-end">
+                            <label for="" class="mt-1">Transacciones por día</label>
+                        </div>
+
+                        <div class="form-group col-lg-1">
+                            <img draggable="false" 
+                                src="../../../../../../assets/icon/fi_help-circle.svg"
+                                nz-tooltip nzTooltipTitle="Máximo cantidad de transacciones permitidas." 
+                            >
+                        </div>
+                    </div>
+
+                    <!-- <label class="mt-1 pr-0">Mínima edad permitida:</label>
+                    <div class="row">
+                        <div class="form-group col-lg-5">
+                            <input type="number" 
+                                class="form-control input-field"
+                                name="max_edad_cuenta" 
+                                [(ngModel)]="mobileForm.maxAgeLogin"
+                                #max_edad_cuenta="ngModel" 
+                                pattern="[0-9]{1,}"
+                                required
+                                placeholder="Mínima edad permitida">
+                            <span *ngIf="max_edad_cuenta.touched && !max_edad_cuenta.valid" class="messagewarning">
+                                Valor inválido
+                            </span>
+                        </div>
+
+                        <div class="form-group col-lg-2 d-flex justify-content-end">
+                            <label for="">Edad</label>
+                        </div>
+
+                        <div class="form-group col-lg-2">
+                            <img draggable="false" 
+                                src="../../../../../../assets/icon/fi_help-circle.svg"
+                                nz-tooltip nzTooltipTitle="Máxima edad permitida para la plataforma." 
+                            >
+                        </div>
+                    </div> -->
+                </nz-card>
+            </div>
+
+            <!-- 2da Columna -->
+            <div class="col-sm-6">
+                <nz-card nzHoverable style="border-radius: 8px; border: 1px solid #CBD7E5; height: auto;">
+                    <h3 class="text-sm title-home">QR:</h3> 
+                    <!-- Actualizacion automatica QR -->
+                    <label class="mt-1 pr-0">Actualización automática QR:</label>
+                    <div class="row">
+                    
+                        <div class="form-group col-lg-2 col-sm-4 pl-0">
+                            <input type="number"
+                                class="form-control input-field"
+                                name="tiempo_actualiza_qr"
+                                [(ngModel)]="mobileForm.timeUpdateQr"
+                                #tiempo_actualiza_qr="ngModel"
+                                pattern="[0-9]{1,}"
+                                required>
+                            <span *ngIf="tiempo_actualiza_qr.touched && !tiempo_actualiza_qr.valid" class="messagewarning">
+                                Valor inválido
+                            </span>
+                        </div>
+
+                        <div class="form-group col-lg-5 col-sm-8">
+                            <select class="form-control" 
+                                    [(ngModel)]="mobileForm.unitUpdateQr" 
+                                    name="selectUnityActQR"
+                                    #selectUnityActQR="ngModel"  
+                                    required>
+                                <option disabled value="undefined">Seleccionar unidad</option>
+                                <option *ngFor="let time of timeUnity" value="{{time.value}}">{{time.key}}</option>
+                            </select>
+                            <span *ngIf="selectUnityActQR.touched && !selectUnityActQR.valid && selectUnityActQR.value == undefined" class="messagewarning">
+                                Valor inválido
+                            </span>
+                        </div>
+
+                        <div class="form-group col-lg-1 svg-icon">
+                            <img draggable="false" 
+                                src="../../../../../../assets/icon/fi_help-circle.svg"
+                                nz-tooltip nzTooltipTitle="Tiempo de actualización automática de QR en línea." 
+                            >
+                        </div>
+                    </div>
+                </nz-card>
+                <nz-card nzHoverable class="mt-2" style="border-radius: 8px; border: 1px solid #CBD7E5; height: auto;">
+                    <h3 class="text-sm title-home">Tarjetas:</h3> 
+                    <!-- Actualizacion automatica QR -->
+                    <label class="mt-1 pr-0">Configuración N° de tarjetas:</label>
+                    <div class="row">
+                    
+                        <div class="form-group col-lg-2 col-sm-4 pl-0">
+                            <input type="number"
+                                class="form-control input-field"
+                                name="tiempo_actualiza_qr"
+                                [(ngModel)]="mobileForm.maxNroTarjetas"
+                                #maxNroTarjetas="ngModel"
+                                pattern="[0-9]{1,}"
+                                required>
+                            <span *ngIf="maxNroTarjetas.touched && !maxNroTarjetas.valid" class="messagewarning">
+                                Valor inválido
+                            </span>
+                        </div>
+                    </div>
+                </nz-card>
+                <nz-card nzHoverable class="mt-2" style="border-radius: 8px; border: 1px solid #CBD7E5; height: auto;">
+                    <h3 class="text-sm title-home">Seguridad:</h3> 
+                    <!-- Bloqueo credenciales -->
+                    <label class="mt-1 pr-0">Bloqueo credenciales:</label>
+                    <div class="row">
+                        <div class="form-group col-lg-2">
+                            <input type="number"
+                                class="form-control input-field"
+                                name="tiempo_bloq_credenciales"
+                                [(ngModel)]="mobileForm.lockTimeCredentials"
+                                #tiempo_bloq_credenciales="ngModel"
+                                pattern="[0-9]{1,}"
+                                required>
+                            <span *ngIf="tiempo_bloq_credenciales.touched && !tiempo_bloq_credenciales.valid" class="messagewarning">
+                                Valor inválido
+                            </span>
+                        </div>
+
+                        <div class="form-group col-lg-5 d-flex justify-content-end">
+                            <label for="">Segundos</label>
+                        </div>
+
+                        <div class="form-group col-lg-1">
+                            <img draggable="false" 
+                                src="../../../../../../assets/icon/fi_help-circle.svg"
+                                nz-tooltip nzTooltipTitle="Tiempo de bloqueo de credenciales por 3 intentos fallidos." 
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Bloqueo cambio No. celular -->
+                    <label class="mt-1 pr-0">Bloqueo cambio No. Celular:</label>
+                    <div class="row">
+                        <div class="form-group col-lg-2 col-sm-4 pl-0">
+                            <input type="number"
+                                class="form-control input-field"
+                                name="tiempo_bloq_cambio_cel"
+                                [(ngModel)]="mobileForm.lockTimeChangeCell"
+                                #tiempo_bloq_cambio_cel="ngModel"
+                                pattern="[0-9]{1,}"
+                                required>
+                            <span *ngIf="tiempo_bloq_cambio_cel.touched && !tiempo_bloq_cambio_cel.valid" class="messagewarning">
+                                Valor inválido
+                            </span>
+                        </div>
+
+                        <div class="form-group col-lg-5 col-sm-8">
+                            <select class="form-control" 
+                                    [(ngModel)]="mobileForm.unitLockChangeCell" 
+                                    name="selectUnityBloqCambioCel"
+                                    #selectUnityBloqCambioCel="ngModel"  
+                                    required>
+                                <option disabled value="undefined">Seleccionar unidad</option>
+                                <option *ngFor="let time of timeUnity" value="{{time.value}}">{{time.key}}</option>
+                            </select>
+                            <span *ngIf="selectUnityBloqCambioCel.touched && !selectUnityBloqCambioCel.valid && selectUnityBloqCambioCel.value == undefined" class="messagewarning">
+                                Valor inválido
+                            </span>
+                        </div>
+
+                        <div class="form-group col-lg-1 svg-icon">
+                            <img draggable="false" 
+                                src="../../../../../../assets/icon/fi_help-circle.svg"
+                                nz-tooltip nzTooltipTitle="Tiempo que debe transcurrir desde que se cambie el correo electrónico, para que se permita cambiar el número de celular." 
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Bloqueo cambio correo electronico -->
+                    <label>Bloqueo cambio correo electrónico:</label>
+                    <div class="row">
+                        <div class="form-group col-lg-2 col-sm-4 pl-0">
+                            <input type="number"
+                                class="form-control input-field"
+                                name="tiempo_bloq_cambio_email"
+                                [(ngModel)]="mobileForm.lockTimeChangeMail"
+                                #tiempo_bloq_cambio_email="ngModel"
+                                pattern="[0-9]{1,}"
+                                required>
+                            <span *ngIf="tiempo_bloq_cambio_email.touched && !tiempo_bloq_cambio_email.valid" class="messagewarning">
+                                Valor inválido
+                            </span>
+                        </div>
+
+                        <div class="form-group col-lg-5 col-sm-8">
+                            <select class="form-control" 
+                                    [(ngModel)]="mobileForm.unitLockChangeMail" 
+                                    name="selectUnityBloqCambioEmail"
+                                    #selectUnityBloqCambioEmail="ngModel"  
+                                    required>
+                                <option disabled value="undefined">Seleccionar unidad</option>
+                                <option *ngFor="let time of timeUnity" value="{{time.value}}">{{time.key}}</option>
+                            </select>
+                            <span *ngIf="selectUnityBloqCambioEmail.touched && !selectUnityBloqCambioEmail.valid && selectUnityBloqCambioEmail.value == undefined" class="messagewarning">
+                                Valor inválido
+                            </span>
+                        </div>
+
+                        <div class="form-group col-lg-1 svg-icon">
+                            <img draggable="false" 
+                                src="../../../../../../assets/icon/fi_help-circle.svg"
+                                nz-tooltip nzTooltipTitle="Tiempo que debe transcurrir desde que se cambie el celular, para que se permita cambiar el correo electrónico." 
+                            >
+                        </div>
+                    </div>
+                </nz-card>
+            </div>
+        </div>
+    </div>    
+</div>

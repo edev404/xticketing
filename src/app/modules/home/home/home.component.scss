@@ -1,0 +1,219 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
+.welcome{
+    position: static;
+    width: 100%;
+    height: 340px;
+    left: 0px;
+    top: 0px;
+    background: linear-gradient(180deg, #42D9B6 0%, #3BD9B4 57.95%, #0F9189 123.19%);
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+    margin: 10px 0px;
+    border-radius: 10px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.title-description{
+    display: flex;
+    flex-direction: column;
+    width: 710px;
+}
+
+.circule{
+    position: fixed;
+    width: 305px;
+    height: 305px;
+    left: 227px;
+    top: 130px;
+    border-radius: 100%;
+    background: linear-gradient(191.97deg, #F0FAF8 35.05%, rgba(240, 250, 248, 0) 98.93%);
+    mix-blend-mode: normal;
+    opacity: 0.35;
+}
+
+.circule01{
+    position: fixed;
+    width: 350px;
+    height: 350px;
+    left: 240px;
+    top: 100px;
+    background: #F0FAF8;
+    mix-blend-mode: normal;
+    opacity: 0.1;
+    border-radius: 100%;
+}
+
+.circule02{
+    position: fixed;
+    width: 325px;
+    height: 325px;
+    right: -108px;
+    bottom: 170px;;
+    background: linear-gradient(180deg, rgba(240, 250, 248, 0) 0%, #F0FAF8 50.52%);
+    mix-blend-mode: normal;
+    opacity: 0.4;
+    border-radius: 100%;
+}
+
+.circule03{
+    position: fixed;
+    width: 452px;
+    height: 452px;
+    right: -103px;
+    bottom: 100px;
+    background: linear-gradient(216.62deg, #F0FAF8 30.6%, rgba(240, 250, 248, 0) 86.61%);
+    mix-blend-mode: normal;
+    opacity: 0.15;
+    border-radius: 100%;
+}
+
+.home-title{
+    font-family: 'Taylor Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 48px;
+    line-height: 56px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: -0.01em;
+    color: #FFFFFF;
+}
+
+.home-title-secundary{
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #FFFFFF;
+    text-shadow: 0px 0px 12px rgba(0, 113, 82, 0.5);
+    flex: none;
+    order: 2;
+    flex-grow: 0;
+    margin: 24px 0px;
+}
+
+.group{
+    height: 6px;
+    display: flex;
+    justify-content: center;
+}
+
+.rectangle01{
+    width: 8px;
+    height: 6px;
+    background: #FFFFFF;
+    border-radius: 6px;
+}
+
+.rectangle02{
+    width: 42px;
+    height: 6px;
+    background: #FFFFFF;
+    border-radius: 6px;
+    margin: 0px 5px;
+}
+
+.rectangle03{
+    width: 13px;
+    height: 6px;
+    background: #FFFFFF;
+    border-radius: 6px;
+}
+
+.second-section{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    position: static;
+    width: 100%;
+    height: 240px;
+    left: 24px;
+    top: 432px;
+    border-radius: 8px;
+}
+
+.card-home{
+    width: 288px;
+    text-align: -webkit-center;
+    flex: none;
+    order: 0;
+    flex-grow: 0;  
+}
+
+.card-text{
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 565;
+    font-size: 12px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #556A83;
+    
+}
+
+.circle{
+    position: static;
+    width: 96px;
+    height: 96px;
+    left: 96px;
+    top: 0px;
+    background: #F0FAF8;
+    border-radius: 48px;
+}
+
+.card-title-primary{
+    font-family: "Taylor Sans";
+    font-style: italic;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 0px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    place-content: center;
+    letter-spacing: -0.01em;
+    color: #32414F;
+}
+
+.home-title-page{
+    position: static;
+    width: 100%;
+    height: 28px;
+    left: 0px;
+    top: 0px;
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+    margin: 5px 0px;
+}
+
+.title-home{
+    font-family: 'Taylor Sans';
+    font-style: italic;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 22px;
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.01em;
+    color: #415364;
+}
+
+.cont-text{
+    margin: 20px 0px;
+}

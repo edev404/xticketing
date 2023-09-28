@@ -1,0 +1,15 @@
+<div class="row mt-3">
+  <div class="col-sm-12">
+    <div [ngClass]="{'centrado': urlFile == undefined || urlFile == '', 'box-image-card': urlFile != ''}"
+      class="contenedor-pdf d-flex justify-content-center align-items-center">
+      <div *ngIf="urlFile == '' || urlFile == undefined">
+        <img draggable="false" src="../../../../../assets/icon/pdf.png" height="100px">
+      </div>
+
+      <ng-container *ngIf="urlFile != ''">
+        <pdf-viewer [src]="urlFile" [render-text]="true" [original-size]="false"
+          style="width: 1000px; height: 400px"></pdf-viewer>
+      </ng-container>
+    </div>
+  </div>
+</div>

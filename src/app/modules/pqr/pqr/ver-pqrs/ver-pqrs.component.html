@@ -1,0 +1,213 @@
+<nz-breadcrumb style="margin-bottom: 20px;">
+  <nz-breadcrumb-item>
+    <span class="title-modulo">
+      <i nz-icon nzType="solution" style="font-size: 25px; margin-bottom: 1px;"></i>
+    </span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-modulo">PQR</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">Gestión PQR</span>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+
+<!-- icono filtro -->
+<ng-template #extraIcon>
+  <span nz-icon nzType="filter" nzTheme="outline"></span>
+</ng-template>
+
+<!-- filtros -->
+<nz-collapse>
+  <nz-collapse-panel nzHeader="Filtrar" [nzActive]="false" [nzDisabled]="false" [nzExtra]="extraIcon">
+    <div style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px;" class="p-3">
+      <form [formGroup]="formFiltro">
+
+        <div class="row">
+          <div class="col">
+            <label for="cod_pqr">{{ labelFormFiltro('cod_pqr') }}:</label>
+            <input nz-input class="input-field" [type]="tipoFormFiltro('cod_pqr')" id="cod_pqr"
+              formControlName="cod_pqr">
+            <div class="control-invalid" *ngIf="controlValidFiltro('cod_pqr')">
+              {{ errorMessageFiltro('cod_pqr') }}
+            </div>
+          </div>
+          <div class="col">
+            <label for="documento">{{ labelFormFiltro('documento') }}:</label>
+            <input nz-input class="input-field" [type]="tipoFormFiltro('documento')" id="documento"
+              formControlName="documento">
+            <div class="control-invalid" *ngIf="controlValidFiltro('documento')">
+              {{ errorMessageFiltro('documento') }}
+            </div>
+          </div>
+          <div class="col">
+            <label for="tipo">{{ labelFormFiltro("tipo") }}:</label>
+            <nz-select name="tipo" id="tipo" class="form-select" formControlName="tipo">
+              <nz-option nzValue="" nzLabel="Seleccione"></nz-option>
+              <nz-option *ngFor="let option of optionsTipoPqr?.data.tipos" nzValue="{{ option.id }}" nzLabel="{{ option.descripcion }}">
+              </nz-option>
+            </nz-select>
+            <div class="control-invalid" *ngIf="controlValidFiltro('tipo')">
+              {{ errorMessageFiltro("tipo") }}
+            </div>
+          </div>
+          <div class="col">
+            <label for="motivo">{{ labelFormFiltro("motivo") }}:</label>
+            <nz-select id="motivo" class="form-select" formControlName="motivo">
+              <nz-option nzValue="" nzLabel="Seleccione"></nz-option>
+              <nz-option *ngFor="let option of optionsMotivoPqr?.data.motivos" nzValue="{{ option.id }}"
+                attr.data-cod-tpqr="{{ option.codTpqr }}" nzLabel="{{ option.descripcion }}"></nz-option>
+            </nz-select>
+            <div class="control-invalid" *ngIf="controlValidFiltro('motivo')">
+              {{ errorMessageFiltro("motivo") }}
+            </div>
+          </div>
+          <div class="col">
+            <label for="medio">{{ labelFormFiltro("medio") }}:</label>
+            <nz-select class="form-select" formControlName="medio">
+              <nz-option nzValue="" nzLabel="Seleccione"></nz-option>
+              <nz-option *ngFor="let option of optionsMedioRecepcion?.data['Medio-recepcion']" nzValue="{{ option.id }}" nzLabel="{{ option.descripcion }}"></nz-option>
+            </nz-select>
+            <div class="control-invalid" *ngIf="controlValidFiltro('medio')">
+              {{ errorMessageFiltro("medio") }}
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3 mb-2">
+          <div class="col">
+            <label for="estado">{{ labelFormFiltro('estado') }}:</label>
+            <nz-select formControlName="estado" class="form-select">
+              <nz-option nzValue="" nzLabel="Seleccione"></nz-option>
+              <nz-option *ngFor="let option of optionsEstadosPqr" nzValue="{{ option.idEstado }}" nzLabel="{{ option.nombreEstado }}">
+              </nz-option>
+            </nz-select>
+            <div class="control-invalid" *ngIf="controlValidFiltro('estado')">
+              {{ errorMessageFiltro("estado") }}
+            </div>
+          </div>
+          <div class="col">
+            <label for="tipo_fecha">{{ labelFormFiltro('tipo_fecha') }}</label>
+            <nz-select formControlName="tipo_fecha" class="form-select">
+              <nz-option nzValue="0" nzLabel="Seleccione"></nz-option>
+              <nz-option nzValue="1" nzLabel="Radicación"></nz-option>
+              <nz-option nzValue="2" nzLabel="Solicitud"></nz-option>
+              <nz-option nzValue="3" nzLabel="Notificación"></nz-option>
+              <nz-option nzValue="4" nzLabel="Cierre"></nz-option>
+            </nz-select>
+            <div class="control-invalid" *ngIf="controlValidFiltro('tipo_fecha')">
+              {{ errorMessageFiltro("tipo_fecha") }}
+            </div>
+          </div>
+          <div class="col">
+            <label for="fecha_inicial">{{ labelFormFiltro('fecha_inicial') }}:</label>
+            <input nz-input class="input-field" [type]="tipoFormFiltro('fecha_inicial')" formControlName="fecha_inicial"
+              id="fecha_inicial" title="Fecha inicial">
+            <div class="control-invalid" *ngIf="controlValidFiltro('fecha_inicial')">
+              {{ errorMessageFiltro("fecha_inicial") }}
+            </div>
+          </div>
+          <div class="col">
+            <label for="fecha_final">{{ labelFormFiltro('fecha_final') }}:</label>
+            <input nz-input class="input-field" [type]="tipoFormFiltro('fecha_final')" formControlName="fecha_final"
+              id="fecha_final" title="Fecha final">
+            <div class="control-invalid" *ngIf="controlValidFiltro('fecha_final')">
+              {{ errorMessageFiltro("fecha_final") }}
+            </div>
+          </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col">
+              <button nz-button class="button-green mx-1" [nzType]="'primary'" (click)="filtrarPqrs()">
+                Filtrar
+              </button>
+              <button nz-button class="button-black mx-1" [nzType]="'primary'" (click)="restablecerFiltro()">
+                Restablecer
+              </button>
+            </div>
+        </div>
+      </form>
+    </div>
+  </nz-collapse-panel>
+</nz-collapse>
+
+
+<!-- table -->
+<div style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px;">
+  <nz-table #basicTable nzSize="small" *ngIf="listaPqr?.data.pqr.length > 0" [nzData]="listaPqr?.data.pqr"
+    [nzFrontPagination]="false" [nzPageSize]="5" [nzScroll]="{ x: '1000px'}">
+    <thead>
+      <tr style="background: #F5F7FA;">
+        <th nzWidth="40px"></th>
+        <th nzWidth="75px" nzAlign="center">PQR</th>
+        <th nzWidth="100px" nzAlign="center">Tipo</th>
+        <th nzWidth="100px" nzAlign="center">Registro</th>
+        <th nzWidth="100px" nzAlign="center">Solución</th>
+        <th nzWidth="100px" nzAlign="center">Plazo</th>
+        <th nzWidth="150px" nzAlign="center">Estado</th>
+        <th nzWidth="220px" nzAlign="center">Solicitante</th>
+        <th nzWidth="150px" nzAlign="center">No. de documento</th>
+        <th nzWidth="150px" nzAlign="center">Medio recepción</th>
+        <th nzWidth="220px" nzAlign="center">Motivo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let pqr of basicTable.data | paginate : { id: 'table', itemsPerPage: numberRow, currentPage: page }">
+        <td nzAlign="right">
+          <app-acciones-pqr [acciones]="accionesPqr" [pqr]="pqr" (modalToOpen)="openModal($event, pqr)" (click)="setAccionesFromEstadoPqr(pqr)"></app-acciones-pqr>
+        </td>
+        <td nzAlign="right">{{ pqr.id }}</td>
+        <td>{{ pqr.tipo }} </td>
+        <td>{{ pqr.fecRegi }} </td>
+        <td>{{ pqr.fechaMaxSol }} </td>
+        <td class="text-center">
+          <span class="badge text-bg-success" style="font-size: 12px;" *ngIf="dateDifference(pqr.fecRegi, pqr.fechaMaxSol) >= 4 ">{{ dateDifference(pqr.fecRegi, pqr.fechaMaxSol) }} días</span>
+          <span class="badge text-bg-danger" style="font-size: 12px;" *ngIf="dateDifference(pqr.fecRegi, pqr.fechaMaxSol) < 4 ">{{ dateDifference(pqr.fecRegi, pqr.fechaMaxSol) }} días</span>
+        </td>
+        <td>{{ pqr.nombreEstado }}</td>
+        <td>{{ pqr.nomSolicitante }} </td>
+        <td>{{ pqr.nroDocu }} </td>
+        <td>{{ pqr.medio }} </td>
+        <td>{{ pqr.motivo }} </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <nz-table [nzTemplateMode]="true" nzShowPagination="false" nzSize="small" *ngIf="listaPqr?.data.pqr.length == 0">
+    <tbody>
+      <tr>
+        <td colspan="10">
+          <h5>No se encontraron PQR</h5>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <!-- PAGINADO DE LA TABLA -->
+  <div class="row d-flex align-items-center" *ngIf="listaPqr?.data.pqr.length > 0">
+    <div class="col-sm-4 ps-4">
+      <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+        <div>
+          <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+        </div>
+
+        <div class="px-1">
+          <nz-form-control>
+            <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow"
+              (ngModelChange)="onChangeRowPerPage($event)">
+              <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </div>
+
+        <div>
+          <label class="label-title" style="margin-top: 7px;">entradas</label>
+        </div>
+      </nz-form-item>
+    </div>
+    <div class="col-sm d-flex justify-content-end pe-4">
+      <pagination-controls id="table" previousLabel="Anterior" nextLabel="Siguiente" (pageChange)="onChangePage($event)"
+        (pageBoundsCorrection)="onChangePage($event)">
+      </pagination-controls>
+    </div>
+  </div>
+</div>
+
+<app-modals-acciones (accionEjecutada)="listPQR('');" [abrirModal]="modal"></app-modals-acciones>

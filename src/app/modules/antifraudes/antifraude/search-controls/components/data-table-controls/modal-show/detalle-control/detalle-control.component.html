@@ -1,0 +1,128 @@
+<form nz-form [formGroup]="form">
+
+  <div nz-row [nzGutter]="24" nzJustify="space-around" nzAlign="middle">
+
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="3">
+      <label class="label-title" for="estado">Estado</label>
+      <nz-form-item>
+        <nz-form-control nz-col [nzSpan]="24">
+          <nz-select class="disabled-select" nzAutoFocus nzId="estado" formControlName="estado">
+            <nz-option [nzValue]="form.controls['estado'].value"
+              [nzLabel]="form.controls['estado'].value == 405 ? 'Activo' : 'Inactivo'"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="5">
+      <label class="label-title" for="codigo">Código</label>
+      <nz-form-item>
+        <nz-form-control nz-col [nzSpan]="24">
+          <input nz-input type="text" class="input-field disable-input" id="codigo" formControlName="codigo" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+      <label class="label-title" for="control">Control</label>
+      <nz-form-item>
+        <nz-form-control nz-col [nzSpan]="24">
+          <input nz-input type="text" class="input-field disable-input" id="control" formControlName="control" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+      <label class="label-title" for="tipo_control">Tipo de control</label>
+      <nz-form-item>
+        <nz-form-control nz-col [nzSpan]="24">
+          <nz-select class="disabled-select" nzId="tipo_control" formControlName="tipo_control">
+            <nz-option [nzValue]="form.controls['tipo_control'].value"
+              [nzLabel]="form.controls['tipo_control'].value"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+  </div> <!-- Fin row -->
+
+  <div nz-row [nzGutter]="24" nzJustify="space-around" nzAlign="middle">
+
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+      <label class="label-title" for="componente">Componente</label>
+      <nz-form-item>
+        <nz-form-control nz-col nzMd="24">
+          <nz-select class="disabled-select" nzId="componente" formControlName="componente">
+            <nz-option [nzValue]="form.controls['componente'].value"
+              [nzLabel]="form.controls['componente'].value"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="16">
+      <label class="label-title" for="descripcion">Descripción</label>
+      <nz-form-item>
+        <nz-form-control nz-col nzMd="24">
+          <input nz-input type="text" class="input-field disable-input" id="descripcion"
+            formControlName="descripcion" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+  </div> <!-- Fin row -->
+
+  <div nz-row [nzGutter]="24" nzJustify="start" nzAlign="middle" style="margin-top: 3.125rem;">
+
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+      <label class="label-title" for="criticidad">Criticidad</label>
+      <nz-form-item>
+        <nz-form-control nz-col nzMd="24">
+          <nz-select class="disabled-select" nzId="criticidad" formControlName="criticidad">
+            <nz-option [nzValue]="form.controls['criticidad'].value"
+              [nzLabel]="form.controls['criticidad'].value"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="16">
+      <label class="label-title" for="fuente">Fuente</label>
+      <nz-form-item>
+        <nz-form-control nz-col nzMd="24">
+          <nz-select class="disabled-select" nzId="fuente" formControlName="fuente">
+            <nz-option [nzValue]="form.controls['fuente'].value" [nzLabel]="form.controls['fuente'].value"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+  </div> <!-- Fin row -->
+
+  <div nz-row [nzGutter]="24" nzJustify="start" nzAlign="middle">
+
+    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8">
+      <label class="label-title" for="deteccion">Detección</label>
+      <nz-form-item>
+        <nz-form-control nz-col nzMd="24">
+          <nz-select class="disabled-select" nzId="deteccion" formControlName="deteccion">
+            <nz-option [nzValue]="form.controls['deteccion'].value"
+              [nzLabel]="form.controls['deteccion'].value"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="16">
+      <label class="label-title" for="accion_resultante">Acción resultante</label>
+      <nz-form-item>
+        <nz-form-control nz-col nzMd="24">
+          <input nz-input type="text" class="input-field disable-input" id="accion_resultante"
+            formControlName="accion_resultante" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+  </div> <!-- Fin row -->
+
+</form>

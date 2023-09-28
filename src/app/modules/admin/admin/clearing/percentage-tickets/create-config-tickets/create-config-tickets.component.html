@@ -1,0 +1,153 @@
+<div class="home-title-page mb-4" style="display: flex; justify-content: space-between; ">
+  <h1 class="title-home pt-2">{{isEdit?'Editar configuración % pasajes':'Crear configuración % pasajes'}}</h1>
+  <div>
+    <button nz-button class="button-black mx- mx-2" [nzType]="'primary'" (click)="cancelCompany()">
+      Cancelar
+    </button>
+    <button *ngIf="!isEdit" nz-button (click)="saveData()" class="button-green mx-2" [nzType]="'primary'">
+      Guardar
+    </button>
+    <button *ngIf="isEdit" nz-button (click)="saveData()" class="button-green mx-2" [nzType]="'primary'">
+      Editar
+    </button>
+  </div>
+</div>
+<nz-divider style="margin: 0px 0 !important;"></nz-divider>
+<h2 class="text-sm my-3 title-secundary">Agregue los datos en los campos correspondientes para continuar</h2>
+<div class="row mt-3">
+  <!-- CODIGO -->
+  <div class="form-group col-sm-2 ">
+    <label for="codeLabel" class="my-label-form">C&oacute;digo</label>
+    <input type="text" class="form-control input-field" id="codeLabel" required name="codeLabel"
+      placeholder="Ingrese un C&oacute;digo" [(ngModel)]="passagesConfiguration.code" #code="ngModel"
+      [ngClass]="{'not-valid-input':code.touched && code.invalid,'disable-input':passagesConfiguration.id != undefined}" [disabled]="passagesConfiguration.id != undefined"
+      [pattern]="'^[.]?[0-9]+[.]?[0-9]*$'">
+    <span *ngIf="code.touched && code.invalid" class="messagewarning">
+      !Por favor ingresar un código¡
+    </span>
+  </div>
+  <!-- NOMBRE -->
+  <div class="form-group col-sm-2">
+    <label for="nameLabel" class="my-label-form">Nombre</label>
+    <input type="text" class="form-control input-field" id="nameLabel" required name="nameLabel"
+      placeholder="Ingrese nombre" [(ngModel)]="passagesConfiguration.name" #nameLabel="ngModel"
+      [ngClass]="{'not-valid-input':nameLabel.touched && nameLabel.invalid}">
+    <span *ngIf="nameLabel.touched && nameLabel.invalid" class="messagewarning">
+      ¡Por favor ingrese un nombre!
+    </span>
+  </div>
+  <!-- CIUDAD -->
+  <div class="form-group col-sm-4 ">
+    <label for="city" class="my-label-form">Ciudad</label>
+    <select class="form-control collection-basic-font" id="city" required name="city"
+      [(ngModel)]="passagesConfiguration.cityId" #city="ngModel"
+      [ngClass]="{'not-valid-input':city.touched && city.invalid && city.value == undefined}">
+      <option disabled [value]="undefined">Seleccione una ciudad</option>
+      <option *ngFor="let row of cities" [ngValue]="row.id">{{row.name}}</option>
+    </select>
+    <span *ngIf="city.touched && city.invalid && city.value == undefined" class="messagewarning">
+      ¡Por favor seleccione una ciudad!
+    </span>
+  </div>
+  <!-- VIGENCIA DESDE -->
+  <div class="form-group col-sm-2 ">
+    <label for="fromDate" class="my-label-form">Vigencia desde</label>
+    <input type="date" name="fromDate" #fromDate="ngModel" placeholder="Fecha desde"
+      [(ngModel)]="passagesConfiguration.validityStartDate" class="form-control input-field"
+      id="fromDate" />
+  </div>
+  <!-- VIGENCIA HASTA -->
+  <div class="form-group col-sm-2 ">
+    <label for="toDate" class="my-label-form">Vigencia hasta</label>
+    <input id="toDate" type="date" name="toDate" placeholder="Fecha hasta"
+      class="form-control input-field" [(ngModel)]="passagesConfiguration.validityEndDate"
+      #toDate="ngModel" />
+  </div>
+</div>
+<div class="row mt-5">
+  <div class="col-sm-6">
+    <div class="custom-card">
+      <ng-container *ngIf="passagesConfiguration.ticketInvolveds!.length > 0; then data; else noData"></ng-container>
+      <ng-template #data>
+        <nz-table #pasajeCofigTable [nzData]="passagesConfiguration.ticketInvolveds!" [nzFrontPagination]="false" [nzShowPagination]="false" [nzPageSize]="passagesConfiguration.ticketInvolveds!.length" [nzScroll]="{ y: '250px'}">
+          <thead>
+            <tr style="background: #F5F7FA;">
+              <th></th>
+              <th>Tipo de actor</th>
+              <th>Porcentaje</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of pasajeCofigTable.data">
+              <td style="display: revert;">
+                <div style="display: flex;">
+                  <img draggable="false" style="cursor: pointer;" class="mx-3" src="../../../../../../../assets/icon/fi_trash-2.svg"
+                    (click)="deletePercentageTypeActor(data)">
+                </div>
+              </td>
+              <td class="fw-bold">{{ data.involvedName }}</td>
+              <td>{{ data.percentage }}%</td>
+            </tr>
+          </tbody>
+          <tfoot class="sticky-bottom"
+            *ngIf="passagesConfiguration && passagesConfiguration.ticketInvolveds && passagesConfiguration.ticketInvolveds.length > 0">
+            <tr style="background: #fafafa;">
+              <td colspan="2">LA SUMA DEBE DAR 100%</td>
+              <td class="red-color fontbold">{{currentPercentage}}%</td>
+            </tr>
+          </tfoot>
+        </nz-table>
+      </ng-template>
+
+      <ng-template #noData>
+        <div nz-row class="card-aling-center mb-4">
+          <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+            <div nz-col nzXs="24" nzSm="20" nzMd="14">
+        
+              <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../assets/icon/info_icon.svg" alt="icono-buscar">
+              <div nz-col nzSm="24" nzMd="18">
+                <h1 class="title-form" style="place-content: center !important;">
+                  No hay datos existentes
+                </h1>
+                <h1 class="title-secundary" style="margin-top: 0px;">
+                  No existen datos para visualizar en esta tabla.
+                </h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+      
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <!-- TIPO DE ACTOR -->
+    <div class="row col-sm-12 d-flex justify-content-center">
+      <div class="form-group col-sm-7">
+        <label for="typeActors" class="my-label-form">Tipo de actor</label>
+        <select class="form-control collection-basic-font" id="typeActors" name="typeActors"
+          [(ngModel)]="percentageTypeActorSelectedCB" #typeActorsModel="ngModel">
+          <option disabled [value]="undefined">Seleccionar tipo actor</option>
+          <option *ngFor="let row of typeActors" [ngValue]="row">{{row.name}}</option>
+        </select>
+      </div>
+    </div>
+    <!-- PORCENTAJE -->
+    <div class="row col-sm-12 mt-2 d-flex justify-content-center">
+      <div class="form-group col-sm-7">
+        <label for="percentage" class="my-label-form">Porcentaje</label>
+        <input type="text" min="1" max="100" [(ngModel)]="percentageTypeActorSelected.percentage" #percentage="ngModel"
+          name="percentage" id="percentage" class="form-control input-field porcentaje-input" suffix="%" mask="000"
+          placeholder="Ingrese porcentaje">
+      </div>
+    </div>
+    <!-- BUTTON AGREGAR -->
+    <div class="form-group col-sm-12 mt-2 d-flex justify-content-center">
+      <button nz-button class="button-green" [nzType]="'primary'"
+        style="margin: 5px 0px !important;" (click)="addPercentageTypeActor()">
+        <i nz-icon nzType="plus" nzTheme="outline" class="align-middle pb-1"></i>
+        Agregar
+      </button>
+    </div>
+  </div>
+</div>

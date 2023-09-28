@@ -1,0 +1,88 @@
+<div class="home-title-page mb-4" style="display: flex; justify-content: space-between; ">
+    <h1 class="title-home">{{isEdit?'Editar servicio':'Crear servicio'}}</h1>
+    <div>
+        <button nz-button class=" button-black mx-2" [nzType]="'primary'" (click)="cancelService()">
+            Cancelar
+        </button>
+        <button *ngIf="!isEdit" nz-button class="button-green mx-2" [nzType]="'primary'"
+            form="CreateForm" (click)="saveService()">Guardar
+        </button>
+        <button *ngIf="isEdit" nz-button class="button-green mx-2" [nzType]="'primary'"
+            form="CreateForm" (click)="editService()">Editar
+        </button>
+    </div>
+</div>
+
+<nz-divider style="margin: 0px 0 !important;"></nz-divider>
+
+<form nz-form [formGroup]="validateForm" id="CreateForm" style="margin: 10px 0px;">
+    <div class="row gx-3">
+        <div class="col-sm-6">
+            <!-- codigo -->
+            <div class="col-sm">
+                <label class="label-title text-sm">Codigo</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24" nzErrorTip="Por favor ingrese el código!">
+    
+                        <input id="code" [ngClass]="!this.serviceId && this.validateCode > -1 ? 'error-form' : ''" class="rounded input-field" type="text" nz-input formControlName="code"
+                            placeholder="Ingrese un código" (ngModelChange)="cambioEstado()"/>
+                    </nz-form-control>
+                </nz-form-item>
+                <div *ngIf="!this.serviceId && this.validateCode > -1" style="color: #ff4d4f; margin-top: -20px;">
+                    ¡El código ingresado ya se encuentra registrado.!
+                </div>
+            </div>
+            <!-- nombre -->
+            <div class="col-sm">
+                <label class="label-title text-sm">Nombre</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24" nzErrorTip="Por favor ingrese el nombre!">
+                        <input id="nombre" [ngClass]="!this.serviceId && this.validateNombre > -1 ? 'error-form' : ''" class="rounded input-field" type="text" nz-input formControlName="nombre"
+                            placeholder="Ingrese un nombre" (ngModelChange)="cambioNombre()"/>
+                    </nz-form-control>
+                </nz-form-item>
+                <div *ngIf="!this.serviceId && this.validateNombre > -1" style="color: #ff4d4f; margin-top: -20px;">
+                    ¡El nombre ingresado ya se encuentra registrado.!
+                </div>
+            </div>
+            <!-- descripción -->
+            <div class="col-sm">
+                <label class="label-title text-sm">Descripción</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese una descripción!">
+                        <input id="description" class="rounded input-field" type="text" nz-input formControlName="description"
+                            placeholder="Ingrese una Descripción"/>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <!-- tipo de empresa -->
+            <div class="col-sm">
+                <label class="label-title text-sm">Tipo de empresa</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleciona un tipo empresa!">
+                        <nz-select nzAutoFocus  nzServerSearch id="company" formControlName="company"
+                            nzPlaceHolder="Seleccione una empresa">
+                            <nz-option disabled nzValue="undefined" nzLabel="Seleccione un tipo empresa"></nz-option>
+                            <nz-option *ngFor="let company of typeCompanies" [nzLabel]="company.description" [nzValue]="company.id"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+        <!-- box-checks -->
+        <div class="col-sm-6 row">
+            <div class="pr-5">
+                <nz-card  nzHoverable style="border-radius: 8px; border: 1px solid #CBD7E5; height: auto;" class="col-sm-12">
+                    <label>Maneja</label>
+                    <div *ngFor="let item of optionsChecks; let i = index" class="my-2">
+                        <input type="checkbox" class="mycheck-md" [id]="'option-' + i" [name]="'option-' + i"
+                            [checked]="item.value == 1" (click)="selectCheck($event,item)"/>
+                        <label class="ms-2" [for]="'option-' + i">
+                            {{item.name}}
+                        </label>
+                    </div>
+                </nz-card>
+            </div>
+        </div>
+    </div>
+</form>

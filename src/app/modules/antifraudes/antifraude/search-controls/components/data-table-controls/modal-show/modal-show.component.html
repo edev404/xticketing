@@ -1,0 +1,42 @@
+
+<nz-modal [(nzVisible)]="isModalShow" [nzWidth]="'80vw'" nzCentered="true" [nzFooter]="null" (nzOnCancel)="closeModal()">
+    <ng-container *nzModalContent>
+        
+      <div>
+          <h1 class="title-home">Información del control</h1>
+          <nz-tabset nzType="card">
+
+            <!-- DETALLE -->
+            <nz-tab nzTitle="Detalle" style="padding-left: 0px;" >
+              
+              <app-detalle-control [controlDetalle]="controlDetalle"></app-detalle-control>
+
+            </nz-tab>
+
+            <!-- Servicios y empresas -->
+            <nz-tab nzTitle="Servicios y empresas">
+
+              <app-data-table-servicios-empresas [listOfData]="listOfEmpresasServicios"></app-data-table-servicios-empresas>
+
+            </nz-tab>
+
+            <!-- Trazabilidad -->
+            <nz-tab nzTitle="Trazabilidad">
+              
+              <app-data-table-trazabilidad [listOfData]="listOfTrazabilidad"></app-data-table-trazabilidad>
+
+            </nz-tab>
+        </nz-tabset>
+      </div>
+
+      <div nz-col [nzSpan]="24" style="display: flex; justify-content: center; padding: 2rem 0rem 1rem 0rem;">
+        <button nz-button 
+                class="button-green" 
+                [nzType]="'primary'"
+                (click)="closeModal()">
+          Aceptar
+        </button>
+      </div>
+
+    </ng-container>
+</nz-modal>

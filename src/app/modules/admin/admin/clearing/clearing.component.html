@@ -1,0 +1,41 @@
+<!-- BREADCRUMB -->
+<nz-breadcrumb style="margin-bottom: 20px;">
+    <nz-breadcrumb-item>
+        <span class="title-modulo">
+            <i nz-icon nzType="setting" style="font-size: 25px; margin-bottom: 1px;"></i>
+        </span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+        <span class="title-modulo">Administración</span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+        <span class="title-submodulo">Clearing</span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+        <span class="title-submodulo" [ngClass]="{'breadCumbSelect': !breadcrumb}">{{titelBreadcrumb}}</span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item *ngIf="titelBreadcrumb == 'Pasajes'">
+        <span class="title-submodulo" [ngClass]="{'breadCumbSelect': breadcrumb}">{{titelBreadcrumbChild}}</span>
+    </nz-breadcrumb-item>
+</nz-breadcrumb>
+<!-- TABS -->
+<nz-tabset nzType="card" (nzSelectedIndexChange)="tabSelect($event)">
+    <nz-tab [nzTitle]="'Recargas'">
+        <app-recharges></app-recharges>
+    </nz-tab>
+    <nz-tab [nzTitle]="'Pasajes'">
+        <div class="p-2" style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px; ">
+            <nz-tabset nzType="card" (nzSelectedIndexChange)="tabSelectChild($event)">
+                <nz-tab [nzTitle]="'% Pasajes'">
+                    <app-percentage-tickets></app-percentage-tickets>
+                </nz-tab>
+                <nz-tab [nzTitle]="'Tipos de Actores'">
+                    <app-type-actors></app-type-actors>
+                </nz-tab>
+            </nz-tabset>
+        </div>
+    </nz-tab>
+    <nz-tab [nzTitle]="'Tipos de hallazgos'">
+        <app-type-finding></app-type-finding>
+    </nz-tab>
+</nz-tabset>

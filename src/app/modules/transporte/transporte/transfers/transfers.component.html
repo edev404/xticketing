@@ -1,0 +1,531 @@
+<!-- LISTA PRINCIPAL -->
+<div *ngIf="!edit" style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px;">
+  <div class="d-flex justify-content-between">
+    <!-- INPUT BUSQUEDA -->
+    <form nz-form style="padding: 0px 24px; margin: 25px 0px 0px 0px" nz-col nzSpan="7">
+      <nz-form-item>
+        <nz-form-control [nzSpan]="24">
+          <nz-input-group nzPrefixIcon="search" style="color: #798CA5; justify-content: center;" class="type-control">
+            <input 
+              nz-input
+              id="search"
+              name="search"
+              type="search"
+              autocomplete="off"
+              [(ngModel)]="filterValue"
+              (ngModelChange)="search()"
+              placeholder="Búsqueda"              
+            />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+    <!-- BUTTON CONFIGURAR -->
+    <button nz-button class="button-green mx-4" style="margin-top: 22px;"
+      [nzType]="'primary'" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <i nz-icon nzType="setting" nzTheme="outline" class="align-middle pb-1"></i>Configurar condiciones generales
+    </button>
+  </div>
+  <!-- TABLA PRINCIPAL -->
+  <ng-container *ngIf="dataTable.length > 0; then data; else noData"></ng-container>
+  <ng-template #data>
+    <!-- TABLA DE RUTAS  -->
+    <nz-table #tableList [nzData]="dataTable" [nzFrontPagination]="false" [nzPageSize]="5" [nzScroll]="{ x: '1000px', y: '285px' }">
+      <thead>
+        <tr style="background: #F5F7FA;">
+          <th nzWidth="50px"></th>
+          <th nzWidth="60px">Código</th>
+          <th nzWidth="100px">Nombre de ruta</th>
+          <th nzWidth="60px">Tipo de ruta</th>
+          <th nzWidth="50px" class="text-center">Transbordo</th>
+          <th nzWidth="100px" class="text-center">Transbordo otras empresas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of tableList.data | paginate : { id: 'tableMain', itemsPerPage: numberRowMain, currentPage: pageMain }">
+          <td class="d-flex justify-content-end align-items-center">
+            <span nz-tooltip="Esta ruta tiene transbordos pendientes por aprobar" *ngIf="data.hasRequestPendings">
+              <img draggable="false" src="../../../../../assets/icon/fi_info.svg">
+            </span>
+            <span *ngIf="!data.hasRequestPendings">
+            </span>
+            <img draggable="false" src="../../../../../assets/icon/fi_settings.svg" nz-tooltip="Configurar transbordo" class="mx-3" (click)="configTrasfer(data);"
+              style="cursor: pointer; margin-right: 10px;">
+          </td>
+          <td>{{ data.code }}</td>
+          <td>{{ data.name }}</td>
+          <td>{{ data.type }}</td>
+          <td class="text-center">
+            <span class="badge text-bg-success" *ngIf="data.havetransfer === true">Si</span>
+            <span class="badge text-bg-danger" *ngIf="data.havetransfer === false">No</span>
+          </td>
+          <td class="text-center">
+            <span class="badge text-bg-success" *ngIf="data.applyAnotherCompanies === true">Si</span>
+            <span class="badge text-bg-danger" *ngIf="data.applyAnotherCompanies === false">No</span>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <!-- PAGINADO DE LA TABLA RUTAS -->
+    <div class="row d-flex align-items-center" *ngIf="dataTable.length > 0">
+      <div class="col-sm-4 ps-4">
+        <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+          <div>
+            <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+          </div>
+
+          <div class="px-1">
+            <nz-form-control>
+              <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRowMain" (ngModelChange)="onChangeRowPerPage($event,'main')">
+                <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </div>
+          
+          <div>
+            <label class="label-title" style="margin-top: 7px;">entradas</label>
+          </div>
+        </nz-form-item>
+      </div>
+      <div class="col-sm d-flex justify-content-end pe-4">
+        <pagination-controls id="tableMain" previousLabel="Anterior" nextLabel="Siguiente" (pageChange)="onChangePage($event,'main')"
+          (pageBoundsCorrection)="onChangePage($event,'main')">
+        </pagination-controls>
+      </div>
+    </div>  
+  </ng-template>
+
+  <ng-template #noData>
+    <div nz-row class="card-aling-center mb-4">
+      <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+        <div nz-col nzXs="24" nzSm="20" nzMd="14">
+          <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../assets/icon/info_icon.svg" alt="icono-buscar">
+          <div nz-col nzSm="24" nzMd="18">
+            <h1 class="title-form" style="place-content: center !important;">
+              No hay datos existentes
+            </h1>
+            <h1 class="title-secundary" style="margin-top: 0px;">
+              No existen datos para visualizar en esta tabla.
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  
+</div>
+
+<!-- CONFIGURACION DE TRASBORDO -->
+<div *ngIf="edit" style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px; padding: 0px !important;" class="p-2">
+  <!-- BOTONES DE ACCIONES -->
+  <div class="w-100 p-2">
+    <div class="home-title-page" style="display: flex; justify-content: space-between; ">
+      <h1 class="title-home">{{titelCompany}}</h1>
+      <div>
+        <button nz-button class="button-black mx-2" [nzType]="'primary'"
+          (click)="cancelEdit()">Cancelar
+        </button>
+        <button nz-button class="button-green" [nzType]="'primary'"
+          (click)="saveData()">Guardar
+        </button>
+      </div>
+    </div>
+    <!-- CHECK DE TRASBORDO -->
+    <nz-divider></nz-divider>
+  </div>
+  <div class="d-flex my-2">
+    <input 
+      type="checkbox" class="mycheck-md align-bottom mx-2" id="haveTransfer"
+      #haveTransfer="ngModel" [(ngModel)]="routeTrasfer.havetransfer"/>
+      <span for="haveTransfer">Permitir que esta ruta realice transbordos.</span>
+  </div>
+  <!-- TABS DE CONFIGURACION -->
+  <nz-tabset nzType="card" *ngIf="routeTrasfer.havetransfer">
+    <!-- CONFIGURACION DE DESTINOS -->
+    <nz-tab [nzTitle]="'Configurar destinos'">
+      <!-- FORMULARIO -->
+      <div>
+        <h2 class="title-secundary" style="margin: 15px;">Digite los siguientes campos.</h2>
+        <form nz-form [formGroup]="validateForm">
+          <div class="row gx-3 d-flex justify-content-center mx-2">
+            <!-- EMPRESA -->
+            <div class="col-sm-4">
+              <label class="label-title">Empresa</label>
+              <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor, seleccione una empresa!">
+                  <nz-select  nzAutoFocus id="servicio" formControlName="comapy"
+                    nzPlaceHolder="Seleccione una empresa" (ngModelChange)="loadRoutesCompanies()">
+                    <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione una empresa"></nz-option>
+                    <nz-option *ngFor="let company of companies" [nzValue]="company"
+                      [nzLabel]="company.name"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <!-- RUTA DE DESTINO -->
+            <div class="col-sm-4">
+              <label class="label-title">Ruta destino</label>
+              <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor, seleccione una ruta de destino!">
+                  <nz-select  nzAutoFocus id="routeDestiny" formControlName="routeDestiny" [ngClass]="{'disabled-select':routeDestiny.length == 0}"
+                    nzPlaceHolder="Seleccione un ruta de destino" (ngModelChange)="changeRutas($event)" [nzDisabled]="routeDestiny.length == 0">
+                    <nz-option disabled [nzValue]="null" nzLabel="Seleccione una ruta de destino"></nz-option>
+                    <nz-option *ngFor="let route of routeDestiny" [nzValue]="route" [nzLabel]="route.name"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <!-- TIEMPO -->
+            <div class="col-sm-4">
+              <label class="label-title">Tiempo</label>
+              <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor, seleccione un tiempo!">
+                  <nz-select  nzAutoFocus id="timeTerms" formControlName="timeTerms"
+                    nzPlaceHolder="Seleccione un tiempo">
+                    <nz-option disabled [nzValue]="null" nzLabel="Seleccione un tiempo"></nz-option>
+                    <nz-option *ngFor="let row of timeTerms" [nzValue]="row" [nzLabel]="row.range"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <!-- COBRO -->
+            <div class="col-sm-4">
+              <label class="label-title">Cobro</label>
+              <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor, seleccione un cobro!">
+                  <nz-select  nzAutoFocus id="empresa" formControlName="paymentTerm"
+                    nzPlaceHolder="Seleccione un cobro">
+                    <nz-option disabled [nzValue]="null" nzLabel="Seleccione un cobro"></nz-option>
+                    <nz-option *ngFor="let row of paymentTerms" [nzValue]="row" [nzLabel]="row.range"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <!-- ZONAS DE COBERTURA -->
+            <div class="col-sm-4">
+              <label class="label-title">Zonas de cobertura</label>
+              <nz-form-item>
+                <nz-form-control  nz-col [nzSpan]="23" nzErrorTip="¡Por favor, seleccione una zona de cobertura!">
+                  <nz-select  nzAutoFocus [ngClass]="zonaCobertura ? 'disabled-select' : ''" id="zone" formControlName="coverageArea"
+                    nzPlaceHolder="Seleccione una zona de cobertura">
+                    <nz-option [nzValue]="null" nzLabel="Seleccione una zona de cobertura"></nz-option>
+                    <nz-option *ngFor="let row of relatedZones" [nzValue]="row" [nzLabel]="row.name"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <!-- FECHAS DE VIEGNCIA -->
+            <div class="col-sm-4">
+              <label class="label-title">Fechas de vigencia</label>
+              <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor, seleccione un rango de vigencia!">
+                  <nz-range-picker [nzDisabledDate]="disabledDate" formControlName="rangePickerValue"
+                    nzFormat="yyyy-MM-dd" [nzPlaceHolder]="datePlaceholder"></nz-range-picker>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <!-- AGREGAR -->
+          </div>
+          <div class="row" style="display: flex; justify-content: flex-end; margin-top: -20px;">
+            <div class="col-sm-2">
+              <div style="margin: 24px 10px;">
+                <button nz-button [nzType]="'primary'" form="CreateTarifa" class="button-green mt-1 mb-0" (click)="addData()">
+                  <i nz-icon nzType="plus" nzTheme="outline" class="align-middle pb-1"></i>
+                  Agregar
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- TABLA DE DESTINOS -->
+      <nz-table #tableDestinos [nzData]="configDestinosTableCopy" [nzFrontPagination]="false" [nzPageSize]="5" [nzScroll]="{ x: '1000px', y: '350px' }">
+        <thead>
+          <tr style="background: #F5F7FA;">
+            <th nzWidth="145px"></th>
+            <th nzWidth="220px">Empresa Transbordo</th>
+            <th nzWidth="220px">Ruta de destino</th>
+            <th nzWidth="250px">Tiempo</th>
+            <th nzWidth="250px">Cobro</th>
+            <th nzWidth="160px" nzAlign="center">Vigencia desde</th>
+            <th nzWidth="160px" nzAlign="center">Vigencia hasta</th>
+            <th nzWidth="200px">Zona de cobertura</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of tableDestinos.data | paginate : { id: 'tableDestinos', itemsPerPage: numberRowDestinos, currentPage: pageDestinos }; let i = index">
+            <td class="d-flex justify-content-start align-items-center">
+              <div class="form-check form-switch form-switch-sm m-0 mt-1">
+                <input class="form-check-input" type="checkbox" nz-tooltip="Cambiar estado" style="cursor: pointer;" *ngIf="data.status == true" [checked]="data.state" (click)="changeStateRelated(data)">
+              </div>
+              <span class="badge text-bg-warning mx-2" nz-tooltip="Pendiente por aprobar/rechazar" style="cursor: pointer;" *ngIf="data.status === null  || data.status === undefined">
+                Pendiente
+              </span>
+              <span class="badge text-bg-danger mx-2" nz-tooltip="Rechazado" style="cursor: pointer;" *ngIf="data.status === false">Rechazado</span>
+              <span class="badge text-bg-success mx-2" style="cursor: pointer;" nz-tooltip="Aprobado" *ngIf="data.status === true">Aprobado</span>
+            </td>
+            <td>{{ data.companyName || '-' }}</td>
+            <td>{{ data.name || '-' }}</td>
+            <td>{{ data.transferpaymentitems || '-' }}</td>
+            <td>{{ data.transfertermitems || '-' }}</td>
+            <td nzAlign="center">{{ data.validityStartDate || '-' }}</td>
+            <td nzAlign="center">{{ data.validityEndDate || '-' }}</td>
+            <td>{{ data.transferZoneItems  ? 'Zona de cobertura ' + data.transferZoneItems[0].zone : '-'}}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+      <!-- PAGINADO DE LA TABLA DESTINOS -->
+      <div class="row d-flex align-items-center" *ngIf="configDestinosTable.length > 0">
+        <div class="col-sm-4 ps-4">
+          <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+            <div>
+              <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+            </div>
+
+            <div class="px-1">
+              <nz-form-control>
+                <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRowDestinos" (ngModelChange)="onChangeRowPerPage($event,'destinos')">
+                  <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </div>
+            
+            <div>
+              <label class="label-title" style="margin-top: 7px;">entradas</label>
+            </div>
+          </nz-form-item>
+        </div>
+        <div class="col-sm d-flex justify-content-end pe-4">
+          <pagination-controls id="tableDestinos" previousLabel="Anterior" nextLabel="Siguiente" (pageChange)="onChangePage($event,'destinos')"
+            (pageBoundsCorrection)="onChangePage($event,'destinos')">
+          </pagination-controls>
+        </div>
+      </div>
+    </nz-tab>
+    <!-- CONFIGURACION DE SOLICITUDES -->
+    <nz-tab [nzTitle]="'Solicitudes'">
+      <h2 class="title-secundary ms-2">Solicitudes realizadas por otras empresas.</h2>
+      <!-- TABLA DE SOLICITUDES -->
+      <nz-table #tableSolicitudes class="m-0" [nzData]="requesTable" [nzFrontPagination]="false" [nzPageSize]="5" [nzScroll]="{ x: '1000px', y: '329px' }">
+        <thead>
+          <tr style="background: #F5F7FA;">
+            <th nzWidth="220px">Estado de la solicitud</th>
+            <th nzWidth="220px">Empresa de origen</th>
+            <th nzWidth="250px">Ruta origen</th>
+            <th nzWidth="250px">Condiciones de tiempo</th>
+            <th nzWidth="250px">Cobro</th>
+            <th nzWidth="160px" nzAlign="center">Vigencia desde</th>
+            <th nzWidth="160px" nzAlign="center">Vigencia hasta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of tableSolicitudes.data | paginate : { id: 'tableSolicitudes', itemsPerPage: numberRowSolicitudes, currentPage: pageSolicitudes }">
+            <td class="d-flex justify-content-start align-items-center">
+              <div class="form-check form-switch form-switch-sm m-0 mt-1">
+                <input class="form-check-input" type="checkbox" *ngIf="data.status == true" [checked]="data.state"
+                  (click)="changeStateRelated(data)">
+              </div>
+              <span class="badge mx-2 text-bg-warning " style="cursor: pointer;" *ngIf="data.status === null  || data.status === undefined"
+                (click)="approveOrRejectTransshipment(data)"
+              >
+                Pediente
+              </span>
+              <span class="badge mx-2 text-bg-danger " *ngIf="data.status === false">Rechazado</span>
+              <span class="badge mx-2 text-bg-success " *ngIf="data.status === true">Aprobado</span>
+            </td>
+            <td>{{ data.companyName || '-' }}</td>
+            <td>{{ data.name || '-' }}</td>
+            <td>{{ data.transferitemsList.terms[0].range || '-' }}</td>
+            <td>{{ data.transferitemsList.payments[0].range || '-' }}</td>
+            <td nzAlign="center">{{ data.validityStartDate || '-' }}</td>
+            <td nzAlign="center">{{ data.validityEndDate || '-' }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+      <!-- PAGINADO DE LA TABLA SOLICITUDES -->
+      <div class="row d-flex align-items-center" *ngIf="requesTable.length > 0">
+        <div class="col-sm-4 ps-4">
+          <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+            <div>
+              <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+            </div>
+
+            <div class="px-1">
+              <nz-form-control>
+                <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRowSolicitudes" (ngModelChange)="onChangeRowPerPage($event,'solicitudes')">
+                  <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </div>
+            
+            <div>
+              <label class="label-title" style="margin-top: 7px;">entradas</label>
+            </div>
+          </nz-form-item>
+        </div>
+        <div class="col-sm d-flex justify-content-end pe-4">
+          <pagination-controls id="tableSolicitudes" previousLabel="Anterior" nextLabel="Siguiente" (pageChange)="onChangePage($event,'solicitudes')"
+            (pageBoundsCorrection)="onChangePage($event,'solicitudes')">
+          </pagination-controls>
+        </div>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+</div>
+
+<!-- MODAL DE CONFIGURACION -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog  modal-lg">
+    <div class="modal-content p-3">
+      <!-- body -->
+      <div class="row-md">
+        <!-- titel and description -->
+        <div class="col-sm-12 ms-2 d-flex justify-content-end">
+          <button type="button" class="btn-close me-2 " #closebutton data-bs-dismiss="modal" aria-label="Close"
+            style="height: 23px; width: 23px;"></button>
+        </div>
+        <div class="col-sm-12 ps-2">
+          <h1 class="modal-title fs-5 mb-3">Configuración de transbordos</h1>
+          <div class="title-secundary my-3 text-md" style="margin: 24px 0px;">
+            Por favor, ingrese los valores pertinentes para añadir al listado.
+          </div>
+        </div>
+        <!-- body -->
+        <div class="col-sm-12">
+          <!-- modulos -->
+          <div class="nav" style="width: 100% !important;">
+            <button class="font-g btn pb-3 pt-3 module-title"
+              *ngFor="let items of itemsNavsTransferSetting"
+              (click)="changeSettingTransferTabs(items.code)">
+              {{items.name}}
+            </button>
+          </div>
+          <nz-divider></nz-divider>
+          <!-- TAB TIEMPO-->
+          <div class="boxtabconfigtransfer container-fluid mt-4"
+            [ngClass]="{'showtab':activateTabTransferConfig=='CT','hidetab':activateTabTransferConfig!='CT'}">
+            <div class="row">
+              <div class="col-lg-11">
+                <div class="row">
+                  <div class="col-lg-4 mt-4 d-flex justify-content-center align-items-center">
+                    <label style="font-size: 80% !important">
+                      CREAR CONDICIÓN DE TIEMPO
+                    </label>
+                  </div>
+                  <div class="col-lg-6 ">
+                    <div class="row sinpadding">
+                      <div class="col-sm-5 text-center">
+                        <small class="darkgray"><b>Lun-Sáb</b></small>
+                        <input type="number" class="form-control" [(ngModel)]="mondaySaturday" placeholder="Minutos"
+                          [min]="0" (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57">
+                      </div>
+                      <div class="col-sm-2 text-center">
+                        <hr class=" mt-5">
+                      </div>
+                      <div class="col-sm-5 text-center">
+                        <small class="darkgray"><b>Dom-Fes</b></small>
+                        <input type="number" class="form-control" [(ngModel)]="sundayFestive" placeholder="Minutos"
+                          [min]="0" (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-2  ">
+                    <button (click)="validateItemAdd('CONDICIONTIEMPO',mondaySaturday,sundayFestive)" nz-button
+                      [nzType]="'primary'" class="button-green mt-4">
+                      Agregar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- inputs range time -->
+            <div class="row mt-3 d-flex justify-content-center" *ngIf="termsItems">
+              <div class="col-lg-10"
+                [ngClass]="{'boxlisttabconfigtransfer':termsItems.length<1,'boxlisttabconfigtransferscroll':termsItems.length>1} ">
+                <div *ngFor="let term of termsItems ;let index = index" class="row ml-2">
+                  <div class="col-sm-10" style="margin-bottom: 6px ">
+                    <div style="border: #aebbce 1px solid; "
+                      class="p-1 rounded d-flex justify-content-center align-items-center"
+                      [ngClass]="{'itemauto':dimensWindow.width < 1000 }">
+                      {{term.range}}
+                    </div>
+                  </div>
+                  <span class="col-sm mt-1">
+                    <img draggable="false" class="menu-icon" style="cursor: pointer;" src="../../../../../assets/icon/fi_trash-2.svg"
+                      (click)="deleteSettingItem(term.id)">
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--TAB COBROS-->
+          <div class="boxtabconfigtransfer mt-4"
+            [ngClass]="{'showtab':activateTabTransferConfig =='CBR'  ,'hidetab':activateTabTransferConfig !='CBR'}">
+            <div class="row">
+              <div class="col-lg-11">
+                <div class="row">
+                  <div class="col-lg-4 mt-4 d-flex justify-content-center align-items-center">
+                    <label style="font-size: 80% !important">
+                      CREAR COBROS
+                    </label>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="row sinpadding">
+                      <div class="col-sm-5 text-center">
+                        <small class="darkgray"><b>Lun-Sáb</b></small>
+                        <input type="number" class="form-control" [(ngModel)]="paymentMondaySaturday" placeholder="$"
+                          [min]="0"  (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57">
+                      </div>
+                      <div class="col-sm-2 text-center">
+                        <hr class=" mt-5">
+                      </div>
+                      <div class="col-sm-5 text-center">
+                        <small class="darkgray"><b>Dom-Fes</b></small>
+                        <input type="number" class="form-control" [(ngModel)]="paymentSundayFestive" placeholder="$"
+                          [min]="0"  (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-2">
+                    <button (click)="validateItemAdd('COBRO',paymentMondaySaturday,paymentSundayFestive)" nz-button
+                      [nzType]="'primary'" class="button-green mt-4">
+                      Agregar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- inputs range payments -->
+            <div class="row mt-3 d-flex justify-content-center" *ngIf="paymentsItems">
+              <div class="col-lg-10"
+                [ngClass]="{'boxlisttabconfigtransfer':paymentsItems.length<1,'boxlisttabconfigtransferscroll':paymentsItems.length>1}">
+                <div *ngFor="let payment of paymentsItems ;let index = index" class="row ml-2">
+                  <div class="col-sm-10" style="margin-bottom: 6px ">
+                    <div style="border: #aebbce 1px solid; "
+                      class="p-1 rounded d-flex justify-content-center align-items-center"
+                      [ngClass]="{'itemauto':dimensWindow.width < 1000 }">
+                      {{payment.range}}
+                    </div>
+                  </div>
+                  <span class="col-sm mt-1">
+                    <img draggable="false" class="menu-icon" style="cursor: pointer;" src="../../../../../assets/icon/fi_trash-2.svg"
+                      (click)="deleteSettingItem(payment.id)">
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- button -->
+        <div class="col-sm-12 d-flex justify-content-center mt-4">
+          <button nz-button class=" button-black mx-1" [nzType]="'primary'" data-bs-dismiss="modal" aria-label="Close">
+            Cancelar
+          </button>
+          <button nz-button class=" button-green mx-1" [nzType]="'primary'" (click)="saveConfigTransfer()">
+            Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

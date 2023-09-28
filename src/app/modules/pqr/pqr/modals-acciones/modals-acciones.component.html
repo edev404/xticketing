@@ -1,0 +1,548 @@
+<!-- RESPONDER PQR -->
+<nz-modal [(nzVisible)]="findModal('PLANT')!.visible" nzTitle="Responder PQR No. {{ codPqr }}"
+  (nzOnCancel)="switchModal('PLANT')">
+  <div *nzModalContent>
+    <div class="row">
+      <div class="col-sm">
+        <!-- formulario activo -->
+        <form nz-form [formGroup]="form">
+          <label for="fecha_respuesta">{{ label('PLANT','fecha_respuesta') }}</label>
+          <input nz-input class="input-field" type="{{ tipo('PLANT','fecha_respuesta') }}"
+            formControlName="fecha_respuesta" class="mt-2 {{ textAreaClass }}" [readonly]="respuestaReadOnly">
+          <div class="control-invalid" *ngIf="controlValid('PLANT','fecha_respuesta')">
+            {{ errorMessage('PLANT','fecha_respuesta') }}
+          </div>
+          <label for="descripcion_respuesta" class="mt-3">{{ label('PLANT','descripcion_respuesta') }}</label>
+          <textarea nz-input formControlName="descripcion_respuesta" [value]="" rows="4"
+            class="mt-2 {{ textAreaClass }}" [readonly]="respuestaReadOnly"></textarea>
+          <div class="control-invalid" *ngIf="controlValid('PLANT','descripcion_respuesta')">
+            {{ errorMessage('PLANT','descripcion_respuesta') }}
+          </div>
+        </form>
+        <!-- fin formulario activo -->
+      </div>
+    </div>
+  </div>
+  <div *nzModalFooter class="p-0">
+    <div class="row-md">
+      <div class="col-sm-12 d-flex justify-content-center mb-3">
+        <button nz-button class="button-green mx-1" [nzType]="'primary'" (click)="funcionModal('PLANT')">
+          Aceptar
+        </button>
+        <button nz-button class="button-black me-1" [nzType]="'primary'" aria-label="Close"
+          (click)="switchModal('PLANT')">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-modal>
+
+
+<!-- ASIGNAR RESPONSABLE -->
+<nz-modal [(nzVisible)]="findModal('ASIAB')!.visible" nzTitle="Asignar responsable de PQR No. {{ codPqr }}"
+  (nzOnCancel)="switchModal('ASIAB')">
+  <div *nzModalContent>
+    <div class="row">
+      <div class="col-sm">
+        <!-- formulario activo -->
+        <form nz-form [formGroup]="form">
+          <nz-form-item>
+            <!-- nzErrorTip="¡Por favor selecionar un perfil!" -->
+            <nz-form-control nz-col [nzSpan]="23">
+              <label for="responsables">{{ label('ASIAB','responsables') }}</label>
+              <nz-select name="responsables" id="responsables" formControlName="responsables">
+                <nz-option nzValue="" nzLabel="Seleccione"></nz-option>
+                <nz-option *ngFor="let responsable of responsables" [nzValue]="responsable.id"
+                  nzLabel="{{ responsable.username }}"></nz-option>
+              </nz-select>
+              <div class="control-invalid" *ngIf="controlValid('ASIAB','responsables')">
+                {{ errorMessage('ASIAB','responsables') }}
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+        <!-- fin formulario activo -->
+      </div>
+    </div>
+  </div>
+  <div *nzModalFooter class="p-0">
+    <div class="row-md">
+      <div class="col-sm-12 d-flex justify-content-center mb-3">
+        <button nz-button class="button-green mx-1" [nzType]="'primary'" (click)="funcionModal('ASIAB')">
+          Aceptar
+        </button>
+        <button nz-button class="button-black me-1" [nzType]="'primary'" aria-label="Close"
+          (click)="switchModal('ASIAB')">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-modal>
+
+<!-- SUBIR ARCHIVOS -->
+<nz-modal [(nzVisible)]="findModal('SUBIR')!.visible" nzTitle="Subir archivos a la PQR No. {{ codPqr }}"
+  (nzOnCancel)="switchModal('SUBIR')" nzWidth="800px" nzCentered="">
+  <div *nzModalContent>
+    <div class="row mb-3">
+      <div class="col-sm">
+        <!-- formulario activo -->
+        <form nz-form [formGroup]="form">
+          <label for="archivo">{{ label('SUBIR','archivo') }}</label>
+          <input type="file" class="form-control" id="file" type="{{ tipo('SUBIR','archivo') }}" formControlName="archivo" class="mt-2"
+            accept="application/pdf, image/png, image/gif, image/jpeg, image/jpg"
+            (change)="handlePqrRegistroFiles($event)">
+          <div class="control-invalid" *ngIf="controlValid('SUBIR','archivo')">
+            {{ errorMessage('SUBIR','archivo') }}
+          </div>
+        </form>
+        <!-- fin formulario activo -->
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-sm mt-3">
+        <div style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 0px 0px;">
+          <nz-table #basicTableA nzSize="small" *ngIf="archivos.length > 0 && !noHayArchivos"
+            [nzFrontPagination]="false" [nzData]="archivos" [nzScroll]="{ x: '500px', y: '300px'}">
+            <thead>
+              <tr>
+                <th nzWidth="30px" nzAlign="center">Id</th>
+                <th nzWidth="150px" nzAlign="center">Descargar</th>
+                <th nzWidth="50px" nzAlign="center">Tipo</th>
+                <th nzWidth="100px" nzAlign="center">Cargado</th>
+                <th nzWidth="75px" nzAlign="center">Usuario</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let registro of basicTableA.data | paginate : { id: 'subir', itemsPerPage: numberRow, currentPage: page }">
+                <td nzAlign="center">{{ registro.id }}</td>
+                <td nzAlign="center"><a href="{{ registro.fileKey }}" target="_blank">{{ registro.filename }}</a></td>
+                <td nzAlign="center">{{ registro.filetype }}</td>
+                <td nzAlign="center">{{ registro.fechaActualiza.substring(0,19) }}</td>
+                <td nzAlign="center">{{ registro.usuarioBd }}</td>
+              </tr>
+            </tbody>
+          </nz-table>
+          <!-- PAGINADO DE LA TABLA -->
+          <div class="row d-flex align-items-center" *ngIf="archivos.length > 0">
+            <div class="col-sm-4 ps-4">
+              <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+                <div>
+                  <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+                </div>
+
+                <div class="px-1">
+                  <nz-form-control>
+                    <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow"
+                      (ngModelChange)="onChangeRowPerPage($event)">
+                      <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </div>
+
+                <div>
+                  <label class="label-title" style="margin-top: 7px;">entradas</label>
+                </div>
+              </nz-form-item>
+            </div>
+            <div class="col-sm d-flex justify-content-end pe-4">
+              <pagination-controls id="subir" previousLabel="Anterior" nextLabel="Siguiente"
+                (pageChange)="onChangePage($event)" (pageBoundsCorrection)="onChangePage($event)">
+              </pagination-controls>
+            </div>
+          </div>
+          <nz-table [nzTemplateMode]="true" nzShowPagination="false" nzSize="small" *ngIf="noHayArchivos">
+            <tbody>
+              <tr>
+                <td colspan="10">
+                  <h1 class="title-secundary" style="margin-top: 0px;">No se encontraron archivos para esta PQR.</h1>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *nzModalFooter class="p-0">
+    <div class="row-md">
+      <div class="col-sm-12 d-flex justify-content-center mb-3">
+        <button nz-button class="button-green mx-1" [nzType]="'primary'" (click)="funcionModal('SUBIR')">
+          Aceptar
+        </button>
+        <button nz-button class="button-black me-1" [nzType]="'primary'" aria-label="Close"
+          (click)="switchModal('SUBIR')">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-modal>
+
+<!-- RECHAZAR PQR -->
+<nz-modal [(nzVisible)]="findModal('RECHA')!.visible" nzTitle="Rechazar la PQR No. {{ codPqr }}"
+  (nzOnCancel)="switchModal('RECHA')">
+  <div *nzModalContent>
+    <div class="row">
+      <div class="col-sm">
+        <!-- formulario activo -->
+        <form nz-form [formGroup]="form">
+          <label for="pqr">{{ label('RECHA','pqr') }}</label>
+          <br>
+          <label for="motivo_rechazo">{{ label('RECHA','motivo_rechazo') }}</label>
+          <textarea nz-input formControlName="motivo_rechazo" class="mt-2"></textarea>
+          <div class="control-invalid" *ngIf="controlValid('RECHA','motivo_rechazo')">
+            {{ errorMessage('RECHA','motivo_rechazo') }}
+          </div>
+        </form>
+        <!-- fin formulario activo -->
+      </div>
+    </div>
+  </div>
+  <div *nzModalFooter class="p-0">
+    <div class="row-md">
+      <div class="col-sm-12 d-flex justify-content-center mb-3">
+        <button nz-button class="button-green mx-1" [nzType]="'primary'" (click)="funcionModal('RECHA')">
+          Aceptar
+        </button>
+        <button nz-button class="button-black me-1" [nzType]="'primary'" aria-label="Close"
+          (click)="switchModal('RECHA')">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-modal>
+
+<!-- SOLICITAR PRÓRROGA PQR -->
+<nz-modal [(nzVisible)]="findModal('PRORR')!.visible" nzTitle="Rechazar la PQR No. {{ codPqr }}"
+  (nzOnCancel)="switchModal('PRORR')">
+  <div *nzModalContent>
+    <div class="row">
+      <div class="col-sm">
+        <!-- formulario activo -->
+        <form nz-form [formGroup]="form">
+          <label for="pqr">{{ label('PRORR','pqr') }}</label>
+          <br>
+          <label for="justificacion">{{ label('PRORR','justificacion') }}</label>
+          <textarea nz-input formControlName="justificacion" class="mt-2"></textarea>
+          <div class="control-invalid" *ngIf="controlValid('PRORR','justificacion')">
+            {{ errorMessage('PRORR','justificacion') }}
+          </div>
+        </form>
+        <!-- fin formulario activo -->
+      </div>
+    </div>
+  </div>
+  <div *nzModalFooter class="p-0">
+    <div class="row-md">
+      <div class="col-sm-12 d-flex justify-content-center mb-3">
+        <button nz-button class="button-green mx-1" [nzType]="'primary'" (click)="funcionModal('PRORR')">
+          Aceptar
+        </button>
+        <button nz-button class="button-black me-1" [nzType]="'primary'" aria-label="Close"
+          (click)="switchModal('PRORR')">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-modal>
+
+
+
+<!-- ENVIAR A INTERMEDIARIO NOTIFICACION -->
+<nz-modal [(nzVisible)]="findModal('ENVNO')!.visible" nzTitle="Enviar a Intermediario la PQR No. {{ codPqr }}"
+  (nzOnCancel)="switchModal('ENVNO')">
+  <div *nzModalContent>
+    <div class="row">
+      <div class="col-sm">
+        <!-- formulario activo -->
+        <form nz-form [formGroup]="form">
+          <label for="pqr">{{ label('ENVNO','pqr') }}</label>
+        </form>
+        <!-- fin formulario activo -->
+      </div>
+    </div>
+  </div>
+  <div *nzModalFooter class="p-0">
+    <div class="row-md">
+      <div class="col-sm-12 d-flex justify-content-center mb-3">
+        <button nz-button class="button-green mx-1" [nzType]="'primary'" (click)="funcionModal('ENVNO')">
+          Aceptar
+        </button>
+        <button nz-button class="button-black me-1" [nzType]="'primary'" aria-label="Close"
+          (click)="switchModal('ENVNO')">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-modal>
+
+
+<!-- CITAR USUARIO -->
+<nz-modal [(nzVisible)]="findModal('CITAR')!.visible" nzTitle="Citar al usuario PQR No. {{ codPqr }}"
+  (nzOnCancel)="switchModal('CITAR')">
+  <div *nzModalContent>
+    <div class="row">
+      <div class="col-sm">
+        <!-- formulario activo -->
+        <form nz-form [formGroup]="form">
+          <label for="fecha_cita">{{ label('CITAR','fecha_cita') }}</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="24">
+              <input nz-input class="input-field" type="{{ tipo('CITAR','fecha_cita') }}" formControlName="fecha_cita"
+                class="mt-2">
+              <div class="control-invalid" *ngIf="controlValid('CITAR','fecha_cita')">
+                {{ errorMessage('CITAR','fecha_cita') }}
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+        <!-- fin formulario activo -->
+      </div>
+    </div>
+  </div>
+  <div *nzModalFooter class="p-0">
+    <div class="row-md">
+      <div class="col-sm-12 d-flex justify-content-center mb-3">
+        <button nz-button class="button-green mx-1" [nzType]="'primary'" (click)="funcionModal('CITAR')">
+          Aceptar
+        </button>
+        <button nz-button class="button-black me-1" [nzType]="'primary'" aria-label="Close"
+          (click)="switchModal('CITAR')">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-modal>
+
+
+<!-- NOTIFICAR USUARIO -->
+<nz-modal [(nzVisible)]="findModal('NOTIF')!.visible" nzTitle="Notificar PQR No. {{ codPqr }}"
+  (nzOnCancel)="switchModal('NOTIF')">
+  <div *nzModalContent>
+    <div class="row">
+      <div class="col-sm">
+        <!-- formulario activo -->
+        <form nz-form [formGroup]="form">
+          <label for="fecha_noti">{{ label('NOTIF','fecha_noti') }}</label>
+          <input nz-input class="input-field" type="{{ tipo('NOTIF','fecha_noti') }}" formControlName="fecha_noti"
+            class="mt-2">
+          <div class="control-invalid" *ngIf="controlValid('NOTIF','fecha_noti')">
+            {{ errorMessage('NOTIF','fecha_noti') }}
+          </div>
+        </form>
+        <!-- fin formulario activo -->
+      </div>
+    </div>
+  </div>
+  <div *nzModalFooter class="p-0">
+    <div class="row-md">
+      <div class="col-sm-12 d-flex justify-content-center mb-3">
+        <button nz-button class="button-green mx-1" [nzType]="'primary'" (click)="funcionModal('NOTIF')">
+          Aceptar
+        </button>
+        <button nz-button class="button-black me-1" [nzType]="'primary'" aria-label="Close"
+          (click)="switchModal('NOTIF')">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-modal>
+
+
+<!-- NOTIFICAR USUARIO POR CORREO ELECTRÓNICO -->
+<nz-modal [(nzVisible)]="findModal('NOTCO')!.visible" nzTitle="Notificar por correo electrónico PQR No. {{ codPqr }}"
+  (nzOnCancel)="switchModal('NOTCO')">
+  <div *nzModalContent>
+    <div class="row">
+      <div class="col-sm">
+        <!-- formulario activo -->
+        <form nz-form [formGroup]="form">
+          <label for="fecha_notif_correo">{{ label('NOTCO','fecha_notif_correo') }}</label>
+          <input nz-input class="input-field" type="{{ tipo('NOTCO','fecha_notif_correo') }}"
+            formControlName="fecha_notif_correo" class="mt-2">
+          <div class="control-invalid" *ngIf="controlValid('NOTCO','fecha_notif_correo')">
+            {{ errorMessage('NOTCO','fecha_notif_correo') }}
+          </div>
+        </form>
+        <!-- fin formulario activo -->
+      </div>
+    </div>
+  </div>
+  <div *nzModalFooter class="p-0">
+    <div class="row-md">
+      <div class="col-sm-12 d-flex justify-content-center mb-3">
+        <button nz-button class="button-green mx-1" [nzType]="'primary'" (click)="funcionModal('NOTCO')">
+          Aceptar
+        </button>
+        <button nz-button class="button-black me-1" [nzType]="'primary'" aria-label="Close"
+          (click)="switchModal('NOTCO')">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-modal>
+
+
+<!-- NOTIFICAR USUARIO POR AVISO -->
+<nz-modal [(nzVisible)]="findModal('NOTAV')!.visible" nzTitle="Notificar por aviso PQR No. {{ codPqr }}"
+  (nzOnCancel)="switchModal('NOTAV')">
+  <div *nzModalContent>
+    <div class="row">
+      <div class="col-sm">
+        <!-- formulario activo -->
+        <form nz-form [formGroup]="form">
+          <label for="fecha_notif_aviso">{{ label('NOTAV','fecha_notif_aviso') }}</label>
+          <input nz-input class="input-field" type="{{ tipo('NOTAV','fecha_notif_aviso') }}"
+            formControlName="fecha_notif_aviso" class="mt-2">
+          <div class="control-invalid" *ngIf="controlValid('NOTAV','fecha_notif_aviso')">
+            {{ errorMessage('NOTAV','fecha_notif_aviso') }}
+          </div>
+        </form>
+        <!-- fin formulario activo -->
+      </div>
+    </div>
+  </div>
+  <div *nzModalFooter class="p-0">
+    <div class="row-md">
+      <div class="col-sm-12 d-flex justify-content-center mb-3">
+        <button nz-button class="button-green mx-1" [nzType]="'primary'" (click)="funcionModal('NOTAV')">
+          Aceptar
+        </button>
+        <button nz-button class="button-black me-1" [nzType]="'primary'" aria-label="Close"
+          (click)="switchModal('NOTAV')">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-modal>
+
+
+<!-- HISTORIAL -->
+<nz-modal [(nzVisible)]="findModal('HISTO')!.visible" nzTitle="Historial PQR No. {{ codPqr }}"
+  (nzOnCancel)="switchModal('HISTO')" nzWidth="800px" nzCentered="">
+  <div *nzModalContent>
+    <div class="row">
+      <div class="col-sm">
+        <!-- formulario activo -->
+        <form nz-form [formGroup]="form">
+          <label for="pqr" class="label-title" style="margin-top: 7px;">{{ label('HISTO','pqr') }}</label>
+        </form>
+        <!-- fin formulario activo -->
+      </div>
+      <div style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 0px 0px;">
+        <nz-table #basicTableH nzSize="small" *ngIf="historial.length > 0 && !noHayHistorial"
+          [nzFrontPagination]="false" [nzData]="historial" [nzScroll]="{ x: '300px', y: '300px'}">
+          <thead>
+            <tr>
+              <th>Estado anterior</th>
+              <th>Estado actual</th>
+              <th>Fecha de modificación</th>
+              <th>usuario</th>
+              <th>Acción realizada</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let registro of basicTableH.data | paginate : { id: 'historial', itemsPerPage: numberRow, currentPage: page }">
+              <td> {{ registro.estadoAnterior }}</td>
+              <td> {{ registro.estadoActual }}</td>
+              <td> {{ registro.fechaModificacion.substring(0,19) }} </td>
+              <td> {{ registro.usuarioBd }} </td>
+              <td> {{ registro.descripcionAccionRealizada }} </td>
+            </tr>
+          </tbody>
+        </nz-table>
+        <!-- PAGINADO DE LA TABLA -->
+        <div class="row d-flex align-items-center" *ngIf="!noHayHistorial">
+          <div class="col-sm-4 ps-4">
+            <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+              <div>
+                <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+              </div>
+
+              <div class="px-1">
+                <nz-form-control>
+                  <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow"
+                    (ngModelChange)="onChangeRowPerPage($event)">
+                    <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </div>
+
+              <div>
+                <label class="label-title" style="margin-top: 7px;">entradas</label>
+              </div>
+            </nz-form-item>
+          </div>
+          <div class="col-sm d-flex justify-content-end pe-4">
+            <pagination-controls id="historial" previousLabel="Anterior" nextLabel="Siguiente"
+              (pageChange)="onChangePage($event)" (pageBoundsCorrection)="onChangePage($event)">
+            </pagination-controls>
+          </div>
+        </div>
+        <nz-table [nzTemplateMode]="true" nzShowPagination="false" nzSize="small" *ngIf="noHayHistorial">
+          <tbody>
+            <tr>
+              <td colspan="10">
+                <h1 class="title-secundary" style="margin-top: 0px;">No se ha iniciado gestión sobre esta PQR.</h1>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </div>
+    </div>
+  </div>
+  <div *nzModalFooter class="p-0">
+    <div class="row-md">
+      <div class="col-sm-12 d-flex justify-content-center mb-3">
+        <button nz-button class="button-green mx-1" [nzType]="'primary'" (click)="funcionModal('HISTO')">
+          Aceptar
+        </button>
+        <button nz-button class="button-black me-1" [nzType]="'primary'" aria-label="Close"
+          (click)="switchModal('HISTO')">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-modal>
+
+
+<!-- CERRAR PQR -->
+<nz-modal [(nzVisible)]="findModal('CERRA')!.visible" nzTitle="Cerrar PQR No. {{ codPqr }}"
+  (nzOnCancel)="switchModal('CERRA')">
+  <div *nzModalContent>
+    <div class="row">
+      <div class="col-sm">
+        <!-- formulario activo -->
+        <form nz-form [formGroup]="form">
+          <label for="pqr">{{ label('CERRA','pqr') }}</label>
+        </form>
+        <!-- fin formulario activo -->
+      </div>
+    </div>
+  </div>
+  <div *nzModalFooter class="p-0">
+    <div class="row-md">
+      <div class="col-sm-12 d-flex justify-content-center mb-3">
+        <button nz-button class="button-green mx-1" [nzType]="'primary'" (click)="funcionModal('CERRA')">
+          Aceptar
+        </button>
+        <button nz-button class="button-black me-1" [nzType]="'primary'" aria-label="Close"
+          (click)="switchModal('CERRA')">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-modal>

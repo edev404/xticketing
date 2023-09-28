@@ -1,0 +1,279 @@
+<nz-breadcrumb style="margin-bottom: 20px">
+  <nz-breadcrumb-item>
+    <span class="title-modulo">
+      <i nz-icon nzType="credit-card" style="font-size: 25px; margin-bottom: 1px"></i>
+    </span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-modulo">Medios de pago</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo">Tarjetas</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo" style="color: #00ae8d !important; font-weight: 700">Registro</span>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+
+<div style="display: flex; justify-content: space-between">
+  <form nz-form style="padding: 0px 24px; margin: 25px 0px" nz-col nzSpan="15">
+    <div style="display: flex">
+      <nz-form-item nz-col nzSpan="15">
+        <nz-form-control [nzSpan]="22">
+          <nz-input-group nzPrefixIcon="search" style="color: #798ca5; justify-content: center" class="type-control">
+            <input nz-input name="search" [(ngModel)]="filterValueTable" type="search" id="search"
+              placeholder="Búsqueda" (ngModelChange)="search()"/>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <!-- <button nz-button class="button-green" [nzType]="'primary'" form="CreateForm">
+        Filtrar
+      </button> -->
+    </div>
+  </form>
+  <div style="padding: 0px 24px; margin: 25px 0px">
+    <button nz-button class="button-green" [nzType]="'primary'" form="CreateForm" (click)="showModal();">
+      Nuevo
+    </button>
+  </div>
+</div>
+
+<div style="border: 1px solid #e9eefa; border-radius: 8px; margin: 20px 0px">
+  <nz-table #basicTable [nzData]="registryData" [nzPageSize]="5" [nzFrontPagination]="false"
+    [nzScroll]="{ x: '1000px', y: '345px' }">
+    <thead>
+      <tr style="background: #f5f7fa">
+        <th></th>
+        <th>Código</th>
+        <th>Soc</th>
+        <th>Proveedor</th>
+        <th>Cantidad</th>
+        <th>Clase</th>
+        <th>Fecha de compra</th>
+        <th>Fecha de ingreso</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="
+          let data of basicTable.data
+            | paginate
+              : { id: 'table', itemsPerPage: numberRow, currentPage: page }
+        ">
+        <td style="display: revert">
+          <div style="display: flex; justify-content: space-evenly">
+            <img draggable="false" style="cursor: pointer" src="../../../../../assets/icon/fi_edit-2.svg"
+              (click)="editRegistry(data)" />
+            <a class="link-historial" (click)="loadDetailData(data);openModalDetail()">
+              Detalle
+            </a>
+          </div>
+        </td>
+        <td>{{ data?.id }}</td>
+        <td>{{ data?.soc }}</td>
+        <td>{{ data.provider_name }}</td>
+        <td>{{ data.quantity }}</td>
+        <td>{{ data.idcardclass }}</td>
+        <td>{{ data.purchasedate }}</td>
+        <td>{{ data.inventorydate }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <!-- PAGINADO DE LA TABLA -->
+  <div class="row d-flex align-items-center">
+    <div class="col-sm-4 ps-4">
+      <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+        <div>
+          <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+        </div>
+
+        <div class="px-1">
+          <nz-form-control>
+            <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow"
+              (ngModelChange)="onChangeRowPerPage($event)">
+              <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </div>
+
+        <div>
+          <label class="label-title" style="margin-top: 7px;">entradas</label>
+        </div>
+      </nz-form-item>
+    </div>
+    <div class="col-sm d-flex justify-content-end pe-4">
+      <pagination-controls id="table" previousLabel="Anterior" nextLabel="Siguiente" (pageChange)="onChangePage($event)"
+        (pageBoundsCorrection)="onChangePage($event)">
+      </pagination-controls>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<nz-modal [(nzVisible)]="isVisible" [nzWidth]="'900px'" nzCentered="true" [nzFooter]="null"
+  (nzOnCancel)="handleCancel()">
+  <ng-container *nzModalContent>
+    <div class="home-title-page" style="margin-top: 10px">
+      <h1 class="title-home">{{ registryEditable ? 'Editar registros' : 'Nuevo registro'}}</h1>
+    </div>
+    <nz-divider></nz-divider>
+    <form nz-form [formGroup]="validateForm" id="CreateForm">
+      <div nz-row [nzGutter]="24" nzJustify="center">
+        <div nz-col [nzSpan]="10">
+          <label class="label-title">Fecha de compra</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor, selecione una fecha de compra!">
+              <nz-date-picker [nzDisabledDate]="disabledDate" [nzShowTime]="false" [(ngModel)]="purchaseDate"
+                (ngModelChange)="{standalone: true}" id="purchaseDate" formControlName="purchaseDate"
+                nzPlaceHolder="Seleccione una fecha de compra" [ngClass]="validateForm.get('purchaseDate')?.invalid && validateForm.get('purchaseDate')?.touched ? 'border-input' : ''">
+              </nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+          <div style="color: #ff4d4f; margin-top: -20px;" *ngIf="validateForm.get('purchaseDate')?.invalid && validateForm.get('purchaseDate')?.touched">
+            ¡Por favor, seleciona tu fecha de compra!
+          </div>
+        </div>
+
+        <div nz-col [nzSpan]="10">
+          <label class="label-title">Fecha de ingreso a inventario</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor, selecione una fecha de inventario!">
+              <nz-date-picker [nzDisabledDate]="disabledDate" [nzShowTime]="false" [(ngModel)]="inventoryIngressDate"
+                (ngModelChange)="{standalone: true}" id="inventoryIngressDate" formControlName="inventoryIngressDate"
+                nzPlaceHolder="Seleccione una fecha de ingreso a inventario" [ngClass]="validateForm.get('inventoryIngressDate')?.invalid && validateForm.get('inventoryIngressDate')?.touched ? 'border-input' : ''">
+              </nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+          <div style="color: #ff4d4f; margin-top: -20px;" *ngIf="validateForm.get('inventoryIngressDate')?.invalid && validateForm.get('inventoryIngressDate')?.touched">
+            ¡Por favor, seleciona tu fecha de ingreso!
+          </div>
+        </div>
+
+        <div nz-col [nzSpan]="10">
+          <label class="label-title">Proveedor</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor, seleccione un proveedor!"
+              [nzValidateStatus]="getFormControlValidateStatus('provider')">
+              <nz-select nzAutoFocus id="provider" formControlName="provider" nzPlaceHolder="Seleccione un proveedor"
+                [(ngModel)]="provider" (ngModelChange)="{standalone: true}" [disabled]="registryEditable">
+                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccionar proveedor"></nz-option>
+                <nz-option *ngFor="let item of providers" [nzValue]="item.id" nzLabel="{{ item.name }}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div nz-col [nzSpan]="10">
+          <label class="label-title">Clase</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor, seleccione una clase!"
+              [nzValidateStatus]="getFormControlValidateStatus('cardClass')">
+              <nz-select nzAutoFocus id="cardClass" formControlName="cardClass" nzPlaceHolder="Seleccione una clase"
+                [(ngModel)]="cardClass" (ngModelChange)="{standalone: true}">
+                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione una clase"></nz-option>
+                <nz-option *ngFor="let item of cardClasses" [nzValue]="item.id" nzLabel="{{ item.description }}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <ng-container *ngIf="estadoEditar">
+          <div nz-col [nzSpan]="10">
+            <label class="label-title">Motivo</label>
+            <nz-form-item>
+              <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor, seleccione un motivo!"
+                [nzValidateStatus]="getFormControlValidateStatus('registryDetailReason')">
+                <nz-select nzAutoFocus id="servicio" nzPlaceHolder="Seleccione un motivo"
+                  formControlName="registryDetailReason">
+                  <nz-option [nzValue]="undefined" nzLabel="Seleccione un motivo"></nz-option>
+                  <nz-option *ngFor="let reason of registryDetailReasons" [nzValue]="reason.id"
+                    nzLabel="{{reason.label}}"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col [nzSpan]="10">
+            <label class="label-title">Observación</label>
+            <nz-form-item>
+              <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor, seleciona una observación!">
+                <textarea nz-input class="input-field" rows="1" style="height: 46px;"
+                  formControlName="registryDetailObservation"></textarea>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </ng-container>
+
+        <div nz-col [nzSpan]="10">
+          <label class="label-title">Cantidad</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor, ingrese una cantidad!"
+              [nzValidateStatus]="getFormControlValidateStatus('quantity')">
+              <input class="input-field" id="quantity" [(ngModel)]="quantity" (ngModelChange)="{standalone: true}"
+                type="text" nz-input formControlName="quantity" placeholder="Ingrese una cantidad" (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div nz-col [nzSpan]="10">
+          <label class="label-title" nz-tooltip="Solicitud de orden compra">#SOC</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor, ingrese un SOC!"
+              [nzValidateStatus]="getFormControlValidateStatus('soc')">
+              <input class="input-field" id="soc" [(ngModel)]="soc" (ngModelChange)="{standalone: true}" type="number"
+                nz-input formControlName="soc" (keypress)="($event.charCode === 8 || $event.charCode === 0) ? null : $event.charCode >= 48 && $event.charCode <= 57;" placeholder="Ingrese un SOC" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <div nz-col [nzSpan]="22" style="display: flex; justify-content: flex-end; margin-top: 20px;">
+        <button nz-button class=" button-black" [nzType]="'primary'" (click)="isVisible = false">
+          Cancelar
+        </button>
+        <button nz-button class="button-green" type="button" [nzType]="'primary'" (click)="saveRegistro()">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<!-- MODAL -->
+<nz-modal [(nzVisible)]="isVisibleDetails" [nzWidth]="'900px'" (nzOnCancel)="handleCancel()" nzCentered="true"
+  [nzFooter]="null">
+  <ng-container *nzModalContent>
+    <div class="home-title-page" style="margin-top: 10px">
+      <h1 class="title-home">Detalle</h1>
+    </div>
+
+    <nz-table class="custom-card" #basicTable [nzData]="registryDetails" [nzPageSize]="5" [nzFrontPagination]="false"
+      [nzScroll]="{ x: '1000px', y: '345px' }">
+      <thead>
+        <tr style="background: #f5f7fa">
+        <tr>
+          <th>Fecha y hora</th>
+          <th>Motivo</th>
+          <th>Observación</th>
+          <th>Cantidad</th>
+          <th>Usuario</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let data of basicTable.data | paginate : { id: 'table', itemsPerPage: numberRow, currentPage: page }">
+          <td>{{data.date}}</td>
+          <td>{{data.reason?.label}}</td>
+          <td>{{!data.observation || data.observation == 'null'? 'N/A' : data.observation}}</td>
+          <td>{{data.quantity}}</td>
+          <td>{{data.user}}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <!-- PAGINADO DE LA TABLA -->
+    <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+      <button nz-button class="button-green" [nzType]="'primary'" (click)="handleCancel()">
+        Aceptar
+      </button>
+    </div>
+  </ng-container>
+</nz-modal>

@@ -1,0 +1,79 @@
+<!-- BREADCRUMB -->
+<nz-breadcrumb style="margin-bottom: 20px;">
+    <nz-breadcrumb-item>
+        <span class="title-modulo">
+            <i nz-icon nzType="credit-card" style="font-size: 25px; margin-bottom: 1px;"></i>
+        </span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+        <span class="title-modulo">Medios de pago</span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+        <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">Ventas</span>
+    </nz-breadcrumb-item>
+</nz-breadcrumb>
+
+
+<div class="home-title-page" style="display: flex; justify-content: space-between; ">
+    <h1 class="title-home">Ventas</h1>
+    <div>
+        <button nz-button class="button-white mx-2" [nzType]="'primary'"  (click)="limpiar()">
+            Limpiar
+        </button>
+        <button nz-button class="button-black mx-2" [nzType]="'primary'"  (click)="validarCard()" [disabled]="!habilitarBoton">
+            Validar tarjeta
+        </button>
+        <button nz-button class="button-green mx-2" [nzType]="'primary'" (click)="venderCard()" [disabled]="habilitarBoton">
+            Vender tarjeta
+        </button>
+    </div>
+</div>
+
+<form [formGroup]="validateForm">
+    <div class="row" style="display: flex; align-items: center;">
+        <div class="col-3">
+            <label class="label-title text-sm">Empresa</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione una empresa!">
+                    <nz-select nzAutoFocus nzServerSearch id="company" formControlName="company"
+                        (ngModelChange)="viewAllOffices($event)" nzPlaceHolder="Seleccione una empresa">
+                        <nz-option disabled [nzValue]="null" nzLabel="Seleccione una empresa"></nz-option>
+                        <nz-option *ngFor="let company of listOfData" [nzLabel]="company.name"
+                            [nzValue]="company"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <!-- SUCURSAL -->
+        <div class="col-3">
+            <label class="label-title text-sm">Sucursales</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione una sucursal!">
+                    <nz-select nzAutoFocus nzServerSearch id="branchOffices" formControlName="branchOffices"
+                        nzPlaceHolder="Seleccione una sucursal"
+                        [ngClass]="{'disabled-select':this.listDataSucurasles.length <= 0}">
+                        <nz-option disabled [nzValue]="null" nzLabel="Seleccione una sucursal"></nz-option>
+                        <nz-option *ngFor="let branchOffices of listDataSucurasles" [nzLabel]="branchOffices.name"
+                            [nzValue]="branchOffices.code"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+
+        <div class="col-3">
+            <label class="label-title">Número de serial</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingresar el número de serial!">
+                    <input class="input-field" id="usuario" type="text" nz-input formControlName="serial"
+                        placeholder="Ingresa el número de serial" />
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <div class="col-3">
+            <nz-form-item style="display: flex; gap: 12px; margin-top: 32px;">
+                <label nz-checkbox class="label-title" formControlName="activo" [nzDisabled]="!habilitarBoton"></label>
+                <span>Serial de fábrica</span>
+            </nz-form-item>
+        </div>
+    </div>
+</form>

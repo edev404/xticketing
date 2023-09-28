@@ -1,0 +1,33 @@
+<div style="display: flex; flex-direction: row; height: 100vh !important;">
+    <div class="slide-bar">
+        <app-side-bar></app-side-bar>
+    </div>
+    <nz-layout>
+        <app-nav-bar></app-nav-bar>
+        <div class="inner-content">
+            <router-outlet></router-outlet>
+        </div>
+    </nz-layout>
+</div>
+
+<nz-modal [(nzVisible)]="isVisible" [nzClosable]="false">
+    <div class="d-flex justify-content-center" *nzModalContent>
+      <!-- titel -->
+      <div class="mt-5">
+        <h1 class="modal-title fs-5 mb-3">¡Atención! Tu sesión está a punto de expirar en</h1>
+        <div class="my-3 text-md text-center">
+          <h2 class="w-100 text-center">{{countDown}}</h2>
+          ¿desea continuar navegando?
+        </div>
+      </div>
+    </div>
+    <div *nzModalFooter class="p-0">
+      <div class="row-md">
+        <div class="col-sm-12 d-flex justify-content-center my-3">
+          <button nz-button class=" button-green mx-1" [nzType]="'primary'" (click)="reset()">
+            Aceptar
+          </button>           
+        </div>
+      </div>
+    </div>
+</nz-modal>

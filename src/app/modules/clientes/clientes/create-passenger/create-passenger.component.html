@@ -1,0 +1,396 @@
+<ng-container *ngIf="!creadoDesdeMetodosPagos">
+  <nz-breadcrumb style="margin-bottom: 20px;">
+    <nz-breadcrumb-item>
+      <span class="title-modulo">
+        <i nz-icon nzType="team" style="font-size: 25px; margin-bottom: 1px;"></i>
+      </span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <span class="title-modulo">Clientes</span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">
+        {{estado?'Crear clientes':'Editar clientes'}}</span>
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+</ng-container>
+
+<div class="home-title-page" style="display: flex; justify-content: space-between; ">
+  <h1 class="title-home" *ngIf="estado==true">Crear clientes</h1>
+  <h1 class="title-home" *ngIf="estado==false">Editar clientes</h1>
+  <div>
+    <button nz-button class="button-white mx-1" [nzType]="'primary'" (click)="clearSearch()">Limpiar
+    </button>
+    <!-- <button nz-button [ngClass]="estado==false ? 'button-white mx-1' : 'button-black mx-1'" [nzType]="'primary'"
+      (click)="isVisible = false">Subir masivamente
+    </button> -->
+    <button nz-button *ngIf="estado==false" [routerLink]="['/main/clientes']" class="button-black"
+      [nzType]="'primary'">Cancelar
+    </button>
+    <button type="button" *ngIf="estado==true" class="btn button-green" form="CreateForm" (click)="saveData()"
+      style="margin: 0px 0px 3px 4px;">Guardar
+    </button>
+    <button type="button" *ngIf="estado==false" class="btn button-green" (click)="editData()"
+      style="margin: 0px 0px 3px 4px;">Editar
+    </button>
+  </div>
+</div>
+<nz-divider></nz-divider>
+<h2 class="title-secundary" *ngIf="estado==true">Ingrese la siguiente información para crear un cliente. Al momento de
+  seleccionar el perfil de la cuenta, los campos se habilitarán.</h2>
+<h2 class="title-secundary" *ngIf="estado==false">Ingrese la siguiente información para editar un cliente. Al momento de
+  seleccionar el perfil de la cuenta, los campos se habilitarán.</h2>
+
+<!-- FORMULARIO -->
+<div style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px; align-items: center;">
+  <form nz-form [formGroup]="validateForm" id="CreateForm" (ngSubmit)="saveData()" style="margin: 10px;">
+    <!-- <h2 class="title-form">Los campos se habilitarán al seleccionar el perfil de la cuenta.</h2> -->
+    <div nz-row [nzGutter]="24" nzJustify="center" style="justify-content: flex-start;">
+      <div nz-col [nzSpan]="24" style="display: flex; justify-content: flex-start;">
+        <!-- PERFIL DE LA CUENTA -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Perfil de la cuenta <span style="color: red;">*</span></label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione un perfil de la cuenta!">
+              <nz-select nzAutoFocus [ngClass]="perfilDisable ? 'disabled-select' : ''" id="perfilcuenta"
+                formControlName="perfilcuenta" nzPlaceHolder="Seleccione un perfil"
+                (ngModelChange)="disabledCompany($event)" [(ngModel)]="passenger.accountProfile">
+                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione un perfil"></nz-option>
+                <nz-option *ngFor="let item of profileCombo" [nzValue]="item.id" nzLabel="{{item.name}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- EMPRESA -->
+        <div nz-col [nzSpan]="8" *ngIf="!perfilDisable">
+          <label class="label-title">Empresa <span style="color: red;">*</span></label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione una empresa!">
+              <nz-select [ngClass]="companyDisable ? 'disabled-select' : ''" nzAutoFocus id="empresa"
+                formControlName="empresa" nzPlaceHolder="Seleccione una empresa" [(ngModel)]="passenger.idCompany">
+                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione una empresa"></nz-option>
+                <nz-option *ngFor="let item of comboCompanies" [nzValue]="item.id" nzLabel="{{item.name}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+      <div style="text-align: center; margin: 25px 0px;" nz-col [nzSpan]="24">
+        <h1 class="title-form">Información personal.</h1>
+      </div>
+      <div nz-col [nzSpan]="24" style="display: flex;">
+        <!-- TIPO -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Tipo de documento <span style="color: red;">*</span></label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione un tipo de documento!">
+              <nz-select nzAutoFocus id="nitType" formControlName="nitType"
+                nzPlaceHolder="Seleccione un tipo de documento" [(ngModel)]="passenger.identificationTypeId">
+                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione un tipo de documento"></nz-option>
+                <nz-option *ngFor="let item of comboNit" [nzValue]="item.id" nzLabel="{{item.name}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- NUMERO DE DOCUMENTO -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Número de documento <span style="color: red;">*</span></label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese un número de documento!">
+              <input class="input-field" id="identificationNumber" type="number" nz-input
+                formControlName="identificationNumber" placeholder="Ingrese número de documento"
+                [(ngModel)]="passenger.identification" [disabled]="!passenger.identificationTypeId"
+                (keypress)="($event.charCode === 8 || $event.charCode === 0) ? null : $event.charCode >= 48 && $event.charCode <= 57; diferentClient($event) " />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- PRIMER NOMBRE -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Primer nombre <span style="color: red;">*</span></label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor ingrese el primer nombre!">
+              <input class="input-field" id="firtsname" type="tel" nz-input formControlName="firtsname"
+                placeholder="Ingrese primer nombre" [(ngModel)]="passenger.firstName" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <div nz-col [nzSpan]="24" style="display: flex; justify-content: flex-start;">
+        <!-- PRIMER APELLIDO -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Primer apellido <span style="color: red;">*</span></label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor ingrese el primer apellido!">
+              <input class="input-field" id="lastName" type="text" nz-input formControlName="lastName"
+                placeholder="Ingrese primer apellido" [(ngModel)]="passenger.lastName" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- SEGUNDO NOMBRE -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Segundo nombre</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor ingrese el segundo apellido!">
+              <input class="input-field" id="secondName" type="tel" nz-input formControlName="secondName"
+                placeholder="Ingrese segundo nombre" [(ngModel)]="passenger.secondName" maxlength="50" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- SEGUNDO APELLIDO -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Segundo apellido</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor ingrese su segundo apellido!">
+              <input class="input-field" id="secondLastName" type="text" nz-input formControlName="secondLastName"
+                placeholder="Ingrese segundo apellido" [(ngModel)]="passenger.secondLastName" maxlength="50" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+      <div style="text-align: center; margin: 25px 0px;" nz-col [nzSpan]="24">
+        <h1 class="title-form">Información de contacto.</h1>
+      </div>
+      <div nz-col [nzSpan]="24" style="display: flex; justify-content: flex-start;">
+        <!-- CORREO ELECTRONICO -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Correo electrónico</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23"
+              nzErrorTip="¡Por favor ingrese un correo electrónico con formato valido!">
+              <input class="input-field" id="mail" type="email" nz-input formControlName="mail"
+                placeholder="Ingrese un correo electrónico" [(ngModel)]="passenger.email"
+                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" [disabled]="passenger.canUpdateEmail === false" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- GENERO -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Género <span style="color: red;">*</span></label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione un género!">
+              <nz-select nzAutoFocus id="passengerGender" formControlName="passengerGender"
+                nzPlaceHolder="Seleccione un género" [(ngModel)]="passenger.genderId"
+                (nzOpenChange)="setGenderCode($event)">
+                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione un género"></nz-option>
+                <nz-option *ngFor="let item of genderChecks" [nzValue]="item.id" nzLabel="{{item.name}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- FECHA DE NACIMENTO -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Fecha de nacimiento <span style="color: red;">*</span></label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione la fecha de nacimiento!">
+              <nz-date-picker (ngModelChange)="onChange($event)" [nzDisabledDate]="disabledfechaMayor" id="born"
+                formControlName="born" nzPlaceHolder="Seleccione la fecha de nacimiento" nzFormat="yyy-MM-dd"
+                [(ngModel)]="passenger.bornDate">
+              </nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <div nz-col [nzSpan]="24" style="display: flex; justify-content: flex-start;">
+        <!-- CELULAR -->
+        <div nz-col [nzSpan]="10">
+          <label class="label-title">Teléfono<span style="color: red;">*</span></label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor ingrese un teléfono!">
+              <div class="d-flex flex-row">
+                <nz-select nzAutoFocus id="passengerGender" style="width: 40% !important;" class="me-2"
+                  [(ngModel)]="passenger.codePhone" formControlName="codePhone"
+                  (nzOpenChange)="setGenderCode($event)">
+                  <nz-option *ngFor="let item of codeContryHas" [nzValue]="item.phone_code" [nzLabel]="item.iso3+' (+'+item.phone_code+')'"></nz-option>
+                </nz-select>
+                
+                <input class="input-field" id="cellPhone" type="tel" nz-input formControlName="cellPhone"
+                  placeholder="Ingrese el número de teléfono" [(ngModel)]="passenger.cellPhone" [disabled]="passenger.canUpdateCellPhone === false" 
+                />
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- ESTADO CIVIL -->
+        <div nz-col [nzSpan]="7">
+          <label class="label-title">Estado civil</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione su estado civil!">
+              <nz-select nzAutoFocus id="civilStatus" formControlName="civilStatus"
+                nzPlaceHolder="Seleccione un estado civil" [(ngModel)]="passenger.maritalStateId">
+                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione un estado civil"></nz-option>
+                <nz-option *ngFor="let item of maritalStatesCombo" [nzValue]="item.id"
+                  nzLabel="{{item.name}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- PROFECION -->
+        <div nz-col [nzSpan]="7">
+          <label class="label-title">Profesión</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione una profesion!">
+              <nz-select nzAutoFocus id="profession" formControlName="profession"
+                nzPlaceHolder="Seleccione una profesión" [(ngModel)]="passenger.occupationId">
+                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione una profesión"></nz-option>
+                <nz-option *ngFor="let item of occupationsCombo" [nzValue]="item.id"
+                  nzLabel="{{item.name}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin: 25px 0px;" nz-col [nzSpan]="24">
+        <h1 class="title-form">Información de residencia.</h1>
+      </div>
+      <div nz-col [nzSpan]="24" style="display: flex; justify-content: flex-start;">
+        <!-- DIRECCION DE RESIDENCIA -->
+        <div nz-col style="width: 98.5%;">
+          <label class="label-title">Dirección</label>
+          <nz-form-item>
+            <nz-form-control nzErrorTip="!Por favor ingrese su dirección!">
+              <input class="input-field" id="address" type="text" nz-input formControlName="address"
+                placeholder="Ingrese una dirección de residencia" [(ngModel)]="passenger.address" maxlength="50" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <div nz-col [nzSpan]="24" style="display: flex; justify-content: flex-start;">
+        <!-- PAIS -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">País</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="Por favor seleciona tu País!">
+              <nz-select nzAutoFocus id="countryResidenceLocation" formControlName="countryResidenceLocation"
+                nzPlaceHolder="Seleccione un país" [(ngModel)]="passenger.residenceLocation!.country.id"
+                (nzOpenChange)="loadResindeceDeparmentCombo($event)">
+                <nz-option disabled [nzValue]="''" nzLabel="Seleccione un país"></nz-option>
+                <nz-option *ngFor="let countries of countryCombo" [nzValue]="countries.id"
+                  nzLabel="{{countries.name}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- DEPARTAMENTO -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Departamento</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="Por favor seleciona tu departamento!">
+              <nz-select nzAutoFocus id="departmentResidenceLocation" formControlName="departmentResidenceLocation"
+                nzPlaceHolder="Seleccione un departamento" [(ngModel)]="passenger.residenceLocation!.department.id"
+                (nzOpenChange)="loadResindeceCityCombo($event);">
+                <nz-option disabled [nzValue]="null" nzLabel="Seleccione departamento"></nz-option>
+                <nz-option *ngFor="let item of departmentResidenceCombo" [nzValue]="item.id"
+                  nzLabel="{{item.name}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- CUIDAD -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Ciudad</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="Por favor seleciona tu ciudad!">
+              <nz-select nzAutoFocus id="municipalityResidenceLocation" formControlName="municipalityResidenceLocation"
+                nzPlaceHolder="Seleccione una ciudad" [(ngModel)]="passenger.residenceLocation!.city.id">
+                <nz-option disabled [nzValue]="null" nzLabel="Seleccione ciudad"></nz-option>
+                <nz-option *ngFor="let item of cityResidenceCombo" [nzValue]="item.id"
+                  nzLabel="{{item.name}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin: 25px 0px;" nz-col [nzSpan]="24">
+        <h1 class="title-form">Información de nacimiento.</h1>
+      </div>
+      <div nz-col [nzSpan]="24" style="display: flex; justify-content: flex-start;">
+        <!-- PAIS -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">País</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="Por favor seleciona tu pais!">
+              <nz-select nzAutoFocus id="countryBornLocation" formControlName="countryBornLocation"
+                nzPlaceHolder="Seleccione un país" [(ngModel)]="passenger.bornLocation!.country.id"
+                (nzOpenChange)="loadBornDeparmentCombo($event)">
+                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione un país"></nz-option>
+                <nz-option *ngFor="let item of countryCombo" [nzValue]="item.id" nzLabel="{{item.name}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- DEPARTAMENTO -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Departamento</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="Por favor seleciona tu estado!">
+              <nz-select nzAutoFocus id="departmentBornLocation" formControlName="departmentBornLocation"
+                nzPlaceHolder="Seleccione un departamento" [(ngModel)]="passenger.bornLocation!.department.id"
+                (nzOpenChange)="loadBornCityCombo($event);">
+                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione departamento"></nz-option>
+                <nz-option *ngFor="let item of departmentBornCombo" [nzValue]="item.id"
+                  nzLabel="{{item.name}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- CIUDAD -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Ciudad</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="Por favor seleciona tu ciudad!">
+              <nz-select nzAutoFocus id="municipalityBornLocation" formControlName="municipalityBornLocation"
+                nzPlaceHolder="Seleccione una ciudad" [(ngModel)]="passenger.bornLocation!.city.id">
+                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione ciudad"></nz-option>
+                <nz-option *ngFor="let item of cityBornCombo" [nzValue]="item.id" nzLabel="{{item.name}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+<nz-modal [(nzVisible)]="isVisible" nzWidth="850px" [nzFooter]="null" (nzOnCancel)="isVisible = !isVisible">
+  <!-- SUBIR ARCHIVO -->
+  <div class="row-md" *nzModalContent>
+    <div class="col">
+      <div class="custom-card row">
+        <!-- DRAG AND DROP -->
+        <div class="col-sm-9 p-4">
+          <label>Subir archivo</label>
+          <div class="file-drop-area">
+            <!-- SI NO ARCHIVO CARGADO -->
+            <span *ngIf="!haveFile" class="text-center text-2xs">
+              <b style="color: #00AE8D !important;">Presiona aquí </b>
+              <b>para subir o arrastra y suelta TXT, XLS o CSV.</b>
+            </span>
+            <!-- SI HAY ARCHIVO CARGADO -->
+            <span *ngIf="haveFile" class="text-start" style="font-size: 16px;">
+              <div class="d-inline-flex">
+                <img draggable="false" src="../../../../../assets/icon/fi_file-text.svg" height="50%" class="mx-2">
+                <div class="d-flex flex-column">
+                  <b>{{currentFileName}}</b>
+                  <p>{{currentFileSize}}</p>
+                </div>
+              </div>
+            </span>
+            <input class="file-input" id="fileInput" type="file" accept=".txt,.xlsx,.csv" (change)="handleFile()" />
+          </div>
+        </div>
+        <!-- BUTTON UPLODAD ARCHIVO -->
+        <div class="col-sm-3 d-flex align-items-center p-0 pe-4">
+          <button nz-button class="button-upload" [nzType]="'primary'" (click)="handleFile()">
+            Subir archivo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nz-modal>

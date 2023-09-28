@@ -1,0 +1,519 @@
+<nz-breadcrumb style="margin-bottom: 20px;">
+  <nz-breadcrumb-item>
+    <span class="title-modulo">
+      <i nz-icon nzType="team" style="font-size: 25px; margin-bottom: 1px;"></i>
+    </span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-modulo">Clientes</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">Búsqueda Clientes</span>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+<div *ngIf="!viewDetails">
+  <div class="home-title-page my-2" style="display: flex; justify-content: space-between; ">
+    <h1 class="title-home m-0">Búsqueda Clientes</h1>
+    <div>
+      <button nz-button class="button-white" (click)="showFilterInputs()" [nzType]="'primary'">
+        <i nz-icon nzType="filter" nzTheme="outline"></i>
+      </button>
+      <button nz-button class=" button-black mx-1" [nzType]="'primary'" (click)="clearSearch()">Limpiar
+      </button>
+      <button nz-button class="button-green" [nzType]="'primary'" form="CreateForm">Buscar
+      </button>
+    </div>
+  </div>
+  <nz-divider></nz-divider>
+  <h2 class="title-secundary">Ingrese los siguientes datos para buscar un cliente.</h2>
+  <div *ngIf="showFilter" style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px; align-items: center;">
+    <div style="display: flex; justify-content: space-between; margin: 15px 15px;">
+      <h1 class="title-home">Información Personal</h1>
+      <button nz-button class="button-white" [nzType]="'primary'" (click)="avanzado()"><i nz-icon nzType="filter"
+          [nzTheme]="'twotone'" [nzTwotoneColor]="'#00AE8D'"></i>Avanzada
+      </button>
+    </div>
+
+    <form nz-form [formGroup]="validateForm" id="CreateForm" (ngSubmit)="search()">
+      <div nz-row [nzGutter]="24" nzJustify="center" style="justify-content: space-evenly;">
+        <!-- Tipo de documento -->
+        <div nz-col [nzSpan]="7">
+          <label class="label-title">Tipo de documento</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23">
+              <nz-select nzAutoFocus id="tipo" formControlName="tipo" nzPlaceHolder="Seleccione un tipo de documento"
+                [(ngModel)]="clientForm.type" (nzOpenChange)="changeType()">
+                <nz-option disabled [nzValue]="null" nzLabel="Seleccione un tipo de documento"></nz-option>
+                <nz-option *ngFor="let item of comboNit" [nzValue]="item.id" nzLabel="{{item.name}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- Número de documento -->
+        <div nz-col [nzSpan]="7">
+          <label class="label-title">Número de documento</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor ingresar el número de documento!">
+              <input class="input-field" id="documento" type="number" nz-input formControlName="documento"
+                placeholder="Ingrese número de documento" [(ngModel)]="clientForm.document"
+                [disabled]="clientForm.type == null"
+                (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- Nombre -->
+        <div nz-col [nzSpan]="7">
+          <label class="label-title">Nombre</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23">
+              <input class="input-field" id="nombre" type="text" nz-input formControlName="nombre"
+                placeholder="Ingrese un nombre" [(ngModel)]="clientForm.name" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- Apellido -->
+        <div nz-col [nzSpan]="7">
+          <label class="label-title">Apellido</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23">
+              <input class="input-field" id="apellido" type="text" nz-input formControlName="apellido"
+                placeholder="Ingrese un apellido" [(ngModel)]="clientForm.lastName" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- Correo electrónico -->
+        <div nz-col [nzSpan]="7">
+          <label class="label-title">Correo electrónico</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23"
+              nzErrorTip="¡Por favor ingrese un correo electrónico con formato valido!">
+              <input class="input-field" id="correo_electronico" type="email" nz-input
+                formControlName="correo_electronico" placeholder="Ingrese un correo electrónico"
+                [(ngModel)]="clientForm.email" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- Teléfono -->
+        <div nz-col [nzSpan]="7">
+          <label class="label-title">Teléfono</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23">
+              <input class="input-field" id="telefono" type="tel" nz-input formControlName="telefono"
+                placeholder="Ingrese un número de teléfono" [(ngModel)]="clientForm.cellPhone"
+                (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- AVANZADO -->
+        <!-- Genero -->
+        <div nz-col [nzSpan]="7" *ngIf="avanzadoMore">
+          <label class="label-title">Género</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23">
+              <nz-select nzAutoFocus id="genero" formControlName="genero" nzPlaceHolder="Seleccione un género"
+                [(ngModel)]="clientForm.genderId">
+                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione un género"></nz-option>
+                <nz-option *ngFor="let item of genderCombo" [nzValue]="item.id" nzLabel="{{item.name}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- Estado civil -->
+        <div nz-col [nzSpan]="7" *ngIf="avanzadoMore">
+          <label class="label-title">Estado civil</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23">
+              <nz-select nzAutoFocus id="estado_civil" formControlName="estado_civil"
+                nzPlaceHolder="Seleccione un estado civil" [(ngModel)]="clientForm.stateId">
+                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione un estado civil"></nz-option>
+                <nz-option *ngFor="let item of maritalStatesCombo" [nzValue]="item.id"
+                  nzLabel="{{item.name}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- Profesion -->
+        <div nz-col [nzSpan]="7" *ngIf="avanzadoMore">
+          <label class="label-title">Profesión</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23">
+              <nz-select nzAutoFocus id="profesion" formControlName="profesion" nzPlaceHolder="Seleccione una profesión"
+                [(ngModel)]="clientForm.professionId">
+                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione una profesión"></nz-option>
+                <nz-option *ngFor="let item of occupationsCombo" [nzValue]="item.id"
+                  nzLabel="{{item.name}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div *ngIf="avanzadoMore" nz-col [nzSpan]="24" style="display: flex; justify-content: space-evenly;">
+          <div nz-col [nzSpan]="11">
+            <div nz-row [nzGutter]="24">
+              <div style="margin: 25px 0px; text-align: start;" nz-col [nzSpan]="24">
+                <h1 class="title-form">Condiciones Generales</h1>
+              </div>
+              <!-- Rango fecha de nacimiento -->
+              <div nz-col [nzSpan]="24">
+                <label class="label-title">Rango fecha de nacimiento</label>
+                <nz-form-item style="justify-content: normal;">
+                  <nz-form-control nz-col [nzSpan]="12">
+                    <nz-date-picker nzFormat="yyyy-MM-dd" [nzDisabledDate]="disabledStartDate"
+                      [(ngModel)]="startValueNac || clientForm.dateInit" nzPlaceHolder="Ingrese una fecha de inicio"
+                      formControlName="rangePickerstartValue"
+                      (ngModelChange)="resetearValor($event)"></nz-date-picker>
+                  </nz-form-control>
+                  <nz-form-control nz-col [nzSpan]="12">
+                    <nz-date-picker #endDatePicker [nzDisabledDate]="disabledEndDate" nzFormat="yyyy-MM-dd"
+                      [(ngModel)]="endValueNac || clientForm.datEnd" nzPlaceHolder="Ingrese una fecha de fin"
+                      formControlName="rangePickerendValue"></nz-date-picker>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <!-- Lugar de nacimiento -->
+              <div nz-col [nzSpan]="24">
+                <label class="label-title">Lugar de nacimiento</label>
+                <nz-form-item style="justify-content: normal;">
+                  <!-- pais -->
+                  <nz-form-control nz-col [nzSpan]="8">
+                    <nz-select nzAutoFocus id="pais" formControlName="pais" nzPlaceHolder="Seleccione un país"
+                      [(ngModel)]="clientForm.bornLocation!.country.id"
+                      (ngModelChange)="loadDepartmentCombo(clientForm.bornLocation!.country.id,'born')">
+                      <nz-option disabled [nzValue]="null" nzLabel="Seleccione un país"></nz-option>
+                      <nz-option *ngFor="let item of countryCombo" [nzValue]="item.id"
+                        nzLabel="{{item.name}}"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                  <!-- departamento -->
+                  <nz-form-control nz-col [nzSpan]="8">
+                    <nz-select nzAutoFocus id="departmentBornLocation" formControlName="departmentBornLocation"
+                      nzPlaceHolder="Seleccione un departamento" [(ngModel)]="clientForm.bornLocation!.department.id"
+                      (ngModelChange)="loadCityCombo(clientForm.bornLocation!.department.id,'born')">
+                      <nz-option disabled [nzValue]="null" nzLabel="Seleccione un departamento"></nz-option>
+                      <nz-option *ngFor="let item of departmentIdBornPlaceList" [nzValue]="item.id"
+                        nzLabel="{{item.name}}"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                  <!-- ciudad -->
+                  <nz-form-control nz-col [nzSpan]="8">
+                    <nz-select nzAutoFocus id="ciudad" formControlName="ciudad" nzPlaceHolder="Seleccione una ciudad"
+                      [(ngModel)]="clientForm.bornLocation!.city.id"
+                      [disabled]="clientForm.bornLocation!.department.id == null">
+                      <nz-option disabled [nzValue]="null" nzLabel="Seleccione una ciudad"></nz-option>
+                      <nz-option *ngFor="let item of municipalyIdBornPlaceList" [nzValue]="item.id"
+                        nzLabel="{{item.name}}"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <!-- Lugar de residencia -->
+              <div nz-col [nzSpan]="24">
+                <label class="label-title">Lugar de residencia</label>
+                <nz-form-item style="justify-content: normal;">
+                  <!-- pais -->
+                  <nz-form-control nz-col [nzSpan]="8">
+                    <nz-select nzAutoFocus id="countryResidenceLocation" formControlName="countryResidenceLocation"
+                      nzPlaceHolder="Seleccione un país" [(ngModel)]="clientForm.residenceLocation!.country.id"
+                      (ngModelChange)="loadDepartmentCombo(clientForm.residenceLocation!.country.id,'residence')">
+                      <nz-option disabled [nzValue]="null" nzLabel="Seleccione un país"></nz-option>
+                      <nz-option *ngFor="let item of countryCombo" [nzValue]="item.id"
+                        nzLabel="{{item.name}}"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                  <!-- Departamento -->
+                  <nz-form-control nz-col [nzSpan]="8">
+                    <nz-select nzAutoFocus id="departmentResidenceLocation"
+                      formControlName="departmentResidenceLocation" nzPlaceHolder="Seleccione un departamento"
+                      [(ngModel)]="clientForm.residenceLocation!.department.id"
+                      (ngModelChange)="loadCityCombo(clientForm.residenceLocation!.department.id,'residence')"
+                      [disabled]="clientForm.residenceLocation!.country.id == null">
+                      <nz-option disabled [nzValue]="null" nzLabel="Seleccione un departamento"></nz-option>
+                      <nz-option *ngFor="let item of departmentIdResidencePlaceList" [nzValue]="item.id"
+                        nzLabel="{{item.name}}"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                  <!-- Ciudad -->
+                  <nz-form-control nz-col [nzSpan]="8">
+                    <nz-select nzAutoFocus id="ciudad2" formControlName="ciudad2" nzPlaceHolder="Seleccione una ciudad"
+                      [(ngModel)]="clientForm.residenceLocation!.city.id"
+                      [disabled]="clientForm.residenceLocation!.department.id == null">
+                      <nz-option disabled [nzValue]="null" nzLabel="Seleccione una ciudad"></nz-option>
+                      <nz-option *ngFor="let item of municipalyIdResidencePlaceList" [nzValue]="item.id"
+                        nzLabel="{{item.name}}"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+          </div>
+
+          <!-- LADO DERECHO -->
+          <div nz-col [nzSpan]="11" nzJustify="center">
+            <div nz-row [nzGutter]="24" nzJustify="space-between">
+              <div style="text-align: center; margin: 25px 0px;" nz-col [nzSpan]="24">
+                <h1 class="title-form">Información de la cuenta</h1>
+              </div>
+              <!-- Número de cuenta -->
+              <div nz-col [nzSpan]="12">
+                <label class="label-title">Número de cuenta</label>
+                <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="23">
+                    <input class="input-field" id="numero_cuenta" type="number" nz-input formControlName="numero_cuenta"
+                      placeholder="Ingrese un número de cuenta" [(ngModel)]="clientForm.numberAccount"
+                      (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <!-- Tipo de cuenta -->
+              <div nz-col [nzSpan]="12">
+                <label class="label-title">Tipo de cuenta</label>
+                <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="23">
+                    <nz-select nzAutoFocus id="tipo_cuenta" formControlName="tipo_cuenta"
+                      nzPlaceHolder="Seleccione un tipo de cuenta" [(ngModel)]="clientForm.typeAccount">
+                      <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione un tipo de cuenta"></nz-option>
+                      <nz-option *ngFor="let item of typeAccount" [nzValue]="item.id"
+                        nzLabel="{{item.name}}"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <!-- Usuario -->
+              <div nz-col [nzSpan]="12">
+                <label class="label-title">Usuario</label>
+                <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="23">
+                    <input class="input-field" id="nombre_usuario" type="tel" nz-input formControlName="nombre_usuario"
+                      placeholder="Ingrese un nombre de usario" [(ngModel)]="clientForm.userName" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <!-- Número de tarjeta -->
+              <div nz-col [nzSpan]="12">
+                <label class="label-title">Número de tarjeta</label>
+                <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="23">
+                    <input class="input-field" id="numero_tarjeta" type="number" nz-input
+                      formControlName="numero_tarjeta" placeholder="Ingrese un número de tarjeta"
+                      [(ngModel)]="clientForm.numberCard"
+                      (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <!-- Perfil de cuenta -->
+              <div nz-col [nzSpan]="12">
+                <label class="label-title">Perfil de cuenta</label>
+                <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="23">
+                    <nz-select nzAutoFocus id="perfil_cuenta" formControlName="perfil_cuenta"
+                      nzPlaceHolder="Seleccione un perfil" [(ngModel)]="clientForm.profileAccount">
+                      <nz-option disabled [nzValue]="undefined" nzLabel="seleccione un perfil"></nz-option>
+                      <nz-option *ngFor="let item of clientsProfiles" [nzValue]="item.id"
+                        nzLabel="{{item.name}}"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+
+              <div style="margin: 25px 0px; text-align: start;" nz-col [nzSpan]="24">
+                <h1 class="title-form">Fecha registro de tarjeta</h1>
+              </div>
+              <!-- Vigencia desde -->
+              <div nz-col [nzSpan]="12">
+                <label class="label-title">Vigencia desde</label>
+                <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="23">
+                    <nz-date-picker nzFormat="yyyy-MM-dd" [(ngModel)]="clientForm.dateInitCard"
+                      nzPlaceHolder="Ingrese una fecha de inicio" formControlName="rangePickerstartValueCard"
+                      [nzDisabledDate]="disabledStartDate2" (ngModelChange)="resetearValor2($event)"></nz-date-picker>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <!-- Vigencia hasta -->
+              <div nz-col [nzSpan]="12">
+                <label class="label-title">Vigencia hasta</label>
+                <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="23">
+                    <nz-date-picker nzFormat="yyyy-MM-dd" [(ngModel)]="clientForm.datEndCard"
+                    formControlName="rangePickerendValueCard"
+                      nzPlaceHolder="Ingrese una fecha de final" [nzDisabledDate]="disabledEndDate2"></nz-date-picker>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!------ no data ------->
+        <div *ngIf="!buscar" nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+          <div nz-col [nzSpan]="12">
+
+            <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../assets/icon/Featured_icon.svg"
+              alt="icono-buscar">
+
+            <div nz-col nzSm="24" nzMd="18">
+              <h1 class="title-form" style="place-content: center !important;">Ingrese un filtro en la parte superior.
+              </h1>
+              <h1 class="title-secundary" style="margin-top: 0px;">No existen datos para visualizar en esta tabla.
+                Presione el botón "buscar" para visualizar.</h1>
+            </div>
+
+            <button style="margin-bottom: 40px;" nz-button class="button-green" [nzType]="'primary'">
+              Volver
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!------------------------ TABLE ---------------------------------->
+  <div *ngIf="buscar" style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px;">
+    <form nz-row [nzGutter]="24" nz-form style="padding: 0px 24px; margin: 25px 0px; justify-content: space-between;">
+      <!-- input search -->
+      <form nz-form style="padding: 0px 14px; margin: 0px 0px" nz-col nzSpan="7">
+        <nz-form-item class="m-0">
+          <nz-form-control [nzSpan]="24">
+            <nz-input-group nzPrefixIcon="search" style="color: #798CA5; justify-content: center;" class="type-control">
+              <input nz-input name="search" type="search" id="search" [(ngModel)]="filterValueTable"
+                (ngModelChange)="searchTable()" placeholder="Buscar por todos los campos: ">
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+      <!-- button actions -->
+      <!-- <div class="button-acciones">
+        <div class="dropdown">
+          <button nz-button class="button-black" [nzType]="'primary'" data-bs-toggle="dropdown" aria-expanded="false">
+            <i nz-icon nzType="eye" nzTheme="outline"></i>
+          </button>
+          <ul class="dropdown-menu p-2" style="width: 200px;">
+            <li class="font-g my-1 d-flex">
+              <input type="checkbox" [checked]="showColum.tipoDocumento" class="mycheck-md me-1"
+                (click)="viewColum($event,1)">
+              Tipo Documento
+            </li>
+            <li class="font-g my-1 d-flex"><input type="checkbox" [checked]="showColum.documento"
+                class="mycheck-md me-1" (click)="viewColum($event,2)">Documento</li>
+            <li class="font-g my-1 d-flex"><input type="checkbox" [checked]="showColum.nombre" class="mycheck-md me-1"
+                (click)="viewColum($event,3)">Nombre</li>
+            <li class="font-g my-1 d-flex"><input type="checkbox" [checked]="showColum.apellido" class="mycheck-md me-1"
+                (click)="viewColum($event,4)">Apellido</li>
+            <li class="font-g my-1 d-flex"><input type="checkbox" [checked]="showColum.correoElectronico"
+                class="mycheck-md me-1" (click)="viewColum($event,5)">Correo electrónico</li>
+            <li class="font-g my-1 d-flex"><input type="checkbox" [checked]="showColum.telefono" class="mycheck-md me-1"
+                (click)="viewColum($event,6)">Teléfono</li>
+            <li class="font-g my-1 d-flex"><input type="checkbox" [checked]="showColum.tipoDeCuenta"
+                class="mycheck-md me-1" (click)="viewColum($event,7)">Tipo de cuenta</li>
+            <li class="font-g my-1 d-flex"><input type="checkbox" [checked]="showColum.perfilDeCuenta"
+                class="mycheck-md me-1" (click)="viewColum($event,8)">Perfil de cuenta</li>
+            <li class="font-g my-1 d-flex"><input type="checkbox" [checked]="showColum.numeroDeCuenta"
+                class="mycheck-md me-1" (click)="viewColum($event,9)">Número de cuenta</li>
+            <li class="font-g my-1 d-flex"><input type="checkbox" [checked]="showColum.fechaDeRegistro"
+                class="mycheck-md me-1" (click)="viewColum($event,10)">Fecha de registro</li>
+          </ul>
+        </div>
+
+        <button nz-button class="button-green" type="button" (click)="renderFileInTemplateDownloads()" [nzType]="'primary'"
+         ><i nz-icon nzType="printer" nzTheme="outline"></i> Imprimir
+        </button>
+        <button nz-button class="button-black" [nzType]="'primary'"><i nz-icon nzType="export" nzTheme="outline"></i>
+          Exportar
+        </button>
+      </div> -->
+    </form>
+    <!-- tabla -->
+    <nz-table #basicTable [nzData]="listOfData" [nzFrontPagination]="false" [nzPageSize]="5"
+      [nzScroll]="{ x: '1000px'}">
+      <thead>
+        <tr style="background: #F5F7FA;">
+          <th nzWidth="110px"></th>
+          <th nzWidth="190px" *ngIf="showColum.tipoDocumento">Tipo Documento</th>
+          <th nzWidth="150px" *ngIf="showColum.documento" [nzSortFn]="sortTable[0].compare!"
+            [nzSortPriority]="sortTable[0].priority">Documento</th>
+          <th nzWidth="150px" *ngIf="showColum.nombre" [nzSortFn]="sortTable[1].compare!"
+            [nzSortPriority]="sortTable[1].priority">Nombre</th>
+          <th nzWidth="150px" *ngIf="showColum.apellido" [nzSortFn]="sortTable[2].compare!"
+            [nzSortPriority]="sortTable[2].priority">Apellido</th>
+          <th nzWidth="190px" *ngIf="showColum.correoElectronico" [nzSortFn]="sortTable[4].compare!"
+            [nzSortPriority]="sortTable[4].priority">Correo electrónico</th>
+          <th nzWidth="150px" *ngIf="showColum.telefono" [nzSortFn]="sortTable[3].compare!"
+            [nzSortPriority]="sortTable[3].priority">Teléfono</th>
+          <th nzWidth="150px" *ngIf="showColum.tipoDeCuenta" [nzSortFn]="sortTable[5].compare!"
+            [nzSortPriority]="sortTable[5].priority">Tipo de cuenta</th>
+          <th nzWidth="150px" *ngIf="showColum.perfilDeCuenta" [nzSortFn]="sortTable[6].compare!"
+            [nzSortPriority]="sortTable[6].priority">Perfil de cuenta</th>
+          <th nzWidth="180px" *ngIf="showColum.numeroDeCuenta" [nzSortFn]="sortTable[7].compare!"
+            [nzSortPriority]="sortTable[7].priority">Número de cuenta</th>
+          <th nzWidth="150px" *ngIf="showColum.fechaDeRegistro">Fecha de registro</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let data of basicTable.data | paginate : { id: 'table', itemsPerPage: numberRow, currentPage: page }">
+          <td style="display: revert;">
+            <div class="d-flex">
+              <img draggable="false" class="mx-2" nz-tooltip="Editar" [routerLink]="['edit-clients', data.id]" src="../../../../../assets/icon/fi_edit-2.svg" style="cursor: pointer;">
+              <span style="cursor: pointer;" nz-tooltip="Ver más" (click)="showDetail(true, data)">
+                <i nz-icon nzType="eye" nzTheme="outline" style="font-size: 22px;"></i>
+              </span>
+            </div>
+          </td>
+          <td *ngIf="showColum.tipoDocumento">{{data.identificationType == 'Cedula de ciudadania' ? 'C.C' :
+            data.identificationType}}</td>
+          <td *ngIf="showColum.documento">{{data.identification}}</td>
+          <td *ngIf="showColum.nombre">{{data.firstName}} {{data.secondName}}</td>
+          <td *ngIf="showColum.apellido">{{data.lastName}} {{data.secondLastName}}</td>
+          <td *ngIf="showColum.correoElectronico">{{data.email}}</td>
+          <td *ngIf="showColum.telefono">{{data.cellPhone}}</td>
+          <td *ngIf="showColum.tipoDeCuenta">{{data.nameTypeAccount}}</td>
+          <td *ngIf="showColum.perfilDeCuenta">{{data.nameProfileAccount}} </td>
+          <td *ngIf="showColum.numeroDeCuenta">{{data.idSavings}}</td>
+          <td *ngIf="showColum.fechaDeRegistro">{{data.dateRegister | date:'yyyy-MM-dd'}}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <!-- PAGINADO DE LA TABLA -->
+    <div class="row d-flex align-items-center" *ngIf="listOfData.length > 0">
+      <div class="col-sm-4 ps-4">
+        <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+          <div>
+            <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+          </div>
+
+          <div class="px-1">
+            <nz-form-control>
+              <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow"
+                (ngModelChange)="onChangeRowPerPage($event)">
+                <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </div>
+
+          <div>
+            <label class="label-title" style="margin-top: 7px;">entradas</label>
+          </div>
+        </nz-form-item>
+      </div>
+      <div class="col-sm d-flex justify-content-end pe-4">
+        <pagination-controls id="table" previousLabel="Anterior" nextLabel="Siguiente"
+          (pageChange)="onChangePage($event)" (pageBoundsCorrection)="onChangePage($event)">
+        </pagination-controls>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- detalles -->
+<div *ngIf="viewDetails" class="p-3" style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px;">
+  <app-detail-passenger (showTable)="showDetail($event, null)" [client]="dataRowSelected">
+  </app-detail-passenger>
+</div>
+
+<!-- Modal -->
+<nz-modal [(nzVisible)]="isVisiblePDF" nzWidth="1200px" nzHeigth="500px" [nzFooter]="null"
+  (nzOnCancel)="closeModalShow()">
+  <div class="row-md" *nzModalContent>
+    <pdf-viewer *ngIf="urlFile != ''" [src]="urlFile" [render-text]="true" [original-size]="false"
+      style="width: 1150px; height: 500px"></pdf-viewer>
+  </div>
+</nz-modal>

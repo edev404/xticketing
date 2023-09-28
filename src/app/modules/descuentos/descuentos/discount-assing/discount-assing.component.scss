@@ -1,0 +1,141 @@
+@import url(../../../../../assets/themes/white/white-theme.scss);
+
+.title-form {
+  font-family: 'Taylor Sans';
+  font-style: italic;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 5px;
+  display: flex;
+  justify-content: center;
+  letter-spacing: -0.01em;
+  color: #415364;
+}
+
+.title-secundary {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #798CA5;
+
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+  margin: 30px 0px;
+}
+
+.contenedor-pdf {
+  position: relative;
+
+  div {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+  }
+}
+
+.centrado {
+  height: 415px !important;
+  border: 1px solid #000;
+  border-radius: 5px !important;
+}
+
+.active {
+  color: #415364;
+}
+
+.box-image-card {
+  height: auto !important;
+  border: 1px solid #000;
+  border-radius: 5px !important;
+}
+
+.error-form {
+  border: 1px solid #ff4d4f !important;
+  border-radius: 6px !important
+}
+
+.error-color {
+  color: #ff4d4f !important;
+}
+
+.disabled-select {
+  border: none !important;
+}
+
+.module-title {
+  font-size: 20px !important;
+}
+
+.button-upload {
+  height: 40px !important;
+  display: flex;
+  align-items: center;
+}
+
+.modal-descuentos {
+  width: 540px;
+  height: 248px;
+  padding: 24px;
+  // border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  // -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.274);
+  // -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.274);
+  // box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.274);
+  background-color: white;
+
+  h2 {
+    font-weight: 600;
+    font-style: italic;
+    font-family: 'Taylor Sans';
+    font-size: 24px;
+    line-height: 28px;
+    text-align: center;
+  }
+
+  p {
+    font-weight: 400;
+    font-family: 'Taylor Sans';
+    line-height: 24px;
+    text-align: center;
+  }
+}
+
+// .modal {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+
+div.modal-btn {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.succces,
+.cancelar {
+  font-family: 'Taylor Sans';
+  background-color: #EF4444;
+  height: 49px;
+  width: 109px;
+  border-radius: 8px;
+  color: white;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.succces {
+  background-color: #EF4444;
+}
+
+.cancelar {
+  background-color: rgb(65, 83, 100);
+}

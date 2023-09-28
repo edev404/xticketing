@@ -1,0 +1,56 @@
+<nz-table class="custom-card" #tableTrazabilidad [nzData]="listOfData" [nzFrontPagination]="false" [nzScroll]="{ x: '1000px' }">
+
+  <thead>
+    <tr style="background: #F5F7FA;">
+      <th nzWidth="100px" class="text-center">Código</th>
+      <th nzWidth="280px">Fecha y hora de ocurrencia</th>
+      <th nzWidth="240px">Causa</th>
+      <th nzWidth="240px">Acciones ejecutadas</th>
+      <th nzWidth="240px">Servicio detectado</th>
+      <th nzWidth="240px">Empresa detectada</th>
+      <th nzWidth="120px">Usuario</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let data of tableTrazabilidad.data | paginate : { id: 'tableTrazabilidad', itemsPerPage: numberRow, currentPage: page }">
+      <td class="text-center">{{data.id}}</td>
+      <td>{{data.fecha_registro | date: 'dd/MM/yyyy h:mm a'}} </td>
+      <td>{{data.causa}}</td>
+      <td>{{data.acciones_ejecutadas}}</td>
+      <td>{{data.servicio}}</td>
+      <td>{{data.empresa}}</td>
+      <td>{{data.usuario}}</td>
+    </tr>
+  </tbody>
+
+</nz-table>
+
+<!-- PAGINADO DE LA TABLA -->
+<div class="row d-flex align-items-center mt-2">
+  <div class="col-sm-4 ps-4">
+    <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+      <div>
+        <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+      </div>
+
+      <div class="px-1">
+        <nz-form-control>
+          <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow"
+            (ngModelChange)="onChangeRowPerPage($event)">
+            <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </div>
+
+      <div>
+        <label class="label-title" style="margin-top: 7px;">entradas</label>
+      </div>
+    </nz-form-item>
+  </div>
+  <div class="col-sm d-flex justify-content-end pe-4">
+    <pagination-controls id="tableTrazabilidad" previousLabel="Anterior" nextLabel="Siguiente" (pageChange)="onChangePage($event)"
+      (pageBoundsCorrection)="onChangePage($event)">
+    </pagination-controls>
+  </div>
+</div>

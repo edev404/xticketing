@@ -1,0 +1,54 @@
+<ng-container *ngIf="!vistaInforme">
+  <nz-breadcrumb style="margin-bottom: 20px;">
+    <nz-breadcrumb-item> 
+        <span class="title-modulo">
+            <i nz-icon nzType="car" style="font-size: 25px; margin-bottom: 1px;"></i>
+        </span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item> 
+      <span class="title-modulo">Transporte</span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">{{titelBreadcrumb}}</span>
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+  <div class="home-title-page p-0 " style="display: flex; justify-content: space-between; ">
+    <h1 class="title-home">{{titelBreadcrumb}}</h1>
+    <div>
+      <form>
+        <nz-form-item style="display: flex;">
+          <nz-form-label>Empresa</nz-form-label>
+          <nz-form-control  nzErrorTip="Por favor seleciona tu empresa!" class="w-50">
+            <nz-select id="empresa" nzPlaceHolder="Seleccione una empresa"
+              [ngModel]="selectedCompany" [ngModelOptions]="{standalone: true}" [ngClass]="_comunicarService.getEvento() ? 'disabled-select' : ''" [nzDisabled]="_comunicarService.getEvento()" (ngModelChange)="setSelectedCompany($event); loadCollect($event)">
+              <nz-option [nzValue]="null" nzLabel="Seleccione una empresa"></nz-option>
+              <nz-option *ngFor="let company of companies" [nzValue]="company.id" nzLabel="{{company.name}}"></nz-option>
+            </nz-select>
+          </nz-form-control>
+          <button nz-button class="button-green" [nzType]="'primary'" *ngIf="showCollect" (click)="rechargeCollect()">
+            Recargar
+          </button>
+        </nz-form-item>
+      </form>
+    </div>
+  </div>
+
+  <div nz-row class="card-aling-center" *ngIf="!showData">
+    <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+      <div nz-col nzXs="24" nzSm="20" nzMd="14">
+  
+        <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../assets/icon/info_icon.svg" alt="icono-buscar">
+        <div nz-col nzSm="24" nzMd="18">
+          <h1 class="title-form" style="place-content: center !important;">
+            Seleccione una empresa en la parte superior
+          </h1>
+          <h1 class="title-secundary" style="margin-top: 0px;">
+            Despliegue la lista de empresas y seleccione una para hacer el registro
+          </h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<router-outlet *ngIf="showData || vistaInforme"></router-outlet>

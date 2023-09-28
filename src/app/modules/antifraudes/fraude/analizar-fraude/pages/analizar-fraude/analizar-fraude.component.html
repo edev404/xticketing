@@ -1,0 +1,36 @@
+<div class="home-title-page" style="display: flex; justify-content: space-between;">
+	<h1 class="title-home">Analizar posibles fraudes</h1>
+	<div>
+		<nz-space>
+			<button nz-button class="button-black" style="color: white;" *nzSpaceItem
+				(click)="regresar()">
+				Regresar
+			</button>
+			<button nz-button class="button-green" nzType="primary"
+				(click)="registerAccion()" *nzSpaceItem
+				[disabled]="accionAnalizar === 2 && enableOrDisabledEnviarNotificacion">
+				{{ accionAnalizar === 0 || accionAnalizar === 1 || accionAnalizar === 3 ? 'Registrar' : 'Enviar' }}
+			</button>
+		</nz-space>
+	</div>
+</div>
+
+<nz-divider></nz-divider>
+
+<h2 class="title-secundary">Para registrar la información del análisis realizado de el o los casos seleccionados,
+	ingrese la información y luego presione el botón “Registrar”.</h2>
+
+<!-- Acciones (Registrar análisis, sanción, notificación) -->
+<div class="content-card">
+
+	<app-acciones-analizar [accionAnalizar]="accionAnalizar" [fraudesData]="fraudesData"
+		(onEmitChangeAccion)="changeAccion($event)"></app-acciones-analizar>
+
+</div> <!-- Fin Acciones content-card -->
+
+<!-- Tablas (Casos por analizar, analisis registrados, sanciones, notificaciones, casos similares, trazabilidad, controles sugeridos ) -->
+<div class="content-card">
+
+	<app-data-tabla-analizar [fraudesData]="fraudesData"></app-data-tabla-analizar>
+
+</div> <!-- Fin Tablas content-card -->

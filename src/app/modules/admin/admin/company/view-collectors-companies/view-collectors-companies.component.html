@@ -1,0 +1,214 @@
+<div *ngIf="!isCreate" style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px; ">
+  <div style="display: flex; justify-content: space-between;margin: 0px 20px;margin-top: 20px;">
+    <div nz-form nz-col nzSpan="12">
+      <nz-form-item class="row m-0">
+        <label class="col-sm-12">TIPO DE EMPRESA</label>
+        <nz-form-control class="col-sm-12" nz-col [nzSpan]="14" nzErrorTip="Por favor seleciona tu ente de recaudos!">
+          <nz-select nzAutoFocus id="ruta" [(ngModel)]="companiesType" (ngModelChange)="loadCompanies()"
+            nzPlaceHolder="Seleccione ente de recaudos"
+          >
+            <nz-option disabled nzValue="undefined" nzLabel="Seleccionar ente de recaudos"></nz-option>
+            <nz-option *ngFor="let company of typeCompanies" [nzLabel]="company.description" [nzValue]="company.id"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div class="pt-1">
+      <button nz-button class="login-form-button login-form-margin button-green mt-3"  [nzType]="'primary'" (click)="CreateOrEdit(null,true)">
+        Crear
+      </button>
+    </div>
+  </div>
+  <nz-divider></nz-divider>
+  <!-- table -->
+  <ng-container *ngIf="listOfData.length > 0; then dataMain; else noDataMain"></ng-container>
+  <ng-template #dataMain>
+    <nz-table #basicTable [nzData]="listOfData" [nzFrontPagination]="false" [nzPageSize]="5" [nzScroll]="{ x: '1000px', y: '400px'}">
+      <thead>
+        <tr style="background: #F5F7FA;">
+          <th nzWidth="190px"></th>
+          <th nzWidth="100px">Código</th>
+          <th nzWidth="200px">Nombre</th>
+          <th nzWidth="200px">NIT/CC</th>
+          <th nzWidth="200px">Dirección</th>
+          <th nzWidth="130px">Municipio</th>
+          <th nzWidth="200px">Correo</th>
+          <th nzWidth="150px">Responsable</th>
+          <th nzWidth="150px">Teléfono</th>
+          <th nzWidth="150px">Rango en lotes</th>
+          <th nzWidth="150px" *ngIf="companiesType == 2">Tope en dinero</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data | paginate : { id: 'table-main', itemsPerPage: numberRowMain, currentPage: pageMain }">
+          <td style="display: revert;">
+            <div class="d-flex justify-content-center gap-3 align-items-center">
+              <div class="form-check form-switch form-switch-sm m-0 mt-1" nz-tooltip="Activar/Inactivar">
+                <input class="form-check-input" type="checkbox" [checked]="true" (click)="changeStateCompany(data)">
+              </div>
+              <img draggable="false" style="cursor: pointer;" src="../../../../../assets/icon/fi_edit-2.svg" class="mx-1" (click)="CreateOrEdit(data.id,true);viewAllOffices(data.id)" nz-tooltip="Editar">
+              <span class="text-decoration-link ms-2 fw-bold" style="cursor: pointer;" (click)="viewAllOffices(data.id)" *ngIf="data.typeId == 2">Ver sucursales</span>
+            </div>
+          </td>
+          <td>{{data.code}}</td>
+          <td>{{data.name || "-"}}</td>
+          <td>{{data.client.nit || "-"}}</td>
+          <td>{{data.client.address || "-"}}</td>
+          <td>{{data.client.city || "-"}}</td>
+          <td>{{data.client.email || "-"}}</td>
+          <td>{{data.managerName || "-"}}</td>
+          <td>{{data.managerCellPhone || "-"}}</td>
+          <td>{{data.minQuantityCardByLot || 0}}-{{data.maxQuantityCardByLot || 0}}</td>
+          <td *ngIf="companiesType == 2">{{data.maxBalance || "-"}}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <!-- PAGINADO DE LA TABLA -->
+    <div class="row d-flex align-items-center" *ngIf="listOfData.length > 0">
+      <div class="col-sm-4 ps-4">
+        <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+          <div>
+            <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+          </div>
+
+          <div class="px-1">
+            <nz-form-control>
+              <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRowMain" (ngModelChange)="onChangeRowPerPage($event,'main')">
+                <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </div>
+
+          <div>
+            <label class="label-title" style="margin-top: 7px;">entradas</label>
+          </div>
+        </nz-form-item>
+      </div>
+      <div class="col-sm d-flex justify-content-end pe-4">
+        <pagination-controls id="table-main" previousLabel="Anterior" nextLabel="Siguiente" (pageChange)="onChangePage($event,'main')"
+          (pageBoundsCorrection)="onChangePage($event,'main')">
+        </pagination-controls>
+      </div>
+    </div>
+  </ng-template>
+  
+  <ng-template #noDataMain>
+    <div nz-row class="card-aling-center mb-4">
+      <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+        <div nz-col nzXs="24" nzSm="20" nzMd="14">
+    
+          <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../assets/icon/info_icon.svg" alt="icono-buscar">
+          <div nz-col nzSm="24" nzMd="18">
+            <h1 class="title-form" style="place-content: center !important;">
+              No hay datos existentes
+            </h1>
+            <h1 class="title-secundary" style="margin-top: 0px;">
+              No existen datos para visualizar en esta tabla.
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  
+  <!-- modal -->
+  <nz-modal [(nzVisible)]="isVisible" nzWidth="850px" nzFooter="" (nzOnCancel)="isVisible = !isVisible">
+    <div class="row-md" *nzModalContent>
+      <!-- body -->
+      <!-- titel and description -->
+      <div class="col-sm-12">
+        <h1 class="modal-title fs-5 mb-3">Sucursales</h1>
+        <div class="my-3 text-md title-secundary">
+          Listado de la información básica de las sucursales
+        </div>
+      </div>
+      <!-- table -->
+      <div class="col-sm-12" [ngClass]="{'d-flex justify-content-center':listDataSucurasles.length == 0}">
+        <ng-container *ngIf="listDataSucurasles.length > 0; then dataModal; else noDataModal"></ng-container>
+        <ng-template #dataModal>
+          <nz-table #tableSucursales [nzData]="listDataSucurasles" [nzFrontPagination]="false" [nzPageSize]="5" [nzScroll]="{ x: '1000px', y: '311px'}">
+            <thead>
+              <tr style="background: #F5F7FA;">
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Telefono</th>
+                <th>Pais</th>
+                <th>Departamento</th>
+                <th>Municipio</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of tableSucursales.data | paginate : { id: 'table-modal', itemsPerPage: numberRowModal, currentPage: pageModal }">
+                <td>{{data.code}}</td>
+                <td>{{data.name}}</td>
+                <td>{{data.address}}</td>
+                <td>{{data.phone}}</td>
+                <td>{{data.country}}</td>
+                <td>{{data.department}}</td>
+                <td>{{data.city}}</td>
+              </tr>
+            </tbody>
+          </nz-table>
+          <!-- PAGINADO DE LA TABLA -->
+          <div class="row d-flex align-items-center" *ngIf="listDataSucurasles.length > 0">
+            <div class="col-sm-4 ps-4">
+              <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+                <div>
+                  <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+                </div>
+
+                <div class="px-1">
+                  <nz-form-control>
+                    <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRowModal" (ngModelChange)="onChangeRowPerPage($event,'modal')">
+                      <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </div>
+
+                <div>
+                  <label class="label-title" style="margin-top: 7px;">entradas</label>
+                </div>
+              </nz-form-item>
+            </div>
+            <div class="col-sm d-flex justify-content-end pe-4">
+              <pagination-controls id="table-modal" previousLabel="Anterior" nextLabel="Siguiente" (pageChange)="onChangePage($event,'modal')"
+                (pageBoundsCorrection)="onChangePage($event,'modal')">
+              </pagination-controls>
+            </div>
+          </div>
+        </ng-template>
+
+        <ng-template #noDataModal>
+          <div nz-col [nzSpan]="12" style="text-align: -webkit-center;">
+            <img draggable="false" style="margin: 20px 0px;" src="../../../../../assets/icon/Featured_icon.svg" alt="icono-buscar">
+            <div nz-col [nzSpan]="18">
+              <h1 class="title-form" style="justify-content: center !important;">
+                No hay datos existentes
+              </h1>
+              <h1 class="title-secundary">
+                No existen datos para visualizar en esta tabla. 
+                Puedes volver a la página principal. 
+              </h1>
+              <button nz-button class=" button-green" [nzType]="'primary'" (click)="isVisible = !isVisible">
+                Volver
+            </button>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+    <div *nzModalFooter></div>
+  </nz-modal>
+</div>
+
+<div *ngIf="isCreate" class="p-3" style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px; ">
+  <app-create-collector-companies
+    (CreateOrEdit)="CreateOrEdit(null, $event)"
+    [companyId]="idCompany"
+    [idTypeCompanies]="companiesType"
+    [showLimit]="companiesType"
+    [isEdit]="isEdit"
+  >
+  </app-create-collector-companies>
+</div>

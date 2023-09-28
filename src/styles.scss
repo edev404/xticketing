@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
+
+@import url('./assets/themes/white/white-theme.scss');
+
+.ck-inspector, .ck-inspector-portal, .ck-inspector-portal :not(select), .ck-inspector :not(select) {
+  opacity: 0 !important;
+
+}
+.ck-inspector .ck-inspector-navbox .ck-inspector-navbox__navigation {
+  opacity: 0 !important;
+}
+.ck-inspector-navbox__navigation {
+  opacity: 0 !important;
+}
+.ck.ck-editor__editable_inline>:last-child {
+  height: 280px;
+}
+
+// FUENTES GLOBALES PARA LA APP
+* {
+  font-family: 'Taylor Sans' !important;
+}
+
+// CONFIG SCROLLBAR APP
+body {
+  overflow-y: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 7.50px;
+  display: block;
+  background-color: #ffffff;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 100rem;
+  background-color: #c1c1c1;
+}
+.mycheck-md {
+  cursor: pointer;
+  background-color: white;
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+  width: 16px;
+  height: 16px;
+  appearance: none;
+  border: 1px solid #90A0B7;
+  border-radius: 4px;
+  margin-top: 3px;
+}
+
+.mycheck-md:checked {
+  background-color: #009F7C;
+}
+
+@mixin switch($res: 'sm') {
+  $index: 1rem;
+  $mainVal: 1rem;
+
+  @if $res =='md' {
+    $index: 2.5rem;
+    $mainVal: 1.5rem;
+  }
+
+  @else if $res =='lg' {
+    $index: 3rem;
+    $mainVal: 2rem;
+  }
+
+  @else if $res =='xl' {
+    $index: 4rem;
+    $mainVal: 2.5rem;
+  }
+
+  margin-bottom: $index / 2;
+  /* JUST FOR STYLING PURPOSE */
+
+  .form-check-input {
+    height: $mainVal;
+    width: calc(#{$index} + 0.75rem);
+    border-radius: $mainVal * 2;
+  }
+
+  .form-check-input:checked {
+    background-color: #00AE8D;
+    border-color: #00AE8D;
+  }
+
+  .form-check-input {
+    background-color: #E9EEFA;
+    border-color: #E9EEFA;
+  }
+}
+
+.form-switch .form-check-input:checked {
+  background-image: url('./assets/icon/icon_circle_check.svg');
+}
+
+.form-switch .form-check-input {
+  background-image: url('./assets/icon/icon_circle_check.svg');
+}
+
+.form-switch.form-switch-sm {
+  @include switch();
+}
+
+.form-switch.form-switch-md {
+  @include switch('md');
+}
+
+.form-switch.form-switch-lg {
+  @include switch('lg');
+}
+
+.form-switch.form-switch-xl {
+  @include switch('xl');
+}
+
+
+// CONFIG CARDS BREADCRUMB TITULOS Y MAS
+::ng-deep .ant-card-body {
+  padding: 24px;
+  padding-bottom: 4px;
+}
+
+.custom-card{
+  border: 1px solid #e9eefa !important;
+  border-radius: 8px;
+  // margin: 20px;
+}
+
+.card-aling-center {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  height: 75%;
+}
+
+:host ::ng-deep nz-breadcrumb-item {
+  span>i {
+    color: #798CA5 !important;
+  }
+}
+
+nz-form-label {
+  font-family: 'Taylor Sans';
+  font-style: italic;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+  color: #556A83;
+  margin: 5px 8px;
+}

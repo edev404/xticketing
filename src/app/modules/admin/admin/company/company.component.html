@@ -1,0 +1,31 @@
+<nz-breadcrumb style="margin-bottom: 20px;">
+  <nz-breadcrumb-item> 
+      <span class="title-modulo">
+        <i nz-icon nzType="setting" style="font-size: 25px; margin-bottom: 1px;"></i>
+      </span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item> 
+      <span class="title-modulo">Administración</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+      <span class="title-submodulo">Empresas</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+      <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">{{titelBreadcrumb}}</span>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+<nz-tabset nzType="card" nzSelectedIndex="0">
+  <nz-tab *ngFor="let item of listTabs" [nzTitle]="item.name" (nzClick)="tabSelect(item)">
+      <ng-container [ngSwitch]="true">
+          <div *ngSwitchCase="tabSelecte === 'AVETE'">
+            <app-view-types-companies></app-view-types-companies>
+          </div>
+          <div *ngSwitchCase="tabSelecte === 'AVECF'">
+            <app-view-fleet-companies></app-view-fleet-companies>
+          </div>
+          <div *ngSwitchCase="tabSelecte === 'AVEER'">
+            <app-view-collectors-companies></app-view-collectors-companies>
+          </div>
+        </ng-container>
+  </nz-tab>
+</nz-tabset>

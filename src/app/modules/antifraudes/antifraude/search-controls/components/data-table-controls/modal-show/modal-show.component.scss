@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
+.title-home {
+  font-family: 'Taylor Sans';
+  font-style: italic;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 29px;
+  color: #415364;
+  margin: 1rem 0rem 1.5rem 0rem;
+}
+
+.button-green{
+  background: #00AE8D;
+  border-radius: 8px;
+  border-color: #00AE8D !important;
+  height: 40px;
+  font-family: 'Taylor Sans';
+  font-style: italic;
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0px 10px;
+  padding: 0rem 3.75rem;
+}
+
+// TAB MENU
+::ng-deep .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #00AE8D !important;
+  font-size: 16px !important;
+}
+
+::ng-deep .ant-tabs-tab-btn {
+  color: #798CA5 !important;
+  font-size: 16px !important;
+}
+
+// ::ng-deep .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active, .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab-active {
+//   border: 0px !important;
+// }
+
+// ::ng-deep .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab, .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab {
+//   border: 0px !important;
+//   background: #fff;
+// }
+
+// ::ng-deep .ant-tabs-top > .ant-tabs-nav::before, .ant-tabs-bottom > .ant-tabs-nav::before, .ant-tabs-top > div > .ant-tabs-nav::before, .ant-tabs-bottom > div > .ant-tabs-nav::before {
+//   border-bottom: 0px solid #f0f0f0 !important;
+// }
+
+// ::ng-deep .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab, .ant-tabs-card.ant-tabs-top[_ngcontent-kkb-c268] > div[_ngcontent-kkb-c268] > .ant-tabs-nav[_ngcontent-kkb-c268] .ant-tabs-tab[_ngcontent-kkb-c268] {
+//   padding-left: 0px !important;
+// }

@@ -1,0 +1,99 @@
+@mixin flex() {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contenedor-card {
+    display: flex;
+    gap: 25px;
+    justify-content: flex-end;
+    margin-bottom: 25px;
+}
+
+.card {
+    width: 280px;
+    height: 145px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 15px -3px rgba(0, 0, 0, 0.1);
+    border: 0px;
+}
+
+.card-estadisticas {
+    .card-estadisticas-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 145px;
+
+        h2 {
+            font-size: 17px;
+            color: #49515a;
+        }
+
+        span {
+            margin-top: 2px;
+            font-size: 28px;
+            color: #9ea6b5;
+            font-weight: 600;
+        }
+    }
+}
+
+.filtro {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 25px;
+    gap: 12px;
+}
+
+nz-select {
+    width: 280px;
+}
+
+// .contenedor {
+//     margin: 25px;
+// }
+
+.contenedor-graficas {
+    display: flex;
+    justify-content: space-between;
+    gap: 25px;
+
+    div.cards {
+        width: 48%;
+        box-shadow: 0px 0px 15px -3px rgba(0, 0, 0, 0.1);
+        border: 12px;
+        padding: 10px;
+    }
+
+    div.torta {
+        width: 48%;
+        box-shadow: 0px 0px 15px -3px rgba(0, 0, 0, 0.1);
+        border: 12px;
+        padding: 10px;
+    }
+}
+
+.contenedor-graficas-2 {
+    margin-top: 25px;
+
+    div {
+        width: 100%;
+        box-shadow: 0px 0px 15px -3px rgba(0, 0, 0, 0.1);
+        border: 12px;
+        padding: 10px;
+    }
+}
+
+
+.celda {
+    cursor: pointer;
+    background-color: #f0f0f0;
+    &:hover {
+        cursor: pointer;
+        background-color: #f0f0f0;
+    }
+}

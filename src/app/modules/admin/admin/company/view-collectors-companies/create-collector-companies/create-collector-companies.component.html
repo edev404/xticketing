@@ -1,0 +1,503 @@
+<div class="home-title-page mb-4" style="display: flex; justify-content: space-between; ">
+    <h1 class="title-home">{{isEdit?'Editar empresa':'Crear empresa'}}</h1>
+    <div>
+        <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cancelCompany()">
+            Cancelar
+        </button>
+        <button *ngIf="!isEdit" nz-button class="button-green mx-2" [nzType]="'primary'" form="CreateForm"
+            (click)="saveCompany()">Guardar
+        </button>
+        <button *ngIf="isEdit" nz-button class="button-green mx-2" [nzType]="'primary'" form="CreateForm"
+            (click)="editCompany()">Editar
+        </button>
+    </div>
+</div>
+
+<nz-divider style="margin: 0px 0 !important;"></nz-divider>
+<h2 class="text-sm my-3 title-secundary">Digite los siguientes campos</h2>
+<form [formGroup]="validateForm">
+    <div class="row">
+        <div class="col-sm-6">
+            <!-- tipo de empresa -->
+            <div class="col-sm">
+                <label class="label-title text-sm">Tipo de empresa</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24" nzErrorTip="!Por favor seleccione una empresa¡">
+                        <nz-select nzAutoFocus nzServerSearch id="typeCompany"
+                            [ngClass]="{'disable-input': idTypeCompanies}" formControlName="typeCompany"
+                            nzPlaceHolder="Seleccione una empresa">
+                            <nz-option disabled [nzValue]="null" nzLabel="Seleccione una empresa"></nz-option>
+                            <nz-option *ngFor="let company of typeCompanies" [nzLabel]="company.description"
+                                [nzValue]="company.id"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <!-- nombre -->
+            <div class="col-sm">
+                <label class="label-title text-sm">Nombre</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese un Nombre!">
+                        <input id="name" class="rounded input-field" type="text" nz-input formControlName="name"
+                            placeholder="Ingrese un Nombre" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <!-- nit/cc -->
+            <div class="col-sm">
+                <label class="label-title text-sm">NIT/CC</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese su documento!">
+                        <input id="nitcc" class="rounded input-field" type="text" nz-input formControlName="nitcc"
+                            placeholder="Ingrese su documento"
+                            (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <!-- correo -->
+            <div class="col-sm">
+                <label class="label-title text-sm">Correo electrónico</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese su correo electrónico!">
+                        <input id="email" class="rounded input-field" type="text" nz-input formControlName="email"
+                            placeholder="Ingrese un correo electrónico" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <!-- ubicación -->
+            <div class="col-sm">
+                <div class="row">
+                    <label class="label-title text-sm">Ubicación</label>
+                    <!-- pais -->
+                    <div class="col-sm-4">
+                        <nz-form-item>
+                            <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione un Pais!">
+                                <nz-select nzAutoFocus nzServerSearch id="contry" formControlName="contry"
+                                    nzPlaceHolder="Seleccione pais" (ngModelChange)="changeSelect('Department',$event)">
+                                    <nz-option disabled [nzValue]="null" nzLabel="Pais"></nz-option>
+                                    <nz-option *ngFor="let contry of countryCombo" [nzLabel]="contry.name"
+                                        [nzValue]="contry.id"></nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                    <!-- departamento -->
+                    <div class="col-sm-4">
+                        <nz-form-item>
+                            <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione un Departamento!">
+                                <nz-select nzAutoFocus nzServerSearch id="department" formControlName="department"
+                                    nzPlaceHolder="Seleccione departamento"
+                                    (ngModelChange)="changeSelect('city',$event)">
+                                    <nz-option disabled [nzValue]="null" nzLabel="Departamento"></nz-option>
+                                    <nz-option *ngFor="let department of departmentResidenceCombo"
+                                        [nzLabel]="department.name" [nzValue]="department.id"></nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                    <!-- municipio -->
+                    <div class="col-sm-4">
+                        <nz-form-item>
+                            <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione un municipio!">
+                                <nz-select nzAutoFocus nzServerSearch id="city" formControlName="city"
+                                    nzPlaceHolder="Municipio">
+                                    <nz-option disabled [nzValue]="null" nzLabel="Seleccione municipio"></nz-option>
+                                    <nz-option *ngFor="let city of cityResidenceCombo" [nzLabel]="city.name"
+                                        [nzValue]="city.id"></nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <!-- Codigo -->
+            <div class="col-sm">
+                <label class="label-title text-sm">Código</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese un código!">
+                        <input id="code" class="rounded input-field" type="text" nz-input formControlName="code"
+                            placeholder="Ingrese un código" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <!-- responsable -->
+            <div class="col-sm">
+                <label class="label-title text-sm">Responsable</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese el responsable!">
+                        <input id="responsible" class="rounded input-field" type="text" nz-input
+                            formControlName="responsible" placeholder="Ingrese un responsable" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <!-- telefono -->
+            <div class="col-sm">
+                <label class="label-title text-sm">Teléfono</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese el número de teléfono!">
+                        <input id="phone" class="rounded input-field" type="text" nz-input formControlName="phone"
+                            placeholder="Ingrese un número de teléfono " />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <!-- rango de lotes -->
+            <!-- <div class="col-sm" >
+                <div class="row">
+                    <label class="label-title text-sm">Rango de lotes</label>
+                    minimo
+                    <div class="col-sm-6">
+                        <nz-form-item>
+                            <nz-form-control nz-col [nzSpan]="24"
+                                nzErrorTip="¡Por favor ingrese un rango de lotes minimo!">
+                                <input id="minimumLots" class="rounded input-field" type="number" nz-input
+                                    formControlName="minimumLots" placeholder="Minimo"
+                                    (keypress)="($event.charCode === 8 || $event.charCode === 0) ? null : $event.charCode >= 48 && $event.charCode <= 57;" />
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                    maximo 
+                    <div class="col-sm-6">
+                        <nz-form-item>
+                            <nz-form-control nz-col [nzSpan]="24"
+                                nzErrorTip="¡Por favor ingrese un rango de lotes maximo!">
+                                <input id="maximumLots" class="rounded input-field" type="number" nz-input
+                                    formControlName="maximumLots" placeholder="Maximo"
+                                    (keypress)="($event.charCode === 8 || $event.charCode === 0) ? null : $event.charCode >= 48 && $event.charCode <= 57;" />
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </div>
+            </div> -->
+            <!-- direccion -->
+            <div class="col-sm">
+                <label class="label-title text-sm">Dirección</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese una dirección!">
+                        <input id="address" class="rounded input-field" type="text" nz-input formControlName="address"
+                            placeholder="Ingrese una dirección" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+
+        <div class="col-sm-12 row" *ngIf="showLimit == 2">
+            <h2 class="text-sm my-2 title-home">Límites de recargas</h2>
+            <nz-divider style="margin: 12px 16px !important;"></nz-divider>
+            <!-- Máximo transacciones de recargas por días -->
+            <div class="col-sm-6">
+                <label class="label-title text-sm">Máximo transacciones de recargas por días</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24"
+                        nzErrorTip="¡Por favor ingrese un número máximo de transacciones!">
+                        <input id="name" class="rounded input-field" type="number" nz-input
+                            formControlName="maxTransByDay" placeholder="Ingrese un número máximo de transacciones"
+                            min="1"
+                            (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <!-- Máximo monto de recarga por días -->
+            <div class="col-sm-6">
+                <label class="label-title text-sm">Máximo monto de recargas por días</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese un monto máximo de recargas!">
+                        <input id="name" class="rounded input-field" type="number" nz-input
+                            formControlName="maxMountByDay" placeholder="Ingrese un monto máximo de recargas" min="1"
+                            (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <!-- Mínimo monto de recarga -->
+            <div class="col-sm-6">
+                <label class="label-title text-sm">Mínimo monto de recargas</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese un monto mínimo de recargas!">
+                        <input id="name" class="rounded input-field" type="number" nz-input
+                            formControlName="minMountRecharge" placeholder="Ingrese un monto mínimo de recargas" min="1"
+                            (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <!-- Tope máximo en dinero -->
+            <div class="col-sm-6">
+                <label class="label-title text-sm">Tope máximo en dinero por día</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese un tope máximo de dinero!">
+                        <input id="name" class="rounded input-field" type="number" nz-input
+                            formControlName="MaxLimitMoney" placeholder="Ingrese un tope máximo de dinero" min="1"
+                            (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+    </div>
+</form>
+
+<ng-container *ngIf="idTypeCompanies == 2">
+    <h2 *ngIf="isEdit" class="text-sm my-2 title-home">Sucursales</h2>
+    <nz-divider *ngIf="isEdit" style="margin: 0px 0 !important;"></nz-divider>
+
+    <div *ngIf="isEdit" class="row my-3 d-flex justify-content-center">
+        <div class="col-sm-9">
+            <form [formGroup]="validateForm2">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <!-- codigo -->
+                        <div class="col-sm">
+                            <label class="label-title text-sm">código</label>
+                            <nz-form-item>
+                                <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese un código!">
+                                    <input id="name" class="rounded input-field" type="text" nz-input
+                                        formControlName="code" placeholder="Ingrese un código" />
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                        <!-- nombre -->
+                        <div class="col-sm">
+                            <label class="label-title text-sm">Nombre</label>
+                            <nz-form-item>
+                                <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese un Nombre!">
+                                    <input id="name" class="rounded input-field" type="text" nz-input
+                                        formControlName="name" placeholder="Ingrese un nombre" />
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                        <!-- ubicación -->
+                        <div class="col-sm">
+                            <div class="row">
+                                <label class="label-title text-sm">Ubicación</label>
+                                <!-- pais -->
+                                <div class="col-sm-4">
+                                    <nz-form-item>
+                                        <nz-form-control nz-col [nzSpan]="24"
+                                            nzErrorTip="¡Por favor seleccione un Pais!">
+                                            <nz-select nzAutoFocus nzServerSearch id="contry" formControlName="contry"
+                                                nzPlaceHolder="seleccione pais"
+                                                (ngModelChange)="changeSelect2('Department',$event)">
+                                                <nz-option disabled nzValue="undefined" nzLabel="Pais"></nz-option>
+                                                <nz-option *ngFor="let contry of countryCombo" [nzLabel]="contry.name"
+                                                    [nzValue]="contry.id"></nz-option>
+                                            </nz-select>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                                <!-- departamento -->
+                                <div class="col-sm-4">
+                                    <nz-form-item>
+                                        <nz-form-control nz-col [nzSpan]="24"
+                                            nzErrorTip="!Por favor seleccione un Departamento¡">
+                                            <nz-select nzAutoFocus nzServerSearch id="department"
+                                                formControlName="department" nzPlaceHolder="seleccione departamento"
+                                                (ngModelChange)="changeSelect2('city',$event)">
+                                                <nz-option disabled nzValue="undefined"
+                                                    nzLabel="Departamento"></nz-option>
+                                                <nz-option *ngFor="let department of departmentResidenceCombo2"
+                                                    [nzLabel]="department.name" [nzValue]="department.id"></nz-option>
+                                            </nz-select>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                                <!-- municipio -->
+                                <div class="col-sm-4">
+                                    <nz-form-item>
+                                        <nz-form-control nz-col [nzSpan]="24"
+                                            nzErrorTip="¡Por favor seleccione municipio!">
+                                            <nz-select nzAutoFocus nzServerSearch id="city" formControlName="city"
+                                                nzPlaceHolder="seleccione municipio">
+                                                <nz-option disabled nzValue="undefined" nzLabel="Municipio"></nz-option>
+                                                <nz-option *ngFor="let city of cityResidenceCombo2"
+                                                    [nzLabel]="city.name" [nzValue]="city.id"></nz-option>
+                                            </nz-select>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <!-- direccion -->
+                            <div class="col-sm-12">
+                                <label class="label-title text-sm">Direccion</label>
+                                <nz-form-item>
+                                    <nz-form-control nz-col [nzSpan]="24"
+                                        nzErrorTip="¡Por favor ingrese una direccion!">
+                                        <input id="address" class="rounded input-field" type="text" nz-input
+                                            formControlName="address" placeholder="Ingrese una dirección" />
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                            <!-- telefono -->
+                            <div class="col-sm-12">
+                                <label class="label-title text-sm">Teléfono</label>
+                                <nz-form-item>
+                                    <nz-form-control nz-col [nzSpan]="24"
+                                        nzErrorTip="Por favor ingrese el número de Teléfono!">
+                                        <input id="phone" class="rounded input-field" type="text" nz-input
+                                            formControlName="phone" placeholder="Ingrese un número de teléfono" />
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- button agregar -->
+                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 25px;">
+                    <button nz-button class="button-black" [nzType]="'primary'" style="margin-top: 3px; height: 40px;"
+                        (click)="isVisible = true">
+                        <span nz-icon nzType="plus" nzTheme="outline" class="align-middle pb-1"></span>
+                        Agregar masivamente
+                    </button>
+                    <button nz-button *ngIf="!officeEdit" class="button-green" [nzType]="'primary'"
+                        style="margin-top: 3px; height: 40px;" (click)="createOffice()">
+                        <span nz-icon nzType="plus" nzTheme="outline" class="align-middle pb-1"></span>
+                        Agregar
+                    </button>
+                    <button nz-button *ngIf="officeEdit" class="button-green" [nzType]="'primary'"
+                        style="margin-top: 3px; height: 40px;" (click)="createOffice()">
+                        Editar
+                    </button>
+                </div>
+            </form>
+            <!-- table -->
+            <ng-container *ngIf="listDataSucurasles.length > 0; then data; else noData"></ng-container>
+            <ng-template #data>
+                <div class="custom-card">
+                    <nz-table #tableSucursales [nzData]="listDataSucurasles" [nzFrontPagination]="false"
+                        [nzPageSize]="5" [nzScroll]="{ x: '1000px', y: '400px'}">
+                        <thead>
+                            <tr style="background: #F5F7FA;">
+                                <th nzWidth="100px"></th>
+                                <th nzWidth="150px">código</th>
+                                <th nzWidth="200px">Nombre</th>
+                                <th nzWidth="200px">Dirección</th>
+                                <th nzWidth="150px">Teléfono</th>
+                                <th nzWidth="100px">Pais</th>
+                                <th nzWidth="150px">Departamento</th>
+                                <th nzWidth="150px">Municipio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="let data of tableSucursales.data | paginate : { id: 'table', itemsPerPage: numberRow, currentPage: page }">
+                                <td style="display: revert;">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <div class="form-check form-switch form-switch-sm m-0 mt-1"
+                                            nz-tooltip="Activar/Inactivar">
+                                            <input class="form-check-input" type="checkbox" [checked]="data.active"
+                                                (click)="changeStateOffice(data)">
+                                        </div>
+                                        <img draggable="false" style="cursor: pointer;"
+                                            src="../../../../../assets/icon/fi_edit-2.svg"
+                                            (click)="setOfficeToEdit(data)" class="mx-1" nz-tooltip="Editar">
+                                    </div>
+                                </td>
+                                <td>{{data.code ||'-'}}</td>
+                                <td>{{data.name ||'-'}}</td>
+                                <td>{{data.address ||'-'}}</td>
+                                <td>{{data.phone ||'-'}}</td>
+                                <td>{{data.country ||'-'}}</td>
+                                <td>{{data.department ||'-'}}</td>
+                                <td>{{data.city ||'-'}}</td>
+                            </tr>
+                        </tbody>
+                    </nz-table>
+                    <!-- PAGINADO DE LA TABLA -->
+                    <div class="row d-flex align-items-center" *ngIf="listDataSucurasles.length > 0">
+                        <div class="col-sm-4 ps-4">
+                            <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+                                <div>
+                                    <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+                                </div>
+
+                                <div class="px-1">
+                                    <nz-form-control>
+                                        <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow"
+                                            (ngModelChange)="onChangeRowPerPage($event)">
+                                            <nz-option *ngFor="let item of tableSizes" [nzValue]="item"
+                                                [nzLabel]="item"></nz-option>
+                                        </nz-select>
+                                    </nz-form-control>
+                                </div>
+
+                                <div>
+                                    <label class="label-title" style="margin-top: 7px;">entradas</label>
+                                </div>
+                            </nz-form-item>
+                        </div>
+                        <div class="col-sm d-flex justify-content-end pe-4">
+                            <pagination-controls id="table" previousLabel="Anterior" nextLabel="Siguiente"
+                                (pageChange)="onChangePage($event)" (pageBoundsCorrection)="onChangePage($event)">
+                            </pagination-controls>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template #noData>
+                <div nz-row class="card-aling-center mb-5">
+                    <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+                        <div nz-col nzXs="24" nzSm="20" nzMd="14">
+
+                            <img draggable="false" style="margin: 40px 0px 20px 0px;"
+                                src="../../../../../assets/icon/info_icon.svg" alt="icono-buscar">
+                            <div nz-col nzSm="24" nzMd="18">
+                                <h1 class="title-form" style="place-content: center !important;">
+                                    No hay datos existentes
+                                </h1>
+                                <h1 class="title-secundary" style="margin-top: 0px;">
+                                    No existen datos para visualizar en esta tabla.
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+
+</ng-container>
+
+<nz-modal [(nzVisible)]="isVisible" nzWidth="850px" [nzFooter]="null" (nzOnCancel)="isVisible = !isVisible">
+    <!-- SUBIR ARCHIVO -->
+    <div class="row-md" *nzModalContent>
+        <div class="col">
+            <div class="custom-card row">
+                <!-- DRAG AND DROP -->
+                <div class="col-sm-9 p-4">
+                    <label>Subir archivo</label>
+                    <div class="file-drop-area">
+                        <!-- SI NO ARCHIVO CARGADO -->
+                        <span *ngIf="!haveFile" class="text-center text-2xs">
+                            <b style="color: #00AE8D !important;">Presiona aquí </b>
+                            <b>para subir o arrastra y suelta TXT, XLS o CSV.</b>
+                        </span>
+                        <!-- SI HAY ARCHIVO CARGADO -->
+                        <span *ngIf="haveFile" class="text-start" style="font-size: 16px;">
+                            <div class="d-inline-flex">
+                                <img draggable="false" src="../../../../../assets/icon/fi_file-text.svg" height="50%"
+                                    class="mx-2">
+                                <div class="d-flex flex-column">
+                                    <b>{{currentFileName}}</b>
+                                    <p>{{currentFileSize}}</p>
+                                </div>
+                            </div>
+                        </span>
+                        <input class="file-input" id="fileInput" type="file" accept=".txt,.xlsx,.csv"
+                            (change)="handleFile()" />
+                    </div>
+                </div>
+                <!-- BUTTON UPLODAD ARCHIVO -->
+                <div class="col-sm-3 d-flex align-items-center p-0 pe-4">
+                    <button nz-button class="button-upload" [nzType]="'primary'" (click)="enviar()">
+                        Subir archivo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</nz-modal>

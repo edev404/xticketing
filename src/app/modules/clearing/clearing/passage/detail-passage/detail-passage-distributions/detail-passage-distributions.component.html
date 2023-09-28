@@ -1,0 +1,106 @@
+<!-- CARD HEADER -->
+<nz-card nzHoverable class="my-3 mx-2" style="border-radius: 8px; border: 1px solid #CBD7E5;">
+  <div class="row">
+    <p class="col-sm-6 text-md">
+      {{dataTimeOfSearch.month | uppercase}}, {{dataTimeOfSearch.year}}
+    </p>
+    <p class="col-sm-6 text-md" style="color: #008160;">
+      {{pressettlementFilter.company.name}}
+    </p>
+    <p class="col-sm-6">
+      <b class="text-md">Desde&nbsp;&nbsp;</b>
+      <span class="text-xs">{{dataTimeOfSearch.fromDate}}, {{pressettlementFilter.fromDate | date:'dd/MM/yyyy'}}</span>
+    </p>
+    <p class="col-sm-6">
+      <b class="text-md">Hasta&nbsp;&nbsp;</b>
+      <span class="text-xs">{{dataTimeOfSearch.toDate}}, {{pressettlementFilter.toDate | date:'dd/MM/yyyy'}}</span>
+    </p>
+  </div>
+</nz-card>
+<!-- TABLES -->
+<div class="row m-2 ">
+  <!-- TABLE LEFT -->
+  <div class="col-sm-6 ps-0">
+    <div class="custom-card">
+      <nz-table #table1 [nzData]="detailsSearch" [nzShowPagination]="false" [nzPageSize]="detailsSearch.length">
+        <thead>
+          <tr style="background: #F5F7FA;">
+            <th>Tipo de actor</th>
+            <th>Porcentaje</th>
+            <th>Valor a Pagar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of table1.data" (click)="detailSelected = data; searchRowDetails()" style="cursor:pointer;">
+            <td>{{data.involvedName}}</td>
+            <td>{{data.percentage}}%</td>
+            <td>{{data.valueToPay | currency}}</td>
+          </tr>
+        </tbody>
+        <tfoot style="background-color: #fafafa;">
+          <tr>
+            <td colspan="2"><b>VALOR A REPARTIR</b></td>
+            <td style="color: #008160 !important;">{{totalToDistribution | currency}}</td>
+          </tr>
+        </tfoot>
+      </nz-table>
+    </div>
+  </div>
+  <!-- TABLE RIGTH -->
+  <div class="col-sm-6 pe-0">
+    <div class="custom-card h-100">
+      <ng-container *ngIf="detailSelected; then rowSelected; else notRowSelected"></ng-container>
+    </div>
+  </div>
+</div>
+
+<!-- NO DATA -->
+<ng-template #notRowSelected>
+  <div nz-row class="card-aling-center">
+      <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+          <div nz-col nzXs="24" nzSm="20" nzMd="14">
+              <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../../../../assets/icon/info_icon.svg"
+                  alt="icono-buscar">
+              <div nz-col nzSm="24" nzMd="18">
+                  <h1 class="title-form" style="place-content: center !important;">
+                      Seleccione un dato de la tabla
+                  </h1>
+                  <h1 class="title-secundary" style="margin-top: 0px;">
+                      y podrá visualizar el detalle de cada uno.
+                  </h1>
+              </div>
+          </div>
+      </div>
+  </div>
+</ng-template>
+<!-- TABLE RIGTH -->
+<ng-template #rowSelected>
+  <div class="row">
+      <div class="col-sm-12 d-flex d-flex align-items-end" style="padding: 4px 16px 10px;">
+          <button 
+              class="nav-item nav-link gray btn px-3 py-3 me-4 module-title"
+              *ngFor="let row of groupBtn"
+              [ngClass]="{'active':periodSelected===row.id}"
+              (click)="periodSelected=row.id; setDetailsRangesDatesByInvolveds()"
+          >
+              {{row.name}}
+          </button>
+      </div>
+      <div class="col-sm-12">
+        <nz-table #table2 [nzData]="detailsInvolvedsShower" [nzShowPagination]="false" [nzScroll]="{ y: '180px'}" [nzPageSize]="detailsInvolvedsShower.length">
+            <thead>
+                <tr style="background: #F5F7FA;">
+                  <th>Desde / Hasta</th>
+                  <th>Valor a Pagar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of table2.data">
+                  <td>{{data.date}}</td>
+                  <td>{{data.valueToPay | currency}}</td>
+                </tr>
+            </tbody>
+        </nz-table>
+      </div>
+  </div>
+</ng-template>

@@ -1,0 +1,105 @@
+<nz-table #table [nzData]="listOfData" [nzTitle]="header" [nzFrontPagination]="false"
+  [nzScroll]="{ x: '1000px', y: '345px'}">
+
+  <!-- Headers, boton de busqueda, acciones masivas y botones para imprimir y exportar -->
+  <ng-template #header>
+    <div nz-row [nzGutter]="24" nzJustify="center" style="justify-content: space-between;">
+      <form nz-form style="padding: 0px 14px; margin: 25px 0px" nz-col nzSpan="7">
+        <nz-form-item>
+          <nz-form-control [nzSpan]="24">
+            <nz-input-group nzPrefixIcon="search" style="color: #798CA5; justify-content: center;" class="type-control">
+              <input nz-input id="search" name="search" type="search" autocomplete="off" [(ngModel)]="filterValue"
+                (ngModelChange)="search()" placeholder="Búsqueda">
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+
+      <div class="flex justify-content-end">
+        <div nz-col [nzSm]="12" [nzMd]="12" style="text-align: end;">
+          <div class="flex justify-content-end">
+            <button nz-button class="button-green" [nzType]="'primary'" form="notForm"
+              (click)="renderFileInTemplateDownloads()">
+              <i nz-icon nzType="printer" nzTheme="outline" style="vertical-align: 0em;"></i> Imprimir
+            </button>
+            <button nz-button class="button-black" [nzType]="'primary'" form="notForm">
+              <i nz-icon nzType="upload" nzTheme="outline" style="vertical-align: 0em;"></i> Exportar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <thead>
+    <tr style="background: #F5F7FA;">
+      <th nzWidth="50px"></th>
+      <th nzWidth="120px">Plantilla</th>
+      <th nzWidth="120px" class="text-center">Medio</th>
+      <th nzWidth="150px">Destinatarios</th>
+      <th nzWidth="200px">Asunto</th>
+      <th nzWidth="120px">Estado</th>
+      <th nzWidth="200px">Fecha registro</th>
+      <th nzWidth="200px">Fecha envío</th>
+      <th nzWidth="120px">Registrado por</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let data of table.data | paginate : { id: 'tableNotificaciones', itemsPerPage: numberRow, currentPage: page }">
+      <td>
+        <div style="display: flex; justify-content: center;">
+          <img draggable="false" style="cursor: pointer" src="../../../../../assets/icon/fi_edit-2.svg" nz-tooltip
+            nzTooltipTitle="Editar notificación" (click)="editarNotificacion(data)" />
+        </div>
+      </td>
+      <td>{{data.plantilla}}</td>
+      <td class="text-center">{{data.medio}} </td>
+      <td>{{data.usuario}}</td>
+      <td>{{data.asunto}}</td>
+      <td>{{data.estado2}}</td>
+      <td>{{data.fecha | date: 'dd/MM/yyyy h:mm a' }}</td>
+      <td>{{data.fechaEnvio | date: 'dd/MM/yyyy h:mm a' }}</td>
+      <td>{{data.nomusuario | titlecase}}</td>
+    </tr>
+  </tbody>
+
+</nz-table>
+
+<!-- PAGINADO DE LA TABLA -->
+<div class="row" style="padding-top: 0.5rem;">
+  <div class="col-sm-4 ps-4">
+    <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+      <div>
+        <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+      </div>
+
+      <div class="px-1">
+        <nz-form-control>
+          <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow"
+            (ngModelChange)="onChangeRowPerPage($event)">
+            <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </div>
+
+      <div>
+        <label class="label-title" style="margin-top: 7px;">entradas</label>
+      </div>
+    </nz-form-item>
+  </div>
+  <div class="col-sm d-flex justify-content-end pe-4">
+    <pagination-controls id="tableNotificaciones" previousLabel="Anterior" nextLabel="Siguiente"
+      (pageChange)="onChangePage($event)" (pageBoundsCorrection)="onChangePage($event)">
+    </pagination-controls>
+  </div>
+</div>
+
+<!-- Modal -->
+<nz-modal [(nzVisible)]="isVisiblePDF" nzWidth="1200px" nzHeigth="500px" [nzFooter]="null"
+  (nzOnCancel)="closeModalShow()">
+  <div class="row-md" *nzModalContent>
+    <pdf-viewer *ngIf="urlFile != ''" [src]="urlFile" [render-text]="true" [original-size]="false"
+      style="width: 1150px; height: 500px"></pdf-viewer>
+  </div>
+</nz-modal>

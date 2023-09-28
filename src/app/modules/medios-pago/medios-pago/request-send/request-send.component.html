@@ -1,0 +1,243 @@
+<nz-breadcrumb style="margin-bottom: 20px;">
+  <nz-breadcrumb-item>
+    <span class="title-modulo">
+      <i nz-icon nzType="credit-card" style="font-size: 25px; margin-bottom: 1px;"></i>
+    </span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-modulo">Medios de pago</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo">Tarjetas</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">Lista de Solicitudes de
+      inicialización</span>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+
+<div style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px;">
+  <ng-container *ngIf="mostrarData">
+    <!-- TABLE FILTER -->
+    <form nz-form style="padding: 0px 24px; margin: 25px 0px" nz-col nzSpan="7">
+      <nz-form-item>
+        <nz-form-control [nzSpan]="24">
+          <nz-input-group nzPrefixIcon="search" style="color: #798CA5; justify-content: center;" class="type-control">
+            <input nz-input id="search" name="search" type="search" autocomplete="off" [(ngModel)]="filterValueTable"
+              (ngModelChange)="search()" placeholder="Búsqueda # solicitud y estado">
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+    <!-- TABLE RECHARGE -->
+    <nz-table #rechargesTable [nzPageSize]="5" [nzData]="dataTable" [nzFrontPagination]="false"
+      [nzScroll]="{ x: '1000px', y: '345px'}">
+      <thead>
+        <tr style="background: #F5F7FA;">
+          <th nzWidth="120px"></th>
+          <th nzWidth="150px">Lote inicialización</th>
+          <th nzWidth="180px">Número de solicitud</th>
+          <th nzWidth="200px">Fecha de solicitud</th>
+          <!-- <th nzWidth="150px">Fecha realizado</th> -->
+          <th nzWidth="260px">Usuario Inicializador</th>
+          <!-- <th nzWidth="120px">Cantidad</th> -->
+          <!-- <th nzWidth="120px">ID lector</th> -->
+          <th nzWidth="150px">Versión mapping</th>
+          <th nzWidth="200px">Avance de la solicitud</th>
+          <th nzWidth="120px">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let data of rechargesTable.data | paginate : { id: 'table', itemsPerPage: numberRow, currentPage: page }">
+          <td>
+            <div class="d-flex">
+              <div>
+                <a (click)="openModalCancel(data)"
+                  *ngIf="data.initialized_quantity != data.requested_quantity && data.status != 'CANCELADO'">
+                  <img draggable="false" src="../../../../../assets/icon/delete.svg" alt="" width="24" height="24">
+                </a>
+              </div>
+
+              &nbsp;
+              &nbsp;
+              <!-- <div>
+                <a (click)="editarInicializacion(data)" *ngIf="data.initialized_quantity == 0 && data.status != 'CANCELADO'">
+                  <img draggable="false" src="../../../../../assets/icon/fi_edit-2.svg" alt="" width="24" height="24">
+                </a>
+              </div> -->
+              &nbsp;
+              &nbsp;
+              <div>
+                <a (click)="openModalReasign(data)"
+                *ngIf="data.initialized_quantity != data.requested_quantity && data.status != 'CANCELADO' && data.status == 'PENDIENTE'" >
+                  <img draggable="false" src="../../../../../assets/icon/fi_repeat.svg" alt="" width="24" height="24">
+                </a>
+              </div>
+            </div>
+          </td>
+          <td>{{data.codigoLote}}</td>
+          <td>{{data.id}}</td>
+          <td>{{data.creation_date}}</td>
+          <!-- <td>-</td> -->
+          <td>{{(data.initUser?(data.initUser?.name+' '+data.initUser?.last_name+' - '+data.initUser?.profile_name) :
+            data.assigned_user)}}</td>
+            <!-- <td>-</td> -->
+            <td>Mappings {{data.id_mapping}}</td>
+          <td> {{(data.initialized_quantity || 0)}} / {{data.requested_quantity }}</td>
+          <td>{{(data.status)}}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <!-- PAGINADO DE LA TABLA -->
+    <div class="row">
+      <div class="col-sm-4 ps-4">
+        <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+          <div>
+            <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+          </div>
+
+          <div class="px-1">
+            <nz-form-control>
+              <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow" (ngModelChange)="onChangeRowPerPage($event)">
+                <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </div>
+
+          <div>
+            <label class="label-title" style="margin-top: 7px;">entradas</label>
+          </div>
+        </nz-form-item>
+      </div>
+
+      <div class="col-sm d-flex justify-content-end pe-4">
+        <pagination-controls id="table" previousLabel="Anterior" nextLabel="Siguiente"
+          (pageChange)="onChangePage($event)" (pageBoundsCorrection)="onChangePage($event)">
+        </pagination-controls>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!mostrarData">
+    <div nz-col [nzSpan]="24" style="text-align: -webkit-center;">
+      <div nz-col [nzSpan]="12">
+
+        <img draggable="false" style="margin: 20px 0px;" src="../../../../../assets/icon/Featured_icon.svg" alt="icono-buscar">
+
+        <div nz-col [nzSpan]="18">
+          <h1 class="title-form" style="justify-content: center !important;">No hay datos para mostrar</h1>
+          <h1 class="title-secundary">Debe digitar al menos 3 caracteres para buscar por un número de tarjeta o número
+            de
+            cuenta.</h1>
+        </div>
+
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+
+<nz-modal [(nzVisible)]="isVisibleCancel" (nzOnCancel)="isVisibleCancel = false">
+  <div class="row-md" *nzModalContent>
+    <!-- titel -->
+    <div class="col-sm-12 mt-3">
+      <h1 class="modal-title fs-5 mb-3">Cancelar solicitud de inicialización</h1>
+    </div>
+
+    <div>
+      <label class="label-title">Motivo</label>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-select nzBorderless nzAutoFocus id="motivo" [(ngModel)]="idReason">
+            <nz-option *ngFor="let reason of cancelationReasons" [nzValue]="reason.id"
+              [nzLabel]="reason.label!"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div>
+      <label class="label-title">Observaciones</label>
+      <nz-form-item>
+        <nz-form-control>
+          <textarea nz-input class="input-field" rows="3" placeholder="Ingresar" name="cancellationComment"
+            [(ngModel)]="cancellationComment"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+
+  <div *nzModalFooter class="p-0">
+    <div class="row-md">
+      <div class="col-sm-12 d-flex justify-content-center mb-3">
+        <button nz-button class=" button-black mx-1" [nzType]="'primary'" (click)="isVisibleCancel=false">
+          No
+        </button>
+        <button nz-button class=" button-green mx-1" [nzType]="'primary'" (click)="cancelRequest()">
+          Si
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isVisibleReasing" (nzOnCancel)="isVisibleReasing = false">
+  <div class="row-md" *nzModalContent>
+    <!-- titel -->
+    <div class="col-sm-12 mt-3">
+      <h1 class="modal-title fs-5 mb-3">Reasignar solicitud</h1>
+    </div>
+
+    <div>
+      <label for="reason" class="label-title">Usuario inicializador actual: </label>
+      <span>{{currentInitUser?.name+' '+currentInitUser?.last_name +' - '+currentInitUser?.profile_name}}</span>
+    </div>
+
+    <div>
+      <label for="reason" class="label-title">Usuario inicializador: </label>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-select nzBorderless nzAutoFocus id="motivo" [(ngModel)]="reasignedUser"
+            [ngModelOptions]="{standalone: true}">
+            <nz-option *ngFor="let initUser of filteredInitUsers" [nzValue]="initUser.user"
+              [nzLabel]="initUser.name+' '+initUser.last_name+' - '+initUser.profile_name"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div>
+      <label class="label-title">Motivo</label>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-select nzBorderless nzAutoFocus id="motivo" [(ngModel)]="idReasignReason">
+            <nz-option *ngFor="let reasignReason of reasignReasons" [nzValue]="reasignReason.id"
+              [nzLabel]="reasignReason.label!"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div>
+      <label class="label-title">Observaciones</label>
+      <nz-form-item>
+        <nz-form-control>
+          <textarea nz-input rows="3" placeholder="Ingresar" name="cancellationComment"
+            [(ngModel)]="reasignedComment"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+
+  <div *nzModalFooter class="p-0">
+    <div class="row-md">
+      <div class="col-sm-12 d-flex justify-content-center mb-3">
+        <button nz-button class=" button-black mx-1" [nzType]="'primary'" (click)="isVisibleReasing=false">
+          No
+        </button>
+        <button nz-button class=" button-green mx-1" [nzType]="'primary'" (click)="reasign()">
+          Si
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-modal>

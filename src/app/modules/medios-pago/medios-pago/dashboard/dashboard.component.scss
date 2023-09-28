@@ -1,0 +1,53 @@
+// Color de backgraund
+$fondo-cards: #fff;
+// borde cards
+$border-cards: #00AE8D;
+
+// Mixing
+@mixin cards-style() {
+  border: $border-cards 1px solid;
+  background-color: $fondo-cards;
+}
+
+.cards {
+  border-radius: 8%;
+}
+
+.contenendor-cards {
+  div>.cards {
+    &:nth-child(1) {
+      @include cards-style();
+    }
+
+    &:nth-child(2) {
+      @include cards-style();
+    }
+
+    &:nth-child(3) {
+      @include cards-style();
+    }
+
+    &:nth-child(4) {
+      @include cards-style();
+    }
+
+    &:nth-child(5) {
+      @include cards-style();
+    }
+  }
+}
+
+.icons-list>.anticon {
+  margin-right: 6px;
+  font-size: 30px;
+}
+
+
+.link-historial {
+  color: #00AE8D;
+}
+
+
+.text-red {
+  color: red;
+}

@@ -1,0 +1,128 @@
+<!-- TABS PARA NAVEGAR POR LOS DASHBOARDS -->
+<nz-tabset nzType="card" [(nzSelectedIndex)]="index">
+  <nz-tab *ngFor="let tab of tabs; let i = index" (nzClick)="cambiarPestana(tab)" [nzTitle]="tab"></nz-tab>
+</nz-tabset>
+
+<!-- CONTENEDOR DE LA INTERFAZ DEL DASHBOARDS DE RECAUDO -->
+<div *ngIf="vista == 0">
+  <ng-container *ngIf="!mostrarDetalleRecarga">
+
+    <!-- FILTRO DE LOS DASHBOARDS -->
+    <div class="filtro">
+      <!-- FILTRO POR EMPRESAS -->
+      <nz-select nzPlaceHolder="Seleccione la empresa para filtrar" [(ngModel)]="empresa"
+        (ngModelChange)="cambioEnElSelect($event)">
+        <nz-option [nzValue]="null" nzLabel="Seleccione una empresa"></nz-option>
+        <nz-option *ngFor="let item of labelsCopys" [nzLabel]="item" [nzValue]="item"></nz-option>
+      </nz-select>
+
+      <!-- FILTRO POR FECHAS -->
+      <nz-select nzPlaceHolder="Seleccione una fecha para filtrar" [(ngModel)]="fechas"
+        (ngModelChange)="cambioEnElSelectFecha($event)">
+        <nz-option [nzValue]="null" nzLabel="Seleccione una fecha"></nz-option>
+        <nz-option *ngFor="let item of fechaPasjCopy" [nzLabel]="item" [nzValue]="item"></nz-option>
+      </nz-select>
+    </div>
+    <!-- CONTENDEDOR DE LAS CADS PARA MOSTRAR LA INFORMACIÓN -->
+    <div class="contenedor-dash">
+      <section class="contenedor">
+        <div class="contenedor-card">
+          <!-- CARDS PARA LAS SUBIDAS, BAJADAS Y BLOQUEOS -->
+          <div class="card">
+            <div class="card-estadisticas">
+              <div class="icon">
+                <img (click)="pasarCard(1)" style="cursor: pointer;" src="../../../../assets/icon/fi_arrow-up.svg"
+                  alt="">
+                <img (click)="pasarCard(2)" style="cursor: pointer;" src="../../../../assets/icon/fi_arrow-down.svg"
+                  alt="">
+                <img (click)="pasarCard(3)" style="cursor: pointer;" src="../../../../assets/icon/fi_x-circle.svg"
+                  alt="">
+              </div>
+              <div class="card-estadisticas-body">
+                <ng-container *ngIf="tarjeta == 1">
+                  <span>{{ subidasNumber }}</span>
+                  <h2>Cantidad pasajeros subidos</h2>
+                </ng-container>
+                <ng-container *ngIf="tarjeta == 2">
+                  <span>{{ bajadasNumber }}</span>
+                  <h2>Cantidad pasajeros bajados</h2>
+                </ng-container>
+                <ng-container *ngIf="tarjeta == 3">
+                  <span>{{ bloqueoNumber }}</span>
+                  <h2>Cantidad pasajeros bloqueados</h2>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+          <!-- CARDS PARA MOSTRAR EL CANTIDAD DE PASAJEROS QUE PAGARÓN -->
+          <div class="card">
+            <div class="card-estadisticas">
+              <div class="card-estadisticas-body">
+                <span>{{ nroPasajeros }}</span>
+                <h2> {{ label[0] }} </h2>
+              </div>
+            </div>
+          </div>
+          <!-- CARDS PARA MOSTRAR EL TOTAL DE DINERO RECAUDADO -->
+          <div class="card">
+            <div class="card-estadisticas">
+              <div class="card-estadisticas-body">
+                <span>{{ total | currency }}</span>
+                <h2> {{ label[1] }} </h2>
+              </div>
+            </div>
+          </div>
+          <!-- CARDS PARA MOSTRAR LA FECHA -->
+          <div class="card">
+            <div class="card-estadisticas">
+              <div class="card-estadisticas-body">
+                <span>{{ fecha ? fecha : 'N/A' }}</span>
+                <h2> {{ label[2] }} </h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- CONTENEDOR PARA LAS GRAFICAS 1 -->
+      <div class="contenedor-graficas">
+        <!-- GRAFICA DE BARRAS VERTICALES -->
+        <div class="myChart">
+          <apx-chart [series]="chartOptions.series!" [chart]="chartOptions.chart!"
+            [dataLabels]="chartOptions.dataLabels!" [plotOptions]="chartOptions.plotOptions!"
+            [yaxis]="chartOptions.yaxis!" [xaxis]="chartOptions.xaxis!" [legend]="chartOptions.legend!"
+            [colors]="chartOptions.colors!" [grid]="chartOptions.grid!" [title]="chartOptions.title!"></apx-chart>
+        </div>
+        <!-- GRAFICA DE BARRAS HORIZONTALES -->
+        <div>
+          <apx-chart [series]="chartOptions2.series!" [chart]="chartOptions2.chart!"
+            [dataLabels]="chartOptions2.dataLabels!" [plotOptions]="chartOptions2.plotOptions!"
+            [xaxis]="chartOptions2.xaxis!" [colors]="chartOptions2.colors!" [yaxis]="chartOptions2.yaxis!"
+            [title]="chartOptions2.title!"></apx-chart>
+        </div>
+      </div>
+      <!-- CONTENEDOR PARA LAS GRAFICAS 2 -->
+      <div class="contenedor-graficas-2">
+        <!-- GRAFICA DE PUNTOS -->
+        <div>
+          <apx-chart [series]="chartOptions3.series!" [chart]="chartOptions3.chart!" [xaxis]="chartOptions3.xaxis!"
+            [dataLabels]="chartOptions3.dataLabels!" [grid]="chartOptions3.grid!" [stroke]="chartOptions3.stroke!"
+            [title]="chartOptions3.title!" [colors]="chartOptions3.colors!"></apx-chart>
+        </div>
+        <!-- GRAFICA DE TORTA -->
+        <div>
+          <apx-chart [series]="chartOptions4.series!" [chart]="chartOptions4.chart!" [colors]="chartOptions4.colors!"
+            [labels]="chartOptions4.labels!" [responsive]="chartOptions4.responsive!"
+            [title]="chartOptions4.title!"></apx-chart>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+<!-- CONTENEDOR DE LA INTERFAZ DEL DASHBOARDS DE RECARGAS -->
+<ng-container *ngIf="vista == 2">
+  <app-recarga></app-recarga>
+</ng-container>
+<!-- CONTENEDOR DE LA INTERFAZ DEL DASHBOARDS DE VIAJES -->
+<ng-container *ngIf="vista == 3">
+  <app-viajes-dashboards></app-viajes-dashboards>
+</ng-container>

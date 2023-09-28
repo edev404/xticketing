@@ -1,0 +1,198 @@
+<div class="home-title-page mb-4" style="display: flex; justify-content: space-between; ">
+    <h1 class="title-home">{{isEdit?'Editar entidad':'Crear entidad'}}</h1>
+    <div>
+        <button nz-button class=" button-black mx-2" [nzType]="'primary'" (click)="cancelCompany()">
+            Cancelar
+        </button>
+        <button *ngIf="!isEdit" nz-button class="mx-2 button-green" [nzType]="'primary'" form="CreateForm"
+            (click)="saveCompany()">Guardar
+        </button>
+        <button *ngIf="isEdit" nz-button class="mx-2 button-green" [nzType]="'primary'" form="CreateForm"
+            (click)="saveCompany()">Editar
+        </button>
+    </div>
+</div>
+<nz-divider style="margin: 0px 0 !important;"></nz-divider>
+<h2 class="text-sm my-3 title-secundary">Digite los siguientes campos</h2>
+<div class="row">
+    <div class="col-sm-6">
+        <!--codeCode-->
+        <div class="form-group row my-3">
+            <label for="staticEmail" class="col-sm-12">Código</label>
+            <div class="col-sm">
+                <input type="number" class="form-control input-field" name="codigo" required
+                    placeholder="Ingrese un código"
+                    [ngClass]="{'invalidInput': !entitiesForm.code && enviarFormulario,'disable-input':entitiesForm.id != undefined}"
+                    [(ngModel)]="entitiesForm.code" #codigo="ngModel" [disabled]="entitiesForm.id != undefined">
+                <span *ngIf="!entitiesForm.code && enviarFormulario" class="messagewarning">
+                    !Por favor ingrese un Código!
+                </span>
+            </div>
+        </div>
+        <!--nombreEntidad-->
+        <div class="form-group row my-3">
+            <label for="staticEmail" class="col-sm-12">Nombre</label>
+            <div class="col-sm">
+                <input type="text" name="entityName" #entityName="ngModel"
+                    [ngClass]="{'invalidInput': !entitiesForm.name && enviarFormulario}"
+                    [(ngModel)]="entitiesForm.name" required class="form-control input-field"
+                    placeholder="Ingrese el nombre de la entidad">
+                <span *ngIf="!entitiesForm.name && !enviarFormulario" class="messagewarning">
+                    !Por favor ingrese un nombre de entidad¡
+                </span>
+            </div>
+        </div>
+        <!--descriptionEntidad-->
+        <div class="form-group row my-3">
+            <label for="staticEmail" class="col-sm-12">Descripción</label>
+            <div class="col-sm">
+                <!-- [ngClass]="{'invalidInput': entitiesForm.description && enviarFormulario}" -->
+                <input type="text" name="entityDescription" #entityDescription="ngModel"
+                    [(ngModel)]="entitiesForm.description" class="form-control input-field"
+                    placeholder="Ingrese una descripción">
+                <!-- <span *ngIf="entitiesForm.description && enviarFormulario" class="messagewarning">
+                    !Por favor ingrese una descripción¡
+                </span> -->
+            </div>
+        </div>
+        <!--mensajeEntidad-->
+        <div class="form-group row my-3">
+            <label for="staticEmail" class="col-sm-12">Mensaje institucional</label>
+            <div class="col-sm">
+                <input type="text" name="entityMenssage" #entityMenssage="ngModel"
+                    [ngClass]="{'invalidInput': !entitiesForm.messageInstitutional && enviarFormulario}"
+                    [(ngModel)]="entitiesForm.messageInstitutional" required class="form-control input-field"
+                    placeholder="Ingrese un mensaje institucional">
+                <span *ngIf="!entitiesForm.messageInstitutional && enviarFormulario" class="messagewarning">
+                    !Por favor ingrese un mensaje institucional¡
+                </span>
+            </div>
+        </div>
+        <!--logoEntidad-->
+        <div class="form-group row my-3">
+            <label for="staticEmail" class="col-sm-12">Logo</label>
+            <div class="col-sm-8">
+                <input style="display:none" type="file" #fileLogoInput (change)="fileLogoEvent($event)" />
+                <input type="text" class="adjunto form-control input-field" [value]="entitiesForm.logo"
+                    [ngClass]="{'invalidInput': inputErrorFileLogo}" placeholder="Adjuntar logo institucional"
+                    disabled />
+                <span *ngIf="inputErrorFileLogo" class="messagewarning">
+                    !Logo no válido¡
+                </span>
+            </div>
+            <div class="col-sm-1 d-flex align-items-center">
+                <button type="button" class="uploadFile" (click)="fileLogoInput.click()">
+                    <img draggable="false" src="../../../../../../assets/icon/fi_upload-cloud.svg">
+                </button>
+            </div>
+        </div>
+        <!--sitioWebEntidad-->
+        <div class="form-group row">
+            <label for="staticEmail" class="col-sm-12">Sitio web</label>
+            <div class="col-sm">
+                <input type="text" name="entityWebSite" #entityWebSite="ngModel" [(ngModel)]="entitiesForm.webSite"
+                    required class="form-control input-field"
+                    [ngClass]="{'invalidInput': !entitiesForm.webSite && enviarFormulario}"
+                    placeholder="ingrese su sitio web institucional">
+                <span *ngIf="!entitiesForm.webSite && enviarFormulario" class="messagewarning">
+                    !Por favor ingrese un sitio web¡
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <!--correoEntidad-->
+        <div class="form-group row my-3">
+            <label for="staticEmail" class="col-sm-12">Correo</label>
+            <div class="col-sm">
+                <input type="email" name="entityMail" #entityMail="ngModel" [(ngModel)]="entitiesForm.mail" required
+                    class="form-control input-field" [ngClass]="{'invalidInput':!entitiesForm.mail && enviarFormulario}"
+                    pattern="[A-Za-z0-9.%_+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="ingrese su correo institucional">
+                <span *ngIf="!entitiesForm.mail && enviarFormulario" class="messagewarning">
+                    !Por favor ingrese un correo¡
+                </span>
+            </div>
+        </div>
+        <!--telefonoEntidad-->
+        <div class="form-group row my-3">
+            <label for="staticEmail" class="col-sm-12">Teléfono</label>
+            <div class="col-sm">
+                <input type="text" name="entityPhone" #entityPhone="ngModel" [(ngModel)]="entitiesForm.phone" required
+                    class="form-control input-field"
+                    [ngClass]="{'invalidInput': !entitiesForm.phone && enviarFormulario}" mask="(000) 000-00-00"
+                    prefix="+57" placeholder="ingrese su teléfono institucional">
+                <span *ngIf="!entitiesForm.phone && enviarFormulario" class="messagewarning">
+                    !Por favor ingrese un telefono valido¡
+                </span>
+            </div>
+        </div>
+        <!--direccionEntidad-->
+        <div class="form-group row my-3">
+            <label for="staticEmail" class="col-sm-12">Dirección</label>
+            <div class="col-sm">
+                <input type="text" name="entityDirection" #entityDirection="ngModel"
+                    [(ngModel)]="entitiesForm.direction" required class="form-control input-field"
+                    [ngClass]="{'invalidInput': !entitiesForm.direction && enviarFormulario}"
+                    placeholder="Dirección oficina institucional">
+                <span *ngIf="!entitiesForm.direction && enviarFormulario" class="messagewarning">
+                    Dirección institucional no válido
+                </span>
+            </div>
+        </div>
+        <!--ubicacionEntidad-->
+        <div class="form-group row my-3">
+            <label for="staticUbicacion" class="col-sm-12">Ubicación</label>
+            <form nz-form class="col-sm row" [formGroup]="validateForm">
+                <!-- pais -->
+                <div class="col-sm-4">
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="24" nzErrorTip="Por favor selecione un Pais">
+                            <nz-select nzAutoFocus nzServerSearch id="contry" formControlName="contry"
+                                (ngModelChange)="changeSelect('Department',$event)" nzPlaceHolder="Seleccione un país">
+                                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione un país"></nz-option>
+                                <nz-option *ngFor="let contry of countryCombo" [nzLabel]="contry.name"
+                                    [nzValue]="contry.id"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <!-- departamento -->
+                <div class="col-sm-4">
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="24" nzErrorTip="Por favor selecione un Departamento">
+                            <nz-select nzAutoFocus nzServerSearch id="department" formControlName="deparment"
+                                (ngModelChange)="changeSelect('city',$event)"
+                                nzPlaceHolder="Seleccione un departamento">
+                                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione un departamento"></nz-option>
+                                <nz-option *ngFor="let department of departmentResidenceCombo"
+                                    [nzLabel]="department.name" [nzValue]="department.id"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <!-- municipio -->
+                <div class="col-sm-4">
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="24" nzErrorTip="Por favor selecione un municipio!">
+                            <nz-select nzAutoFocus nzServerSearch id="city" formControlName="city"
+                                nzPlaceHolder="Seleccione un municipio">
+                                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione un municipio"></nz-option>
+                                <nz-option *ngFor="let city of cityResidenceCombo" [nzLabel]="city.name"
+                                    [nzValue]="city.id"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </form>
+        </div>
+        <!--StockMinimoEntidad-->
+        <div class="form-group row my-3">
+            <label for="staticEmail" class="col-sm-12">Stock mínimo de tarjetas</label>
+            <div class="col-sm">
+                <input type="text" name="stockTarjetas" #entityDirection="ngModel"
+                    [(ngModel)]="entitiesForm.stocktarjetas" required class="form-control input-field"
+                    placeholder="ingrese el stock mímino de tarjetas">
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+.button-green {
+  margin: 0px 10px;
+}
+
+/** Cambiar color del checkbox inhabilitado */
+.form-check-input:checked{
+  background-color: #00AE8D !important;
+  border-color: #00AE8D !important;
+}
+.form-check-input{
+  background-color: #E9EEFA !important;
+  border-color: #E9EEFA !important;
+}
+/** Quitar la opacidad al campo checkbox deshabilitado */
+.form-check-input:disabled {
+  opacity: 1 !important;
+}
+/** Espacio del checkbox del estado*/
+.form-switch {
+  padding-left: 3em;
+}

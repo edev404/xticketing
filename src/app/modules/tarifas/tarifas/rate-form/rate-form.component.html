@@ -1,0 +1,146 @@
+<nz-breadcrumb style="margin-bottom: 20px;">
+  <nz-breadcrumb-item>
+    <span class="title-modulo">
+      <i nz-icon nzType="tags" style="font-size: 25px;"></i>
+    </span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-modulo">Tarifas</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo">Tarifas de servicio</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">Configuración de tarifas</span>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+<div class="home-title-page my-3" style="display: flex; justify-content: space-between">
+  <h1 class="title-home m-0">Configuración de tarifas</h1>
+  <div>
+    <button nz-button class=" button-black" [nzType]="'primary'" [routerLink]="['/main/tarifas']">
+      Cancelar
+    </button>
+    <button nz-button class=" button-green" [nzType]="'primary'" form="CreateForm">
+      Guardar
+    </button>
+  </div>
+</div>
+<div class="custom-card">
+  <h2 class="title-secundary ms-3">
+    Ingrese los siguientes datos para crear una nueva tarifa.
+  </h2>
+  <form nz-form [formGroup]="validateForm" id="CreateForm" (ngSubmit)="saveData()">
+    <div nz-row [nzGutter]="25" nzJustify="center" class="mx-2">
+      <!-- SERVICIOS -->
+      <div nz-col [nzSpan]="8">
+        <label class="label-title">Servicio</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione un servicio!">
+            <nz-select nzAutoFocus id="servicio" formControlName="servicio"
+              nzPlaceHolder="Seleccione un servicio" [(ngModel)]="rateServicesForm.idServices"
+              (ngModelChange)="selectCompanies($event)">
+              <nz-option disabled [nzValue]="null" nzLabel="Seleccione un servicio"></nz-option>
+              <nz-option *ngFor="let row of servicesList" [nzValue]="row.id" nzLabel="{{ row.name }}"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- EMPRESA -->
+      <div nz-col [nzSpan]="8">
+        <label class="label-title">Empresa</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione una empresa!">
+            <nz-select  nzAutoFocus id="empresa" formControlName="empresa"
+              nzPlaceHolder="Seleccione una empresa" [(ngModel)]="rateServicesForm.company">
+              <nz-option disabled [nzValue]="null" nzLabel="Seleccione una empresa"></nz-option>
+              <nz-option *ngFor="let row of companyList" [nzValue]="row.id" nzLabel="{{ row.name }}"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- COGIO -->
+      <div nz-col [nzSpan]="8">
+        <label class="label-title">Código</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor ingrese un código!">
+            <input id="codigo" type="text" class="input-field" nz-input formControlName="codigo" [(ngModel)]="rateServicesForm.code"
+              placeholder="Ingrese un código" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- DESCRIPCION -->
+      <div nz-col [nzSpan]="8">
+        <label class="label-title">Descripción</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor ingrese una descripción!">
+            <input id="descripcion" type="text" class="input-field" nz-input formControlName="descripcion"
+              [(ngModel)]="rateServicesForm.description" placeholder="Ingrese una descripción" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- TIPO DE TARIFA -->
+      <div nz-col [nzSpan]="8">
+        <label class="label-title">Tipo de tarifa</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione un tipo de tarifa!">
+            <nz-select  nzAutoFocus id="tipotarifa" formControlName="tipotarifa"
+              nzPlaceHolder="Seleccione un tipo de tarifa" (ngModelChange)="changeTypeRates($event)"
+              [(ngModel)]="rateServicesForm.typeId">
+              <nz-option disabled [nzValue]="null" nzLabel="Seleccione un tipo de tarifa"></nz-option>
+              <nz-option *ngFor="let row of typesRate" [nzValue]="row.code" nzLabel="{{ row.description }}"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- UNIDAD -->
+      <div nz-col [nzSpan]="8">
+        <label class="label-title">Unidad de medida</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione una unidad de medida!">
+            <nz-select  nzAutoFocus id="unidad" formControlName="unidad"
+              nzPlaceHolder="Seleccione una unidad de medida" [disabled]="rateServicesForm.type == 'Unitario'"
+              [(ngModel)]="rateServicesForm.unity">
+              <nz-option [nzValue]="null" nzLabel="Seleccione una unidad de medida"></nz-option>
+              <nz-option *ngFor="let row of unitRates" [nzValue]="row.description" nzLabel="{{ row.description }}"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- CARRACTERISTICA 1 -->
+      <div nz-col [nzSpan]="8">
+        <label class="label-title">Característica 1</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleciona una característica!">
+            <nz-select  nzAutoFocus id="caracteristica1" formControlName="caracteristica1"
+              nzPlaceHolder="Seleccione la característica 1" [(ngModel)]="rateServicesForm.characteristicFirst">
+              <nz-option [nzValue]="null" nzLabel="Seleccione la característica 1"></nz-option>
+              <nz-option *ngFor="let row of charactsList" [nzValue]="row.id" nzLabel="{{ row.name }}"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- CARRACTERISTICA 2 -->
+      <div nz-col [nzSpan]="8">
+        <label class="label-title">Característica 2</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleciona una característica!">
+            <nz-select  nzAutoFocus id="caracteristica2" formControlName="caracteristica2"
+              nzPlaceHolder="Seleccione la característica 2" [(ngModel)]="rateServicesForm.characteristicSecond">
+              <nz-option [nzValue]="null" nzLabel="Seleccione la característica 2"></nz-option>
+              <nz-option *ngFor="let row of charactsList" [nzValue]="row.id" nzLabel="{{ row.name }}"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- VIEGNCIA -->
+      <div nz-col [nzSpan]="8">
+        <label class="label-title">Fechas de vigencia</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione un rango de fechas!">
+            <nz-range-picker formControlName="rangePicker" [nzDisabledDate]="disabledDate" [nzPlaceHolder]="datePlaceholder"> </nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+</div>

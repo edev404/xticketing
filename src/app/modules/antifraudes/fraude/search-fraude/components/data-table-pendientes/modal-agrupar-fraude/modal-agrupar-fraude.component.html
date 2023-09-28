@@ -1,0 +1,116 @@
+<nz-modal [(nzVisible)]="isModalAgrupar" [nzWidth]="'40rem'" nzCentered="true" [nzFooter]="null" (nzOnCancel)="closeModal()">
+    <ng-container *nzModalContent>
+    
+      <form nz-form [formGroup]="form" autocomplete="off">
+    
+        <div>
+          <h1 class="title-home" style="padding-bottom: 1rem;">Nuevo grupo de fraudes</h1>
+        </div>
+  
+        <div nz-row [nzGutter]="24" nzJustify="start" nzAlign="middle">
+          <div nz-col nzSpan="24">
+            <label class="label-title" for="nombre">Nombre grupo</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor ingrese el nombre del grupo!">
+                <input nz-input
+                        type="text"
+                        class="input-field"
+                        id="nombre"
+                        formControlName="nombre"
+                        placeholder="Ingrese el nombre del grupo"/>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <div nz-row [nzGutter]="24" nzJustify="start" nzAlign="middle">
+          <div nz-col nzSpan="24">
+            <label class="label-title" for="usuario_asignado">Asignado a</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione el usuario!">
+                <nz-select 
+                           
+                           nzCustomContent
+                           nzId="usuario_asignado"
+                           [nzCustomTemplate]="usuarioTemplate"
+                           formControlName="usuario_asignado"
+                           nzPlaceHolder="Seleccione el usuario">
+                  <nz-option *ngFor="let item of users" [nzLabel]="item.firstName + ' ' + item.lastName" [nzValue]="item.id"></nz-option>
+                </nz-select>
+                <ng-template #usuarioTemplate let-selected>
+                  <span nz-icon nzType="user"></span>
+                  <span style="font-weight: 700 !important;"> ID: </span> {{ selected.nzValue }} 
+                  <span style="font-weight: 700 !important;"> Nombre: </span> {{ selected.nzLabel }}
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+        
+        <div nz-row [nzGutter]="24" nzJustify="start" nzAlign="middle">
+          <div nz-col nzSpan="24">
+            <label class="label-title" for="prioridad1">Prioridad</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor seleccione la prioridad!">
+                <nz-select 
+                           nzId="prioridad1"
+                           formControlName="prioridad1"
+                           nzPlaceHolder="Seleccione la prioridad">
+                  <nz-option *ngFor="let item of tpPrioridad" [nzValue]="item.id" [nzLabel]="item.description"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+  
+        <div nz-row [nzGutter]="24" nzJustify="start" nzAlign="middle">
+          <div nz-col nzSpan="24">
+            <label class="label-title" for="criterio_agrupacion">Criterio de agrupación</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24" nzErrorTip="¡Por favor ingrese el criterio de agrupación!">
+                <input nz-input
+                        type="text"
+                        class="input-field"
+                        id="criterio_agrupacion"
+                        formControlName="criterio_agrupacion"
+                        placeholder="Ingrese la razón por la cual agrupó los fraudes seleccionados"/>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <div nz-row [nzGutter]="24" nzJustify="start" nzAlign="middle">
+          <div nz-col nzSpan="24">
+            <label class="label-title" for="observacion">Observación</label>
+            <nz-form-item>
+              <nz-form-control nz-col nzMd="24">
+                <input nz-input
+                        type="text"
+                        class="input-field"
+                        id="observacion"
+                        formControlName="observacion"
+                        placeholder="Describa la observación"/>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+  
+        <div nz-col [nzSpan]="24" style="display: flex; justify-content: center; padding-top: 1.5rem;">
+          <button nz-button 
+                  class="button-black mx-2" 
+                  [nzType]="'primary'"
+                  (click)="closeModal()">
+            Cancelar
+          </button>
+          <button nz-button 
+                  class="button-green" 
+                  [nzType]="'primary'"
+                  (click)="save()">
+            Aceptar
+          </button>
+        </div>
+  
+      </form>
+  
+    </ng-container>
+  </nz-modal>

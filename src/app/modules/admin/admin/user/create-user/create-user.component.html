@@ -1,0 +1,138 @@
+<div  class="p-3" style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px;">
+  <div class="home-title-page" style="display: flex; justify-content: space-between; "> 
+      <h1 class="title-home">{{title}}
+      </h1>
+    <div>
+      <button *ngIf="isEdit"
+      nz-button class="mx-2 button-black"
+      (click)="cancelEditUser()" 
+      [nzType]="'primary'" form="CreateForm"
+      >Cancelar
+     </button>
+     <button *ngIf="!isEdit"
+      nz-button class=" button-green" 
+      [nzType]="'primary'" form="CreateForm"
+      (click)="saveUser()"
+      >Guardar
+     </button>
+     <button *ngIf="isEdit"
+      nz-button class="mx-2 button-green"
+      (click)="editUser()" 
+      [nzType]="'primary'" form="CreateForm"
+      >Editar
+     </button>
+   </div>
+  </div>
+  <nz-divider style="margin: 14px 0px !important;"></nz-divider>
+  
+  <form nz-form [formGroup]="validateForm" id="CreateForm" style="margin: 10px 0px;">
+  <div nz-row [nzGutter]="24" nzJustify="center" style="justify-content: flex-start;">
+      
+          <div nz-col [nzSpan]="12">
+              <label class="label-title">Primer Nombre</label>
+              <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingresar el primer nombre!">
+                    <input  class="input-field" id="primerNombre" type="text" nz-input formControlName="firstName" placeholder="Ingrese el primer nombre"/>
+                  </nz-form-control>
+              </nz-form-item>
+          </div>
+  
+          <div nz-col [nzSpan]="12">
+              <label class="label-title">Segundo Nombre</label>
+              <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese el segundo nombre!">
+                    <input  class="input-field" id="segundoNombre" type="text" nz-input formControlName="secondName" placeholder="Ingrese el segundo nombre"/>
+                  </nz-form-control>
+              </nz-form-item>
+          </div>
+  
+          <div nz-col [nzSpan]="12">
+              <label class="label-title">Primer Apellido</label>
+              <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingresar el primer apellido!">
+                    <input  class="input-field" id="primerapellido" type="text" nz-input formControlName="lastName" placeholder="Ingrese el primer apellido"/>
+                  </nz-form-control>
+              </nz-form-item>
+          </div>
+  
+          <div nz-col [nzSpan]="12">
+              <label class="label-title">Segundo Apellido</label>
+              <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingresar el segundo apellido!">
+                    <input  class="input-field" id="segundoapellido" type="text" nz-input formControlName="secondLastName" placeholder="Ingrese el segundo apellido"/>
+                  </nz-form-control>
+              </nz-form-item>
+          </div>
+  
+          <div nz-col [nzSpan]="12">
+              <label class="label-title">Usuario</label>
+              <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingresar el usuario!">
+                    <input  class="input-field" id="usuario" type="text" nz-input formControlName="username" placeholder="Ingrese el usuario"/>
+                  </nz-form-control>
+              </nz-form-item>
+          </div>
+  
+          <div nz-col [nzSpan]="12" *ngIf="showPassword">
+              <label class="label-title">Contraseña</label>
+              <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24" [nzErrorTip]="errorTip">
+                    <input  class="input-field" id="contrasenaUno" (keypress)="error()" type="password" nz-input nzStatus="error" formControlName="password" placeholder="Ingrese una contraseña"/>
+                  </nz-form-control>
+              </nz-form-item>
+          </div>
+  
+          <div nz-col [nzSpan]="12" >
+              <label class="label-title">Perfil</label>
+              <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccionar un perfil!">
+                  <nz-select  nzAutoFocus 
+                  nzServerSearch
+                    id="perfil"
+                    formControlName="profile"
+                    nzPlaceHolder="Seleccione un perfil"
+                  >
+                  <nz-option disabled [nzValue]="undefined" nzLabel="Seleccione un perfil"></nz-option>
+                  <nz-option *ngFor="let profile of profiles" [nzLabel]="profile.name" [nzValue]="profile.id"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+             </div>
+          
+          <div nz-col [nzSpan]="12" *ngIf="showPassword">
+              <label class="label-title">Confirmar contraseña</label>
+              <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24" [nzErrorTip]="errorTip">
+                    <input  class="input-field" id="contrasenaDos" (keypress)="error()" type="password" nz-input formControlName="passwordConfirm" placeholder="Confirme su contraseña"/>
+                  </nz-form-control>
+              </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="12">
+              <label class="label-title">Correo electrónico</label>
+              <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24" [nzErrorTip]="enviadoFormulario ? '¡Por favor ingrese un correo electrónico!' : '¡Por favor ingrese un correo electrónico con formato valido!'">
+                    <input  class="input-field" id="correo" type="email" nz-input [(ngModel)]="emails" formControlName="email" placeholder="Ingrese un correo electrónico" (ngModelChange)="cambioCorreo()"/>
+                  </nz-form-control>
+              </nz-form-item>
+          </div>
+  
+          <div nz-col [nzSpan]="12">
+              <label class="label-title">Número de celular</label>
+              <nz-form-item>
+                  <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingresar el número celular!">
+                    <input  class="input-field" id="celular" type="tel" nz-input formControlName="cellPhone" placeholder="Ingrese un número de celular"/>
+                  </nz-form-control>
+              </nz-form-item>
+          </div>
+  
+          <div nz-col [nzSpan]="12" nzOffset="12" *ngIf="!isEdit">
+            <nz-form-item style="display: flex; gap: 12px">
+              <label nz-checkbox class="label-title" (change)="show($event)"></label> 
+              <span>Generar Contraseña</span>
+            </nz-form-item>
+          </div>
+  
+      </div>
+  
+  </form>
+</div>

@@ -1,0 +1,133 @@
+<div class="home-title-page mb-4" style="display: flex; justify-content: space-between; ">
+    <h1 class="title-home">Crear Pre-Liquidación</h1>
+    <div *ngIf="showFilter">
+        <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cancelCompany()">
+            Cancelar
+        </button>
+        <button nz-button class="button-green mx-2" [nzType]="'primary'" (click)="submit()">
+            Buscar
+        </button>
+    </div>
+    <button *ngIf="!showFilter" nz-button class="button-white px-2" (click)="showFilter = !showFilter">
+        <i nz-icon nzType="filter" nzTheme="outline"></i>
+    </button>
+</div>
+
+<nz-divider style="margin: 0px 0 !important;"></nz-divider>
+<h2 class="text-sm my-3 title-secundary">Digite los siguientes campos</h2>
+<!-- FORMULARIO DE BUSQUEDA -->
+<form *ngIf="showFilter" nz-form [formGroup]="validateForm" id="CreateForm" style="margin: 10px 0px;" class="row">
+    <!-- AÑO Y MES -->
+    <div class="col-sm-4">
+        <label class="label-title">Año y mes</label>
+        <nz-form-item class="w-100">
+            <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione un año y mes!">
+                <nz-date-picker nzMode="month" nzPlaceHolder="seleccione un año y mes"
+                    formControlName="mountAndYear" (ngModelChange)="obtenerRangoMes()"></nz-date-picker>
+            </nz-form-control>
+        </nz-form-item>
+    </div>
+    <!-- RANGO DE FECHAS -->
+    <div class="col-sm-4">
+        <label class="label-tittle" style="margin-top: 3px;">Rango de fechas</label>
+        <nz-form-item class="w-100" style="margin-top: 5px;">
+            <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione un rango de fechas!">
+                <nz-range-picker nzFormat="yyyy-MM-dd" formControlName="dateRange"
+                    [nzPlaceHolder]="datePlaceholder"></nz-range-picker>
+            </nz-form-control>
+        </nz-form-item>
+    </div>
+    <!-- BASE -->
+    <div class="col-sm-4">
+        <label class="label-title">Base</label>
+        <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione una base!">
+                <nz-select  id="base" formControlName="base" 
+                    (ngModelChange)="changeBase($event)"
+                    nzPlaceHolder="Seleccione una base">
+                    <nz-option disabled [nzValue]="null" nzLabel="Seleccione una base"></nz-option>
+                    <nz-option *ngFor="let base of baseList" [nzLabel]="base.name"
+                        [nzValue]="base.code"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+    </div>
+    <!-- CIUDAD -->
+    <div class="col-sm-4">
+        <label class="label-title">Ciudad</label>
+        <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione una ciudad!">
+                <nz-select nzAutoFocus nzShowSearch 
+                    nzServerSearch id="city" formControlName="city"
+                    nzPlaceHolder="Seleccione una Ciudad" (ngModelChange)="loadPercentageSetting()">
+                    <nz-option disabled [nzValue]="null" nzLabel="Seleccione una Ciudad"></nz-option>
+                    <nz-option *ngFor="let city of cities" [nzLabel]="city.name"
+                        [nzValue]="city.id"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+    </div>
+    <!-- CONFIGURACION -->
+    <div class="col-sm-4">
+        <label class="label-title">Configuración %</label>
+        <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione una configuración!">
+                <nz-select  id="configuration" 
+                    formControlName="configuration" nzPlaceHolder="Seleccione una configuración">
+                    <nz-option disabled [nzValue]="null" nzLabel="Seleccione una configuración"></nz-option>
+                    <nz-option *ngFor="let percentage of percentageSetting" [nzLabel]="percentage.name"
+                        [nzValue]="percentage.id"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+    </div>
+    <!-- EMPRESA -->
+    <div class="col-sm-4">
+        <label class="label-title">Empresa</label>
+        <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione una empresa!">
+                <nz-select  id="configuration" 
+                    formControlName="company" nzPlaceHolder="Seleccione una empresa">
+                    <nz-option disabled [nzValue]="null" nzLabel="Seleccione una empresa"></nz-option>
+                    <nz-option *ngFor="let collector of collectors" [nzLabel]="collector.name"
+                        [nzValue]="collector"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+    </div>
+</form>
+<ng-container *ngIf="detailsSearch; then dataDetails; else selectFilters"></ng-container>
+<!-- NO DATA -->
+<ng-template #selectFilters>
+    <div nz-row class="card-aling-center">
+        <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+            <div nz-col nzXs="24" nzSm="20" nzMd="14">
+    
+                <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../../../assets/icon/Featured_icon.svg" alt="icono-buscar">
+                <div nz-col nzSm="24" nzMd="18">
+                    <h1 class="title-form" style="place-content: center !important;">
+                        Seleccione los filtros indicados
+                    </h1>
+                    <h1 class="title-secundary" style="margin-top: 0px;">
+                        y presione el botón “Buscar” para realizar la consulta.
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- DATA SELECT -->
+<ng-template #dataDetails>
+    <app-detail-recharge *ngIf="detailsSearch && baseFilter==='recharge'"
+        [detailsSearch]="detailsSearch"
+        [pressettlementFilter]="pressettlementFilter"
+        (switchPanel)="cancelCompany()"
+    ></app-detail-recharge>
+    <!-- <app-detail-passage *ngIf="detailsSearch && baseFilter==='passage'"
+        [detailsSearch]="detailsSearch"
+        [pressettlementFilter]="pressettlementFilter"
+        (switchPanel)="cancelCompany()"
+    >
+    </app-detail-passage> -->
+</ng-template>
+

@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
+
+th {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 600 !important;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+  color: #415364 !important;
+}
+
+td {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700 !important;
+  font-size: 12px;
+  line-height: 18px;
+  color: #556A83 !important;
+}
+
+.custom-card {
+  border: 1px solid #e9eefa !important;
+}

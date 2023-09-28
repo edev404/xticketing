@@ -1,0 +1,43 @@
+@import url('./core/_text.scss');
+@import url('./core/_title-breadcrums.scss');
+@import url('./core/_title.scss');
+@import url('./core/_buttons.scss');
+@import url('./core/_formulario.scss');
+@import url('./core/_modal.scss');
+@import url('./core/_table.scss');
+@import url('./core/_paginator.scss');
+
+::ng-deep .ant-picker-focused {
+    border-color: #00AE8D !important;
+    box-shadow: 0 0 0 2px rgba(0, 174, 141, 0.2) !important;
+    border-right-width: 1px;
+    outline: 0;
+}
+
+::ng-deep .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    border-color: #00AE8D !important;
+    box-shadow: 0 0 0 2px rgba(0, 174, 141, 0.2);
+    border-right-width: 1px;
+    outline: 0;
+}
+
+::ng-deep .ant-input-affix-wrapper-status-error:not(.ant-input-affix-wrapper-disabled):not(.ant-input-affix-wrapper-borderless).ant-input-affix-wrapper,
+.ant-input-affix-wrapper-status-error:not(.ant-input-affix-wrapper-disabled):not(.ant-input-affix-wrapper-borderless).ant-input-affix-wrapper:hover {
+    background: #fff;
+    border-color: #ff4d4f !important;
+}
+
+::ng-deep input:focus {
+    border-color: #ffffff;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2) !important;
+    border-right-width: 1px;
+    outline: 0;
+}
+
+.sticky-top {
+    z-index: 1 !important;
+}
+
+.sticky-bottom {
+    z-index: 0 !important;
+}

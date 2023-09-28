@@ -1,0 +1,343 @@
+<nz-breadcrumb style="margin-bottom: 20px;">
+  <nz-breadcrumb-item>
+    <span class="title-modulo">
+      <i nz-icon nzType="tags" style="font-size: 25px; margin-bottom: 1px;"></i>
+    </span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-modulo">Tarifas</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo">Tarifas de servicio</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">Configuración de tarifas</span>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+<div class="home-title-page my-2" style="display: flex; justify-content: space-between; ">
+  <h1 class="title-home m-0">Configuración de tarifas</h1>
+  <div>
+    <button nz-button class=" button-black mx-2" [nzType]="'primary'" (click)="cancelConfig()">
+      Cancelar
+    </button>
+  </div>
+</div>
+<!-- CABEZERA TARIFAS -->
+<div class="custom-card">
+  <div nz-col [nzSpan]="24" style="text-align: -webkit-center;">
+    <nz-page-header-content nz-col [nzSpan]="22">
+      <nz-descriptions nzSize="small" [nzColumn]="3">
+        <!-- SERVICIO -->
+        <nz-descriptions-item nzTitle="Servicio" [nzSpan]="1">
+          {{rateServicesForm.nameServices}}
+        </nz-descriptions-item>
+        <!-- EMPRESA -->
+        <nz-descriptions-item nzTitle="Empresa" [nzSpan]="1">
+          <p style="color: #007152;">{{rateServicesForm.nameCompany}}</p>
+        </nz-descriptions-item>
+        <!-- VEGENCIA -->
+        <nz-descriptions-item nzTitle="Vigencia" [nzSpan]="1">
+          {{ rateServicesForm.validityInitial}} - {{rateServicesForm.validityEnd}}
+        </nz-descriptions-item>
+        <!-- TARIFA -->
+        <nz-descriptions-item nzTitle="Tarifa" [nzSpan]="1">
+          {{ rateServicesForm.code}} - {{rateServicesForm.description}}
+        </nz-descriptions-item>
+        <!-- TIPO DE TARIFA -->
+        <nz-descriptions-item nzTitle="Tipo de tarifa" [nzSpan]="1">
+          {{ rateServicesForm.type}}
+        </nz-descriptions-item>
+        <!-- UNIDAD DE MEDIDA -->
+        <nz-descriptions-item nzTitle="Unidad de medida" [nzSpan]="1">
+          {{ rateServicesForm.unity}}
+        </nz-descriptions-item>
+      </nz-descriptions>
+    </nz-page-header-content>
+  </div>
+</div>
+<!-- FORMULARIO -->
+<div class="custom-card d-flex flex-column justify-content-center mt-3">
+  <h2 class="title-secundary ms-4 ps-1 my-2">Nuevo detalle de tarifa.</h2>
+  <form nz-form [formGroup]="validateForm" id="CreateForm" class="w-100">
+    <div class="row mx-3">
+      <!-- RUTA -->
+      <div class="col-sm-4">
+        <label class="label-title">Ruta</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione una ruta!">
+            <nz-select id="ruta" formControlName="ruta" nzPlaceHolder="Seleccione una ruta"
+              [ngClass]="{'disabled-select':!this.routeDisable}">
+              <nz-option disabled [nzValue]="null" nzLabel="Seleccione una ruta"></nz-option>
+              <nz-option *ngFor="let item of cities" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- ZONA INICIAL -->
+      <div class="col-sm-4" *ngIf="rateServicesForm.type == 'Distancia entre zonas' && haveZonesCoberturas">
+        <label class="label-title">Zona Inicial</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione una zona inicial!">
+            <nz-select nzAutoFocus id="zonainicial" formControlName="zonainicial"
+              nzPlaceHolder="Seleccione una zona inicial">
+              <nz-option disabled [nzValue]="null" nzLabel="Seleccione una zona inicial"></nz-option>
+              <nz-option *ngFor="let item of zones" [nzValue]="item.name" [nzLabel]="item.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- ZONA FINAL -->
+      <div class="col-sm-4" *ngIf="rateServicesForm.type == 'Distancia entre zonas' && haveZonesCoberturas">
+        <label class="label-title">Zona final</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione una zona final!">
+            <nz-select nzAutoFocus id="zonafinal" formControlName="zonafinal" nzPlaceHolder="Seleccione una zona final">
+              <nz-option disabled [nzValue]="null" nzLabel="Seleccione una zona final"></nz-option>
+              <nz-option *ngFor="let item of zones" [nzValue]="item.name" [nzLabel]="item.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- CARACTERISTICA 1 -->
+      <div class="col-sm-4" *ngIf="rateServicesForm.characteristicFirst">
+        <label class="label-title">{{ rateServicesForm.characteristicFirst}}</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23">
+            <nz-select nzAutoFocus id="caracteristica1" formControlName="caracteristica1"
+              nzPlaceHolder="Seleccione una característica">
+              <nz-option disabled [nzValue]="null" nzLabel="Seleccione una característica"></nz-option>
+              <nz-option *ngFor="let item of valuesCharactsList1" [nzValue]="item.value"
+                [nzLabel]="item.value"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- CARACTERISTICA 2 -->
+      <div class="col-sm-4" *ngIf="rateServicesForm.characteristicSecond">
+        <label class="label-title">{{ rateServicesForm.characteristicSecond}}</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="Por favor seleciona tu servicio!">
+            <nz-select nzAutoFocus id="caracteristica2" formControlName="caracteristica2"
+              nzPlaceHolder="Seleccione una característica">
+              <nz-option disabled [nzValue]="null" nzLabel="Seleccione una característica"></nz-option>
+              <nz-option *ngFor="let item of valuesCharactsList2" [nzValue]="item.value"
+                nzLabel="{{item.value}}"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- FRANJA HORARIA -->
+      <div class="col-sm-4">
+        <label class="label-title">Franja horaria</label>
+        <nz-form-item class="row p-0">
+          <nz-form-control class="col-sm-12 p-0">
+            <nz-time-picker nzPlaceHolder="Hora inicial" #timePicker [(ngModel)]="time1"
+              [nzDefaultOpenValue]="defaultOpenValue" [nzUse12Hours]="true" [ngModelOptions]="{standalone: true}"
+              nzFormat="h:mm a" [ngClass]="{'borde-rojo': timeError}" (ngModelChange)="timeError = false">
+            </nz-time-picker>
+            <nz-time-picker nzPlaceHolder="Hora final" #timePicker [(ngModel)]="time2"
+              [nzDefaultOpenValue]="defaultOpenValue" [nzUse12Hours]="true" [ngModelOptions]="{standalone: true}"
+              nzFormat="h:mm a" [ngClass]="{'borde-rojo': timeError}" (ngModelChange)="timeError = false">
+            </nz-time-picker>
+          </nz-form-control>
+          <span *ngIf="timeError" class="col-sm-12 p-0" style="color: red;">¡Por favor ingrese una franja
+            horaria!</span>
+        </nz-form-item>
+      </div>
+      <!-- RANGO CONSUMO -->
+      <div class="col-sm-4" *ngIf="rateServicesForm.type == 'Tiempo'">
+        <label class="label-title">Rango consumo</label>
+        <div class="d-flex">
+          <input nz-input type="number" class="me-1 input-field" id="rangoconsumo1" formControlName="rangoconsumo1"
+            min="1" step="1" placeHolder="Ingrese rango inicial"
+            (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57" />
+
+          <input nz-input type="number" class="ms-1 input-field" id="rangoconsumo2" formControlName="rangoconsumo2"
+            min="1" step="1" placeHolder="Ingrese rango final"
+            (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57" />
+        </div>
+      </div>
+      <!-- VALOR TARIFAS -->
+      <div class="col-sm-4">
+        <label class="label-title">Valor tarifa</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor ingrese un valor de tarifa!">
+            <input id="valortarifa" class="input-field " type="number" nz-input formControlName="valortarifa"
+              placeholder="Ingrese un valor de tarifa"
+              (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- CHECKS -->
+      <div class="col-sm-8">
+        <label>Días hábiles</label>
+        <div style="border-bottom: 1px solid rgb(233, 233, 233);" [ngClass]="{'days-invalid':daysError}">
+          <label class="label-title" id="todos" nz-checkbox [(ngModel)]="allChecked"
+            (ngModelChange)="updateAllChecked($event)" [nzIndeterminate]="false"  [ngModelOptions]="{ standalone: true }">
+            Todos
+          </label>
+          <span *ngIf="daysError" class="mx-2" style="color: red;">¡Por favor seleccione un día hábil!</span>
+        </div>
+        <!-- <nz-checkbox-group id="uno" [(ngModel)]="dias" [ngModelOptions]="{ standalone: true }">
+          <label nz-checkbox *ngFor="let dia of dias" >
+            {{ dia.value }}
+          </label>
+        </nz-checkbox-group> -->
+        <div >
+          <label *ngFor="let item of dias" nz-checkbox [(ngModel)]="item.checked" (ngModelChange)="updateSingleChecked($event)" [ngModelOptions]="{ standalone: true }">{{ item.value}}</label>
+        </div>
+      </div>
+      <!-- BUTTON  -->
+      <div class="col-sm" style="display: flex; justify-content: flex-end; ">
+        <div style="margin: 24px 10px;">
+          <button nz-button class=" button-green" [nzType]="'primary'" (click)="addDetail()">
+            <i nz-icon nzType="plus" nzTheme="outline" class="align-middle pb-1"></i>
+            {{button}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- TABLA -->
+<div style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px;">
+  <ng-container *ngIf="listOfData.length > 0; then data; else noData"></ng-container>
+  <ng-template #data>
+    <nz-table #detailTable [nzData]="listOfData" [nzPageSize]="5" [nzFrontPagination]="false"
+      [nzScroll]="{ x: '2000px', y: '311px' }">
+      <thead>
+        <tr style="background: #F5F7FA;">
+          <th nzWidth="50px"></th>
+          <th nzWidth="100px">Ruta</th>
+          <!-- <th nzWidth="100px">Zonas de cobertura</th> -->
+          <th nzWidth="30px">L</th>
+          <th nzWidth="30px">M</th>
+          <th nzWidth="30px">M</th>
+          <th nzWidth="30px">J</th>
+          <th nzWidth="30px">V</th>
+          <th nzWidth="30px">S</th>
+          <th nzWidth="30px">D</th>
+          <th nzWidth="30px">F</th>
+          <th nzWidth="100px">Franja horaria</th>
+          <th nzWidth="90px">Clase de vehículo</th>
+          <th nzWidth="90px">Acondicionamiento</th>
+          <!-- <th nzWidth="80px">Rango de consumo</th> -->
+          <th nzWidth="80px">Valor tarifa</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let data of detailTable.data | paginate : { id: 'tableControles', itemsPerPage: numberRow, currentPage: page }">
+          <td style="display: revert;">
+            <div style="display: flex;">
+              <div class="form-check form-switch form-switch-sm m-0 mt-1">
+                <input class="form-check-input" type="checkbox" [checked]="data.activa" (click)="changeStateModal(data)"
+                  nz-tooltip="Cambiar estado">
+              </div>
+              <img draggable="false" style="cursor: pointer;" src="../../../../../assets/icon/fi_edit-2.svg"
+                (click)="updateRate(data)" nz-tooltip="Editar">
+            </div>
+          </td>
+          <td> {{data.rute}} </td>
+          <!-- <td> {{data.zoneInitial || 'N/A'}} - {{data.zoneFinal || 'N/A'}} </td> -->
+          <td>
+            <i nz-icon *ngIf="data.dias[0] === 1" [nzType]="'check-circle'" [nzTheme]="'twotone'"
+              [nzTwotoneColor]="'#52c41a'"></i>
+            <span *ngIf="data.dias[0] != 1">-</span>
+          </td>
+          <td>
+            <i nz-icon *ngIf="data.dias[1] === 1" [nzType]="'check-circle'" [nzTheme]="'twotone'"
+              [nzTwotoneColor]="'#52c41a'"></i>
+            <span *ngIf="data.dias[1] != 1">-</span>
+          </td>
+          <td>
+            <i nz-icon *ngIf="data.dias[2] === 1" [nzType]="'check-circle'" [nzTheme]="'twotone'"
+              [nzTwotoneColor]="'#52c41a'"></i>
+            <span *ngIf="data.dias[2] != 1">-</span>
+          </td>
+          <td>
+            <i nz-icon *ngIf="data.dias[3] === 1" [nzType]="'check-circle'" [nzTheme]="'twotone'"
+              [nzTwotoneColor]="'#52c41a'"></i>
+            <span *ngIf="data.dias[3] != 1">-</span>
+          </td>
+          <td>
+            <i nz-icon *ngIf="data.dias[4] === 1" [nzType]="'check-circle'" [nzTheme]="'twotone'"
+              [nzTwotoneColor]="'#52c41a'"></i>
+            <span *ngIf="data.dias[4] != 1">-</span>
+          </td>
+          <td>
+            <i nz-icon *ngIf="data.dias[5] === 1" [nzType]="'check-circle'" [nzTheme]="'twotone'"
+              [nzTwotoneColor]="'#52c41a'"></i>
+            <span *ngIf="data.dias[5] != 1">-</span>
+          </td>
+          <td>
+            <i nz-icon *ngIf="data.dias[6] === 1" [nzType]="'check-circle'" [nzTheme]="'twotone'"
+              [nzTwotoneColor]="'#52c41a'"></i>
+            <span *ngIf="data.dias[6] != 1">-</span>
+          </td>
+          <td>
+            <i nz-icon *ngIf="data.dias[7] === 1" [nzType]="'check-circle'" [nzTheme]="'twotone'"
+              [nzTwotoneColor]="'#52c41a'"></i>
+            <span *ngIf="data.dias[7] != 1">-</span>
+          </td>
+          <td> {{data.horaria_desde_format}} - {{data.horaria_hasta_format}} </td>
+          <td> {{data.featuresOne || '-'}} </td>
+          <td> {{data.featuresTwo || '-'}} </td>
+          <!-- <td> {{data.rango_ini}} - {{data.rango_end}} </td> -->
+          <td> {{data.tarifa | currency}} </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <!-- PAGINADO DE LA TABLA -->
+    <div class="row" *ngIf="listOfData.length > 0">
+      <div class="col-sm-4 ps-4">
+        <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+          <div>
+            <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+          </div>
+
+          <div class="px-1">
+            <nz-form-control>
+              <nz-select class="select-pag" nzBorderless style="padding: 2px 0px !important;" [(ngModel)]="numberRow"
+                (ngModelChange)="onChangeRowPerPage($event)">
+                <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </div>
+
+          <div>
+            <label class="label-title" style="margin-top: 7px;">entradas</label>
+          </div>
+        </nz-form-item>
+      </div>
+      <div class="col-sm d-flex justify-content-end pe-4">
+        <pagination-controls id="tableControles" previousLabel="Anterior" nextLabel="Siguiente"
+          (pageChange)="onChangePage($event)" (pageBoundsCorrection)="onChangePage($event)">
+        </pagination-controls>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #noData>
+    <div nz-row class="card-aling-center mb-4">
+      <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+        <div nz-col nzXs="24" nzSm="20" nzMd="14">
+
+          <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../assets/icon/info_icon.svg"
+            alt="icono-buscar">
+          <div nz-col nzSm="24" nzMd="18">
+            <h1 class="title-form" style="place-content: center !important;">
+              No hay datos existentes
+            </h1>
+            <h1 class="title-secundary" style="margin-top: 0px;">
+              No existen datos para visualizar en esta tabla. Puedes volver a la página principal.
+            </h1>
+            <button nz-button class=" button-green" [nzType]="'primary'" (click)="cancelConfig()">
+              Volver
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

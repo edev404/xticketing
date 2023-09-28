@@ -1,0 +1,22 @@
+.contenedor-pdf {
+    position: relative;
+
+    div {
+        position: absolute;
+        top: 25%;
+        left: 50%;
+        transform: translate(-50%, 50%);
+    }
+}
+
+.centrado {
+    height: 415px !important;
+    border: 1px solid #AEBBCE;
+    border-radius: 5px !important;
+}
+
+.box-image-card {
+    height: auto !important;
+    border: 1px solid #AEBBCE;
+    border-radius: 5px !important;
+}

@@ -1,0 +1,616 @@
+<!-- BREADCRUMB -->
+<nz-breadcrumb style="margin-bottom: 20px;">
+  <nz-breadcrumb-item>
+    <span class="title-modulo">
+      <i nz-icon nzType="percentage" style="font-size: 25px; margin-bottom: 1px;"></i>
+    </span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-modulo">Descuentos</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo selected-breadcrumb">Asignar masivo</span>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+<!-- TITULO Y BOTONES -->
+<div class="home-title-page" style="display: flex; justify-content: space-between; ">
+  <h1 class="title-home">Descuentos masivos</h1>
+  <div>
+    <button nz-button class="button-black mx-1" style="color: white;" (click)="clearForm()">
+      Limpiar
+    </button>
+    <button nz-button class="button-green mx-1" [nzType]="'primary'" (click)="saveDiscount()">
+      Guardar
+    </button>
+  </div>
+</div>
+
+<nz-divider></nz-divider>
+<h1 class="title-secundary">Digite la información y seleccione las condiciones para crear un nuevo descuento.</h1>
+<!-- FORMULARIO -->
+<form nz-form [formGroup]="validateForm">
+  <div class="row">
+    <div class="col-sm-12 row">
+      <!-- SERVICIOS -->
+      <div class="col-sm">
+        <label class="label-title">Servicio</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor, seleccione un servicio!">
+            <nz-select nzAutoFocus id="servicios" nzPlaceHolder="Seleccione un servicio" formControlName="servicios"
+              (ngModelChange)="loadDiscounts($event)">
+              <nz-option disabled [nzValue]="null" nzLabel="Seleccione un servicio"></nz-option>
+              <nz-option *ngFor="let item of servicesList" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- DESCUENTOS -->
+      <div class="col-sm">
+        <label class="label-title">Descuento</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor, seleccione un descuento!">
+            <nz-select nzAutoFocus id="descuento" nzPlaceHolder="Seleccione un descuento" formControlName="discounts"
+              [ngClass]="distcountList.length <=0 && !formularioEnviado ? 'disabled-select' : 'error-form'"
+              [nzDisabled]="distcountList.length <=0" (ngModelChange)="cambioFormulario()"
+              [ngClass]="{'disabled-select':distcountList.length <=0}">
+              <nz-option disabled [nzValue]="null" nzLabel="Seleccione un descuento"></nz-option>
+              <nz-option *ngFor="let item of distcountList" nzLabel="{{item.name}}" [nzValue]="item.id"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- VIGENCIA DESDE -->
+      <div class="col-sm">
+        <label class="label-title">Vigencia inicial</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor, sleccione una vigencia inicial">
+            <nz-date-picker [nzDisabledDate]="disabledStartDate" (ngModelChange)="cambioFormulario(1)"
+              nzFormat="yyyy-MM-dd" [(ngModel)]="startValue" formControlName="rangePickerstartValue"
+              nzPlaceHolder="Seleccione una vigencia inicial" (nzOnOpenChange)="handleStartOpenChange($event)"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- VIGENCIA HASTA -->
+      <div class="col-sm">
+        <label class="label-title">Vigencia final</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor, seleccione la vigencia final!">
+            <nz-date-picker #endDatePicker [nzDisabledDate]="disabledEndDate" (ngModelChange)="cambioFormulario()"
+              nzFormat="yyyy-MM-dd" [(ngModel)]="endValue" nzPlaceHolder="Seleccione una vigencia final"
+              formControlName="rangePickerendValue"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+
+    <div class="col-sm-12 row">
+      <!-- ACCION -->
+      <div class="col-sm-4">
+        <label class="label-title">Acción</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor, seleccione una acción!">
+            <nz-select class="disabled-select" [nzDisabled]="true" nzAutoFocus id="accion"
+              nzPlaceHolder="Seleccione una accion" (ngModelChange)="cambioFormulario()" formControlName="accion">
+              <nz-option disabled [nzValue]="null" nzLabel="Seleccione una accion"></nz-option>
+              <nz-option [nzValue]="item.code" [nzLabel]="item.description" *ngFor="let item of acciones"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- ARCHIVO -->
+      <div class="col-sm-4">
+        <label class="label-title">Archivo</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor, seleccione un archivo!">
+            <nz-select nzAutoFocus id="plantilla" nzPlaceHolder="Seleccione un archivo"
+              (ngModelChange)="cambioFormulario()" formControlName="plantilla">
+              <nz-option [nzValue]="null" nzLabel="Seleccione un archivo"></nz-option>
+              <nz-option *ngFor="let item of dataFilesLoad" [nzLabel]="getFormattedLabel(item)" [nzValue]="item.id"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- EVIDENCIA -->
+      <div class="col-sm-4">
+        <label class="label-title">Evidencia</label>
+        <label class="button-upload"
+          [ngClass]="(currentFileName == null || currentFileName == 'Adjuntar archivo') && formularioEnviado ? 'error-form' : ''">
+          <img draggable="false" src="../../../../../assets/icon/fi_file-plus.svg" class="mx-2"
+            style="pointer-events: none;">
+          <input type="file" style="display: none;" accept="application/pdf" (change)="onFileChange($event)" />
+          <i class="fa fa-cloud-upload"></i>
+          {{currentFileName != null || currentFileName == 'Adjuntar archivo' ? currentFileName : 'Adjuntar archivo'}}
+        </label>
+        <div *ngIf="(currentFileName == null || currentFileName == 'Adjuntar archivo') && formularioEnviado"
+          style="color: #ff4d4f;">¡Por favor, selecciona la evidencia!</div>
+      </div>
+    </div>
+  </div>
+</form>
+<!-- TABLE -->
+<div class="custom-card" *ngIf="dataTable.length > 0">
+  <div *ngIf="dataTable.length > 0">
+    <nz-table #basicTable [nzData]="dataTable" [nzFrontPagination]="false" [nzPageSize]="5"
+      [nzScroll]="{ x: '1000px', y: '345px'}">
+      <thead>
+        <tr style="background: #F5F7FA;">
+          <th nzWidth="80px">Estado asignación</th>
+          <th nzWidth="100px">Servicio</th>
+          <th nzWidth="100px">Nombre del descuento</th>
+          <th nzWidth="100px">Vigencia</th>
+          <th nzWidth="80px">¿Vigente?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let data of basicTable.data | paginate : { id: 'table', itemsPerPage: numberRow, currentPage: page }">
+          <td style="display: revert;">
+            <div class="d-flex justify-content-center align-items-center">
+              <div class="form-check form-switch form-switch-sm m-0 mt-1" (click)="cambiarEstado(data)">
+                <input class="form-check-input" type="checkbox" [checked]="data.active">
+              </div>
+              <img draggable="false" src="../../../../../assets/icon/fi_eye.svg" class="mx-2" data-bs-toggle="modal"
+                data-bs-target="#exampleModal" (click)="showModalView(data); urlFile = '';distcountAssignerDetail.evidencia = ''">
+            </div>
+          </td>
+          <td>{{ data.serviceName }}</td>
+          <td>{{ data.descuentoName }}</td>
+          <td>{{ data.vigenciaIn | date: 'dd/MM/yyyy'}} - {{data.vigenciaFin | date: 'dd/MM/yyyy' }}</td>
+          <td>
+            <span class="badge text-bg-success " *ngIf="data.vigente == false">Si</span>
+            <span class="badge text-bg-danger " *ngIf="data.vigente == true">No</span>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <!-- PAGINADO DE LA TABLA -->
+    <div class="row d-flex align-items-center">
+      <div class="col-sm-4 ps-4">
+        <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+          <div>
+            <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+          </div>
+
+          <div class="px-1">
+            <nz-form-control>
+              <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow"
+                (ngModelChange)="onChangeRowPerPage($event)">
+                <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </div>
+
+          <div>
+            <label class="label-title" style="margin-top: 7px;">entradas</label>
+          </div>
+        </nz-form-item>
+      </div>
+      <div class="col-sm d-flex justify-content-end pe-4">
+        <pagination-controls id="table" previousLabel="Anterior" nextLabel="Siguiente"
+          (pageChange)="onChangePage($event)" (pageBoundsCorrection)="onChangePage($event)">
+        </pagination-controls>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="dataTable.length <= 0">
+  <div nz-row class="card-aling-center mb-4">
+    <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+      <div nz-col nzXs="24" nzSm="20" nzMd="14">
+
+        <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../assets/icon/info_icon.svg"
+          alt="icono-buscar">
+        <div nz-col nzSm="24" nzMd="18">
+          <h1 class="title-form" style="place-content: center !important;">
+            No hay datos existentes
+          </h1>
+          <h1 class="title-secundary" style="margin-top: 0px;">
+            No existen datos para visualizar en esta tabla.
+          </h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <!-- TIUTLO DE MODAL -->
+      <div class="row m-1">
+        <!-- NAV MODAL -->
+        <div class="col-sm-12">
+          <div class="row">
+            <!-- X -->
+            <div class="col-sm-12 d-flex justify-content-end align-items-center my-3">
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <nz-tabset [(nzSelectedIndex)]="index" nzType="editable-card" nzHideAdd (nzClose)="closeTab($event)">
+              <nz-tab *ngFor="let tab of tabs; let i = index" (nzClick)="cambiarPestana(tab)" [nzClosable]="i > 1"
+                [nzTitle]="tab"></nz-tab>
+            </nz-tabset>
+          </div>
+        </div>
+        <!-- TIULO MODAL -->
+        <h4 class="col-sm-12 my-3 pull-left fontbold">
+          {{showInfo ? 'Información general del descuento' : 'Detalles de descuentos'}}
+        </h4>
+      </div>
+
+      <ng-container *ngIf="showInfo && showInfo == true; then info; else detalleDiscount"></ng-container>
+      <!-- INFO DE DESCUENTO -->
+      <ng-template #info>
+        <div class="modal-body">
+          <div class="row">
+            <!-- IZQUIERDA -->
+            <div class="col-sm-6">
+              <!-- ID -->
+              <div class="row mb-2">
+                <label class="col-sm-2 my-label-form fontsemibold mt-2 float-right">ID:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control input-field" name="idDistcount" placeholder="ID"
+                    [(ngModel)]="distcountAssignerDetail.fkDescuento" #idDistcountDetail="ngModel" [disabled]="true" />
+                </div>
+              </div>
+              <!-- NOMBRE -->
+              <div class="row mb-2">
+                <label class="col-sm-2 my-label-form fontsemibold mt-2">Nombre:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control input-field" name="nameDistcount" placeholder="Nombre"
+                    [(ngModel)]="distcountAssignerDetail.descuentoName" #nameDistcountDetail="ngModel"
+                    [disabled]="true" />
+                </div>
+              </div>
+            </div>
+            <!-- DERECHA -->
+            <div class="col-sm-6">
+              <!-- SERVICIO -->
+              <div class="row mb-2">
+                <label for="servicioDistcount" class="col-sm-2 my-label-form fontsemibold mt-2">Servicio:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control input-field" name="serviceDistcount" placeholder="Servicio"
+                    [(ngModel)]="distcountAssignerDetail.serviceName" #serviceDistcountDetail="ngModel"
+                    [disabled]="true" />
+                </div>
+              </div>
+              <!-- VIGENCIA -->
+              <div class="row mb-2">
+                <label for="vigencyDistcount" class="col-sm-2 my-label-form fontsemibold mt-2">Vigencia:</label>
+                <div class="col-sm-10 d-flex justify-content-between" style="padding: 0px 9px;">
+                  <label class="my-label-form">
+                    Fecha inicio
+                    <input type="text" class="input-field me-3 form-control w-100 mx-1" id="initialDate" name="initialDate"
+                      [value]="distcountAssignerDetail.vigenciaIn | date:'dd/MM/yyyy'" placeholder="Fecha inicio"
+                      [disabled]="true" />
+                  </label>
+                  <label class="my-label-form">
+                    Fecha final
+                    <input type="text" class="input-field me-3 form-control w-100 mx-1" id="finalDate" name="finalDate"
+                      [value]="distcountAssignerDetail.vigenciaFin | date:'dd/MM/yyyy'" placeholder="Fecha final"
+                      [disabled]="true" />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-sm-12">
+              <div class="row">
+                <div class="col" style="display: flex; flex-direction: column; gap: 12px;">
+                  <label class="my-label-form me-3">Evidencia:</label>
+                  <div>
+                    <button nz-button class="button-green mx-2" [nzType]="'primary'"
+                      style="width: 58px; margin-right: 10px;"
+                      (click)="renderFileInTemplate(distcountAssignerDetail.evidencia!)">
+                      Ver
+                    </button>
+                    <button nz-button class="button-green mx-2" style="width: 173px;" [nzType]="'primary'"
+                      (click)="renderFileInTemplateDownloads(distcountAssignerDetail.evidencia!)">
+                      Descargar
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="row">
+                <div class="col-sm-9">
+                  <label class="my-label-form me-2">Fecha de subida:</label>
+                  <span class="my-label-form">{{distcountAssignerDetail.dateCreation}}</span>
+                </div>
+              </div> -->
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-sm-12">
+              <div [ngClass]="{'centrado': urlFile == undefined || urlFile == '', 'box-image-card': urlFile != ''}"
+                class="contenedor-pdf d-flex justify-content-center align-items-center">
+                <div *ngIf="urlFile == undefined || urlFile == ''">
+                  <img draggable="false" src="../../../../../assets/icon/pdf.png" height="100px">
+                </div>
+
+                <ng-container *ngIf="urlFile != ''">
+                  <pdf-viewer [src]="urlFile" [render-text]="true" [original-size]="false"
+                    style="width: 1000px; height: 500px"></pdf-viewer>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+      <!-- DETALLE DEL DESCUENTO -->
+      <ng-template #detalleDiscount>
+        <div class="modal-body">
+          <div class="row">
+            <!-- LADO IZQUIERDO -->
+            <div class="col-sm-6">
+              <div class="card vh-100">
+                <div class="card-body">
+                  <label class="col-form-label my-label-form">Condiciones Generales</label>
+                  <div class="row">
+                    <!--Discount ID-->
+                    <div class="form-group col-sm-3 mt-2">
+                      <label for="id" class="col-form-label">ID</label>
+                      <input type="number" id="id" name="id" class="form-control input-field"
+                        [(ngModel)]="discountSend.id" disabled>
+                    </div>
+                    <!--Discount Name-->
+                    <div class="form-group col-sm-9 mt-2">
+                      <label for="name" class="col-form-label">Nombre</label>
+                      <input type="text" id="name" name="name" required #name="ngModel" [(ngModel)]="discountSend.name"
+                        class="form-control input-field" disabled>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <!--Discount Servicio-->
+                    <div class="form-group col-sm-12">
+                      <label class="col-form-label">Servicio</label>
+                      <select name="servicioSelect" class="form-control input-field"
+                        [(ngModel)]="discountSend.serviceId" #servicioSelect="ngModel" required disabled>
+                        <option *ngFor="let service of servicesList" value="{{service.id}}">{{service.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <!--Discount Vigencia desde-->
+                    <div class="form-group col-sm-6">
+                      <label class="col-form-label">Vigencia desde</label>
+                      <input type="date" class="form-control input-field" id="initialDate"
+                        [(ngModel)]="discountSend.dateInit" name="initialDate" #initialDate="ngModel" required disabled>
+                    </div>
+                    <!--Discount Vigencia hasta-->
+                    <div class="form-group col-sm-6">
+                      <label class="col-form-label">Vigencia hasta</label>
+                      <input type="date" class="form-control input-field" id="finalDate"
+                        [(ngModel)]="discountSend.datEnd" name="finalDate" #finalDate="ngModel" required disabled>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <!--Discount value (Descuento)-->
+                    <label for="discountUnit" class="col-sm-12 col-form-label">Descuento</label>
+                    <div class="form-group col-sm-6">
+                      <label>Tipo Descuento</label>
+                      <select name="discountUnit" id="discountUnit" class="form-control input-field"
+                        [(ngModel)]="discountSend.discountUnit" #discountUnit="ngModel" required disabled>
+                        <option value="450">Porcentaje</option>
+                        <option value="2">Pasajes</option>
+                        <option value="3">Minutos</option>
+                        <option value="4">Horas</option>
+                        <option value="5">Días</option>
+                        <option value="455">Pesos</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-sm-6">
+                      <label>Unidad</label>
+                      <input type="number" id="discount" name="discount" class="form-control input-field" required
+                        min="0" max="100" [(ngModel)]="discountSend.value" #discount="ngModel" disabled>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <!--Discount Frecuencia-->
+                    <label for="frequencyType" class="col-sm-12 col-form-label">Frecuencia</label>
+                    <div class="form-group col-sm-6">
+                      <label>Unidad</label>
+                      <select name="frequencyUnit" id="frequencyUnit" class="form-control input-field"
+                        [(ngModel)]="discountSend.frequencyUnit" #frequencyType="ngModel" disabled required>
+                        <option value="452">Día</option>
+                        <option value="453">Semana</option>
+                        <option value="454">Mes</option>
+                        <option value="455">Año</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-sm-6">
+                      <label>Cantidad</label>
+                      <input type="number" id="frequency" name="frequency" class="form-control input-field" disabled
+                        required min="0" [(ngModel)]="discountSend.frequency" #frequency="ngModel">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- LADO DERECHO -->
+            <div class="col-sm-6">
+              <!-- Condiciones de Tiempo -->
+              <div class="card">
+                <div class="card-body">
+                  <p class="col-form-label my-label-form mt-2">Condiciones de Tiempo</p>
+                  <label for="discountDays" class="col-form-label my-label-form mt-3">Días en que aplica el
+                    descuento</label>
+
+                  <div class="container mt-2">
+                    <div class="row">
+                      <div class="custom-control custom-checkbox col-sm-4">
+                        <input type="checkbox" class="custom-control-input mycheck-md" id="alldays" name="alldays"
+                          disabled>
+                        <label class="custom-control-label mx-1" for="alldays">Todos</label>
+                      </div>
+                      <div class="custom-control custom-checkbox col-sm-4" *ngFor="let item of days; let i = index">
+                        <input type="checkbox" class="custom-control-input mycheck-md" [id]="'days-' + i"
+                          [name]="'days-' + i" [(ngModel)]="item.value" disabled>
+                        <label class="custom-control-label mx-1" [for]="'days-' + i">{{item.name}}</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group mt-3">
+                    <label for="discountTime" class="col-form-label my-label-form">Tiempo del descuento</label>
+                    <div class="custom-control custom-checkbox mt-2">
+                      <input type="checkbox" name="alwaysHours" id="alwaysHours" class="custom-control-input mycheck-md"
+                        [(ngModel)]="discountSend.timeTerm.alwaysHours" disabled>
+                      <label for="alwaysHours" class="ms-2">Siempre</label>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-sm-4 col-auto">
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" name="rangeHours" id="rangeHours"
+                          class="custom-control-input mycheck-md" [(ngModel)]="discountSend.timeTerm.rangeHours"
+                          disabled>
+                        <label for="rangeHours" class="ms-2" disabled>Rango de horas:</label>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <input type="time" class="form-control input-field" id="initialHour"
+                        [(ngModel)]="discountSend.timeTerm.hourInitial" name="initialHour" #initialHour="ngModel"
+                        disabled>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <input type="time" class="form-control input-field" id="finalHour"
+                        [(ngModel)]="discountSend.timeTerm.hourFinally" name="finalHour" #finalHour="ngModel"
+                        disabled>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Condiciones de usuario -->
+              <div class="card mt-3">
+                <div class="card-body">
+                  <label class="col-form-label my-label-form mt-2">Condiciones de usuario</label>
+                  <div class="row mt-2">
+                    <!--Discount Age-->
+                    <div class="form-group col-sm-6">
+                      <label class="col-form-label">Rango de edad</label>
+                      <div class="row">
+                        <div class="col">
+                          <input type="number" class="form-control input-field" id="initialAge"
+                            [(ngModel)]="discountSend.userTerm.initialAge" name="initialAge" #initialAge="ngModel"
+                            disabled>
+                        </div>
+                        <div class="col">
+                          <input type="number" class="form-control input-field" id="finalAge"
+                            [(ngModel)]="discountSend.userTerm.finalAge" name="finalAge" #finalAge="ngModel" disabled>
+                        </div>
+                      </div>
+                    </div>
+                    <!--Discount Profesion-->
+                    <div class="form-group col-sm-6">
+                      <label class="col-form-label">Profesión:</label>
+
+                      <select name="professionSelect" class="form-control input-field"
+                        [(ngModel)]="discountSend.userTerm.professionId" disabled>
+                        <option *ngFor="let profession of professionsList" value="{{profession.id}}">
+                          {{profession.name}}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-form-label">Lugar de nacimiento</label>
+                    <!--Discount born place-->
+                    <div class="row">
+                      <div class="col-sm-4 mt-2">
+                        <select name="countryBornceLocation" class="form-control input-field"
+                          [(ngModel)]="discountSend.userTerm.bornLocation.country.id" #countryBornceLocation="ngModel"
+                          disabled>
+                          <option *ngFor="let country of countryIdBornPlaceList" value="{{country.id}}">
+                            {{country.name}}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="col-sm-4 mt-2">
+                        <select name="departmentBornLocation" id="departmentBornLocation"
+                          class="form-control input-field"
+                          [(ngModel)]="discountSend.userTerm.bornLocation.department.id"
+                          #departmentBornLocation="ngModel" disabled>
+                          <option *ngFor="let deparment of departmentIdBornPlaceList" [value]=deparment.id>
+                            {{deparment.name}}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="col-sm-4 mt-2">
+                        <select name="municipalityBornLocation" id="municipalityBornLocation"
+                          class="form-control input-field" [(ngModel)]="discountSend.userTerm.bornLocation.city.id"
+                          disabled>
+                          <option *ngFor="let city of municipalyIdBornPlaceList" [value]=city.id>
+                            {{city.name}}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-form-label">Lugar de residencia</label>
+                    <!--Discount residence place-->
+                    <div class="row">
+                      <div class="col-sm-4 mt-2">
+                        <select name="countryResidenceLocation" id="countryResidenceLocation"
+                          class="form-control input-field"
+                          [(ngModel)]="discountSend.userTerm.residenceLocation.country.id"
+                          #countryResidenceLocation="ngModel" disabled>
+                          <option *ngFor=" let countries of countryIdResidencePlaceList" [value]=countries.id>
+                            {{countries.name}}
+                          </option>
+                        </select>
+                      </div>
+                      <div class="col-sm-4 mt-2">
+                        <select name="departmentResidenceLocation" id="departmentResidenceLocation"
+                          class="form-control input-field"
+                          [(ngModel)]="discountSend.userTerm.residenceLocation.department.id"
+                          #departmentResidenceLocation="ngModel" disabled>
+                          <option *ngFor="let deparment of departmentIdResidencePlaceList" [value]=deparment.id>
+                            {{deparment.name}}
+                          </option>
+                        </select>
+                      </div>
+                      <div class="col-sm-4 mt-2">
+                        <select name="municipalityResidenceLocation" id="municipalityResidenceLocation"
+                          class="form-control input-field" [(ngModel)]="discountSend.userTerm.residenceLocation.city.id"
+                          disabled>
+                          <option *ngFor="let city of municipalyIdResidencePlaceList" [value]=city.id>
+                            {{city.name}}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<nz-modal [nzVisible]="mostrar" nzWidth="580px" [nzFooter]="null" (nzOnCancel)="mostrar = false">
+  <div class="modal-descuentos" *nzModalContent>
+    <h2>¿Estas seguro?</h2>
+    <p>
+      Por favor, confirme si desea {{ estado ? 'desasignar' : 'asociar' }} este descuento. {{ estado ? 'Esta acción
+      desactivará el descuento a los pasajeros asociados' : 'Esta acción activará el descuento a los pasajeros
+      asociados' }}
+    </p>
+    <div class="modal-btn">
+      <button class="cancelar" (click)="mostrar = false">Cancelar</button>
+      <button class="succces" (click)="aceptar()">{{ estado ? 'Desasignar' : 'Asociar' }}</button>
+    </div>
+  </div>
+</nz-modal>

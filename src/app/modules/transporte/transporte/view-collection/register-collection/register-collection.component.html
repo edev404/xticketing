@@ -1,0 +1,473 @@
+<!-- TITLE AND BUTTONS -->
+<div class="home-title-page d-flex justify-content-between my-3">
+  <h1 class="title-home">Registrar recaudo</h1>
+  <ng-container *ngIf="isSummary; then btnSummary; else btnRegister"></ng-container>
+  <!-- BOTON DE REGISTRO -->
+  <ng-template #btnRegister>
+    <div>
+      <!-- CANCELAR -->
+      <button nz-button class="button-black mx-2 align-middle" [nzType]="'primary'" (click)="closeRegister()">
+        Cancelar
+      </button>
+      <!-- CONTINUAR -->
+      <button nz-button class="button-green mx-2 align-middle" [nzType]="'primary'" (click)="summaryViewerShow()">
+        Continuar
+      </button>
+      <!-- VER ANALISIS -->
+      <button nz-button class="button-green mx-2 align-middle" [nzType]="'primary'" (click)="changeRegister()">
+        <i nz-icon nzType="setting" nzTheme="outline" class="align-middle pb-1"></i>
+        Ver análisis
+      </button>
+    </div>
+  </ng-template>
+  <!-- BOTON DE RESUMEN -->
+  <ng-template #btnSummary>
+    <div>
+      <!-- CANCELAR -->
+      <button nz-button class="button-black mx-2 align-middle" [nzType]="'primary'" (click)="isSummary = !isSummary">
+        Cancelar
+      </button>
+      <!-- CONTINUAR -->
+      <button nz-button class="button-green mx-2 align-middle" [nzType]="'primary'" (click)="save()">
+        Registrar
+      </button>
+    </div>
+  </ng-template>
+</div>
+<!-- HEADER -->
+<div class="custom-card row">
+  <div class="col-sm-12 d-flex justify-content-end" *ngIf="!isCollectBalance">
+    <span>
+      El <b class="text-green">valor</b> que aparece entre <b>parentesis ( )</b> equivale al <b>número de
+          pasajeros</b>
+  </span>
+  </div>
+  <!-- INFO GENERAL -->
+  <nz-page-header class="col-sm-7">
+    <nz-page-header-title>Detalle del recaudo</nz-page-header-title>
+    <nz-page-header-content>
+      <nz-descriptions nzSize="small" [nzColumn]="4">
+        <nz-descriptions-item nzTitle="Fecha / Hora consultada" [nzSpan]="2">
+          {{ currentCollection.date }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Ruta" [nzSpan]="2">
+          <a>{{ currentCollection.travel.route ? currentCollection.travel.route.name : 'NA' }}</a>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Fecha / Hora fin viaje" [nzSpan]="2">
+          {{ currentCollection.travel.endDate }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Vehículo" [nzSpan]="2">
+          {{ currentCollection.travel.plate | uppercase}} - {{ currentCollection.travel.internalNumber ? (currentCollection.travel.internalNumber | uppercase)  : 'N/A'}}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Fecha / Hora programada" [nzSpan]="2">
+          {{ currentCollection.travel.startDate }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Conductor" [nzSpan]="2">
+          {{ currentCollection.travel.driver | uppercase }}
+        </nz-descriptions-item>
+      </nz-descriptions>
+    </nz-page-header-content>
+  </nz-page-header>
+  <!-- SHOW VALUES INFO -->
+  <div class="col-sm-5">
+    <!-- REGISTER COLLECT -->
+    <div class="row me-3" *ngIf="!isCollectBalance">
+      <div class="col-sm"> <!-- CONTEO PASAJEROS -->
+        <nz-statistic class="pending d-flex justify-content-end" nzValue="CONTEO PASAJEROS"></nz-statistic>
+        <div class="d-flex justify-content-end">
+          <h5>{{currentCollection.totalBarras|currency}} ({{currentCollection.pasajerosBarras}})</h5>
+        </div>
+      </div>
+      <div class="col-sm"> <!-- PASAJEROS EN EFECTIVO -->
+        <nz-statistic class="pending d-flex justify-content-end" nzValue="PASAJEROS EFECTIVO"></nz-statistic>
+        <div class="d-flex justify-content-end">
+          <h5>{{currentCollection.totalRecaudado|currency}} ({{currentCollection.passengers}})</h5>
+        </div>
+      </div>
+    </div>
+    <!-- COLLECT BALANCE -->
+    <div class="me-3" *ngIf="isCollectBalance">
+      <nz-statistic nzValue="EFECTIVO PENDIENTE A COBRAR" style="display: flex; justify-content: flex-end;"></nz-statistic>
+      <div class="d-flex justify-content-end">
+        <h5>{{currentCollection.balance|currency}}</h5>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- TITLE FORM -->
+<div class="home-title-page row my-2">
+  <div class="col-sm-6 d-flex align-items-center">
+    <h1 class="title-home">Información del recaudo</h1>
+  </div>
+  <div class="col-sm-6 d-flex align-items-center">
+    <h1 class="title-home col-sm-6">Registro del recaudo</h1>
+  </div>
+</div>
+<!-- FORM -->
+<div>
+  <ng-container *ngIf="isCollectBalance || isSummary; then tableInfo; else tableWithDataRegister"></ng-container>
+
+  <ng-container *ngIf="isDownload && isSummary; then downloadScreen;"></ng-container>
+
+  <!-- TABLE DATA REGISTER -->
+  <ng-template #tableWithDataRegister>
+    <div *ngIf="currentCollection" class="w-100 h-100">
+      <table class="table table-bordered m-0">
+        <thead>
+          <tr>
+            <th class="title-table text-center" width="30%">Valor recibido</th>
+            <th class="title-table px-2">{{isAnswerNot || totalCollection ? 'Estado del recaudo' : ''}}</th>
+            <th class="title-table px-2">{{isAnswerNot ? 'Motivo' : ''}}</th>
+            <th class="title-table px-2">{{isAnswerNot ? 'Observación' : ''}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- FORMS INPUTS -->
+          <tr>
+            <!-- INPUT REGISTER VALUE AND MISING VALUE -->
+            <td>
+              <!-- REGISTER VALUE -->
+              <div class="d-flex justify-content-end">
+                <input type="number" placeholder="Escriba el valor a recaudar" #collectInput="ngModel" class="input-field"
+                  name="collectInputName" [(ngModel)]="manualCollect" [disabled]="!showButton" min="1"
+                  (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57" />
+                <img draggable="false" *ngIf="showButton" src="../../../../../../assets/icon/fi_arrow-right-circle.svg"
+                  style="cursor: pointer;" class="mx-3" (click)="registerValue()">
+                <span *ngIf="!showButton" style="margin-left: 54px !important;"></span>
+              </div>
+              <!-- MISING VALUE -->
+              <div *ngIf="valueMising">
+                <div class="mt-2" *ngFor="let input of inputsValues; let i = index">
+                  <div class="d-flex justify-content-end align-items-center">
+                    <label [id]="'label' + i" class="mt-1 me-2" [hidden]="hiddenInputs">Faltante:</label>
+                    <input style="justify-content: right !important; text-align: right;" required type="number"
+                      placeholder="Escriba el valor faltante a recaudar" [name]="'inputMissing' + i" class="input-field"
+                      [id]="'inputMissing' + i" [(ngModel)]="valueMissing" [disabled]="!showButtonMissing" />
+                    <img draggable="false" *ngIf="showButtonMissing" src="../../../../../../assets/icon/fi_arrow-right-circle.svg" style="cursor: pointer;"
+                      class="mx-3" (click)="registerMissing(valueMissing)">
+                    <span *ngIf="!showButtonMissing" style="margin-left: 54px !important;"></span>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <!-- COL-SPAN -->
+            <td colspan="3" *ngIf="!isAnswerNot && !totalCollection">
+
+            </td>
+            <!-- SELECT ESTADO DEL RECAUDO -->
+            <td *ngIf="isAnswerNot || totalCollection">
+              <select class="w-100" name="stateId" required [(ngModel)]="currentCollection.stateId"
+                (ngModelChange)="filterCb()" disabled>
+                <option *ngFor="let row of collectionStates" [value]="row.id">
+                  {{ row.name }}
+                </option>
+              </select>
+            </td>
+            <!-- COL-SPAN -->
+            <td colspan="2" *ngIf="!isAnswerNot && totalCollection">
+
+            </td>
+            <!-- SELECT MOTIVO -->
+            <td *ngIf="isAnswerNot">
+              <div class="row">
+                <div class="col">
+                  <select class="w-100" name="motiveId" [(ngModel)]="currentCollection.motiveId" required
+                    [disabled]=" stateCollectSelected && !stateCollectSelected.motiveRequired" #motiveId="ngModel">
+                    <option [value]="null" disabled>Seleccione un motivo</option>
+                    <option *ngFor="let row of collectionReason" [value]="row.id">
+                      {{ row.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </td>
+            <!-- TEXTAREA OBSERVACIÓN -->
+            <td *ngIf="isAnswerNot">
+              <textarea placeholder="Escribe una Observación" name="observation" #observation="ngModel" class="w-100"
+                [(ngModel)]="currentCollection.observation"
+                [disabled]="stateCollectSelected && !stateCollectSelected.observationRequired" [maxlength]="50">
+                </textarea>
+            </td>
+          </tr>
+          <!-- INFO VALES  -->
+          <tr>
+            <!-- ADVERTENCIAS TECNICAS -->
+            <td>
+              <p style="font-size: 16px; text-align: center;">Advertencias técnicas</p>
+              <div style="width: 100%; height: 50px; overflow-y: auto" *ngIf="novelties">
+                <p class="collection-basic-font" *ngFor="let row of novelties">
+                  {{ row.name }}
+                </p>
+              </div>
+              <div style="width: 100%; height: 50px; overflow-y: auto" class="text-center" *ngIf="!novelties">
+                No se ha agregado ninguna
+              </div>
+            </td>
+            <!-- RESUMEN VALUES -->
+            <td colspan="4" style="border-right: 1px solid #ededed">
+              <div style="width: 40%; float: right">
+                <div class="container-fluid">
+                  <!-- VALOR RECIBIDO -->
+                  <div class="row" style="padding: 10px 0px 10px 0px;" *ngIf="isAnswerNot || totalCollection">
+                    <div class="col-sm-6" style="color: black !important; font-weight: bold">
+                      <b>VALOR RECIBIDO:</b>
+                    </div>
+                    <div class="col-sm-6" style="color: black !important; font-weight: bold">
+                      {{ totalReceived | currency }}
+                    </div>
+                  </div>
+                  <!-- SALDO -->
+                  <div class="row" style="padding: 10px 0px 10px 0px; border-top: 1px solid #d3d3d3;"
+                    *ngIf="isAnswerNot || totalCollection">
+                    <div class="col-sm-6" style="color: black !important; font-weight: bold">
+                      <b>SALDO:</b>
+                    </div>
+                    <div class="col-sm-6" *ngIf="!isCollectBalance" style="color: black !important; font-weight: bold">
+                      {{ valueExcedent && valueExcedent > 0 ? '$0.00' : totalReceived == 0 ? '-------' :
+                      currentCollection.collect - totalReceived | currency}}
+                    </div>
+                    <div class="col-sm-6" *ngIf="isCollectBalance" style="color: black !important; font-weight: bold">
+                      {{ valueExcedent && valueExcedent > 0 ? '$0.00' : totalReceived == 0 ? '-------' :
+                      currentCollection.balance - totalReceived | currency}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-template>
+
+  <!-- TABLE INFO -->
+  <ng-template #tableInfo>
+    <div *ngIf="currentCollection && currentCollectionInfo" class="w-100" class="w-100 h-100">
+      <table class="table table-bordered m-0">
+        <thead>
+          <tr>
+            <th class="title-table text-center">Valor recibido</th>
+            <th class="title-table px-2">Estado del recaudo</th>
+            <th class="title-table px-2">Motivo</th>
+            <th class="title-table px-2">Observación</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- VALUES -->
+          <tr>
+            <td class="text-center">
+              {{
+              isCollectBalance && !isSummary
+              ? (currentCollectionInfo.manualCollect | currency)
+              : (totalReceived | currency)
+              }}
+            </td>
+            <td>
+              {{
+              isCollectBalance && !isSummary
+              ? currentCollectionInfo.state
+              : filterCollectionState(false)
+              }}
+            </td>
+            <td>
+              {{
+              isCollectBalance && !isSummary
+              ? currentCollectionInfo.motive
+              : filterCollectionMotive(false)
+              }}
+            </td>
+            <td>
+              {{
+              isCollectBalance && !isSummary
+              ? currentCollectionInfo.observation
+              : currentCollection.observation
+              }}
+            </td>
+          </tr>
+          <!-- INFO VALUES -->
+          <tr>
+            <!-- ADVERTENCIAS TECNICAS -->
+            <td>
+              <p style="font-size: 16px; text-align: center;">Advertencias técnicas</p>
+              <div style="width: 100%; height: 50px; overflow-y: auto" *ngIf="novelties">
+                <p class="collection-basic-font" *ngFor="let row of novelties">
+                  {{ row.name }}
+                </p>
+              </div>
+              <div style="width: 100%; height: 50px; overflow-y: auto" class="text-center" *ngIf="!novelties">
+                No se ha agregado ninguna
+              </div>
+            </td>
+            <!-- RESUMEN VALUES -->
+            <td colspan="4" style="border-right: 1px solid #ededed">
+              <div style="width: 40%; float: right">
+                <div class="container-fluid">
+                  <!-- VALOR RECIBIDO -->
+                  <div class="row" style="padding: 10px 0px 10px 0px;">
+                    <div class="col-sm-6" style="color: black !important; font-weight: bold">
+                      <b>VALOR RECIBIDO</b>
+                    </div>
+
+                    <div class="col-sm-6" style="color: black !important; font-weight: bold">
+                      {{
+                      isCollectBalance && !isSummary
+                      ? currentCollectionInfo
+                      ? (currentCollectionInfo.manualCollect | currency)
+                      : currentCollectionInfo.state
+                      : (totalReceived | currency)
+                      }}
+                    </div>
+                  </div>
+                  <!-- SALDO -->
+                  <div class="row" style="border-top: 1px solid #d3d3d3; padding: 10px 0px 10px 0px;"
+                    *ngIf="isCollectBalance && !isSummary ? currentCollectionInfo.valueRequired || currentCollectionInfo.state!.includes('Sin') : stateCollectSelected.valueRequired || stateCollectSelected.name.includes('Sin')">
+                    <div class="col-sm-6" style="color: black !important; font-weight: bold">
+                      <b>SALDO:</b>
+                    </div>
+
+                    <div class="col-sm-6" style="color: black !important; font-weight: bold">
+                      {{
+                      isCollectBalance && !isSummary
+                      ? (currentCollectionInfo.balance | currency)
+                      : valueExcedent && valueExcedent > 0 ?
+                      '$0.00'
+                      : currentCollection.collect - totalReceived | currency
+                      }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ng-container *ngIf="isSummary == true && !isDownload; then printCheck; else downloadInfo"></ng-container>
+    </div>
+  </ng-template>
+
+  <div *ngIf="isCollectBalance && !isSummary">
+    <div class="row">
+      <p class="col-sm-4 title-home mt-3 ms-">Saldar viaje</p>
+    </div>
+    <ng-container *ngIf="isCollectBalance && !isSummary; then tableWithDataRegister; else clear"></ng-container>
+  </div>
+
+  <!-- DOWNLOAD PDF -->
+  <ng-template #downloadScreen>
+    <div class="collection-router-container-data">
+      <div class="my-responsive-table-donwload" id="contentPrint">
+        <!---->
+        <div class="row">
+          <div class="col-sm-4"></div>
+          <div class="col-sm-4" style="text-align: center">
+            <h6 class="fontbold dark mt-2">
+              Comprobante de recaudo pago efectivo de conductores
+            </h6>
+          </div>
+          <div class="col-sm-4">
+            <h6 class="fontbold dark mt-2">N° de comprobante</h6>
+          </div>
+        </div>
+
+        <!---->
+        <p class="fontbold dark">
+          {{ "Detalle del recaudo" }}
+        </p>
+
+        <!---->
+
+        <div class="container-fluid mb-2" *ngIf="currentCollection">
+          <div class="row">
+            <div class="col-sm-2 collection-details-item">Fecha</div>
+            <div class="col-sm-4 collection-details-value">
+              {{ currentCollection.date | date: "medium" }}
+            </div>
+            <div class="col-sm-2 collection-details-item">Veh&iacute;culo</div>
+            <div class="col-sm-4 collection-details-value">
+              {{ currentCollection.travel.plate | uppercase }} - {{ currentCollection.travel.internalNumber | uppercase
+              }}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-2 collection-details-item">Viaje</div>
+            <div class="col-sm-4 collection-details-value">
+              {{ currentCollection.travel.startDate | date: "shortTime" }}
+            </div>
+            <div class="col-sm-2 collection-details-item">Ruta</div>
+            <div class="col-sm-4 collection-details-value">
+              {{ currentCollection.travel.route ? currentCollection.travel.route.name : 'NA'}}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-2 collection-details-item">Conductor</div>
+            <div class="col-sm-4 collection-details-value">
+              {{ currentCollection.travel.driver | uppercase }}
+            </div>
+          </div>
+        </div>
+
+        <!---->
+
+        <div>
+          <div class="row">
+            <p class="col-sm-4 fontbold dark">Información del recaudo</p>
+            <p class="col-sm fontbold dark">
+              {{ "Registro del recaudo" }}
+            </p>
+          </div>
+        </div>
+
+        <ng-container *ngIf="isDownload; then tableInfo; else clear"></ng-container>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #clear></ng-template>
+
+  <ng-template #printCheck>
+    <span *ngIf="isSummary == true">
+      <div class="d-flex justify-content-around align-items-center w-25">
+        <div class="form-check form-switch form-switch-sm m-0 mt-1">
+          <input id="print" name="printInput" class="form-check-input" style="cursor: pointer;" type="checkbox"
+            [(ngModel)]="print">
+        </div>
+        <label class="collection-basic-font" for="print">¿Deseas descargar el comprobante?</label>
+      </div>
+    </span>
+  </ng-template>
+
+  <ng-template #downloadInfo>
+    <div *ngIf="isDownload">
+    </div>
+  </ng-template>
+</div>
+
+<!-- MODAL VALUE RECIBED IMCOMPLETE -->
+<nz-modal [(nzVisible)]="valueReceivedIncompletedModal" nzWidth="442px"
+  (nzOnCancel)="valueReceivedIncompletedModal=false">
+  <div class="row-md" *nzModalContent>
+    <!-- titel -->
+    <div class="col-sm-12 mt-3" style="display: flex; justify-content: center;">
+      <h1 class="modal-title">¡Efectivo ingresado incompleto!</h1>
+    </div>
+    <!-- body -->
+    <div class="col-sm-12 text-center text-md">
+      <p>Hacen falta {{ currentCollection!.valueMissing | currency}}</p>
+      <p>¿Deseas registrar el valor faltante?</p>
+    </div>
+  </div>
+  <div *nzModalFooter class="p-0">
+    <div class="row-md">
+      <div class="col-sm-12 d-flex justify-content-center mb-3 my-2">
+        <button nz-button class=" button-black mx-4 px-4" [nzType]="'primary'" (click)="answerNot()">
+          No
+        </button>
+        <button nz-button class=" button-green mx-4 px-4" [nzType]="'primary'" (click)="answerYes()">
+          Si
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-modal>

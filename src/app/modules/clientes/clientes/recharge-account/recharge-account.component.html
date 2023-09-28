@@ -1,0 +1,201 @@
+<nz-breadcrumb style="margin-bottom: 20px;">
+  <nz-breadcrumb-item>
+    <span class="title-modulo">
+      <i nz-icon nzType="team" style="font-size: 25px; margin-bottom: 1px;"></i>
+    </span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-modulo">Clientes</span>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">Ajustar saldo</span>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+
+<!-- TITEL AND BUTTON -->
+<ng-container *ngIf="!accountData">
+  <div class="home-title-page" style="display: flex; justify-content: space-between; ">
+    <h1 class="title-home">Ajustar saldo</h1>
+    <div>
+      <button nz-button class="button-black mx-2" [nzType]="'primary'"
+        (click)="showCard = false;showPhone = false; validateForm.reset()">
+        Limpiar
+      </button>
+      <button nz-button class="button-green mx-2" [nzType]="'primary'" (click)="buscarDatosCuenta()">
+        Buscar cliente
+      </button>
+    </div>
+  </div>
+  <nz-divider></nz-divider>
+  <form [formGroup]="validateForm" nz-form style="padding: 0px 24px; margin: 25px 0px">
+    <!-- TIPO DE RECARGA -->
+    <div class="row">
+      <div class="col-sm-3">
+        <label class="label-title text-sm">Tipo de recarga</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione un tipo de recarga!">
+            <nz-select nzAutoFocus formControlName="typeRechar" (ngModelChange)="handlerTypeRecharge($event)"
+              nzPlaceHolder="Seleccione un tipo de recarga">
+              <nz-option [nzValue]="null" nzLabel="Seleccione un tipo de recarga"></nz-option>
+              <nz-option *ngFor="let recharge of typeRecharge" [nzLabel]="recharge.description"
+                [nzValue]="recharge.code"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- NUMERO DE TARJETA -->
+      <div class="col-sm-3" *ngIf="showCard">
+        <label class="label-title text-sm">Número de tarjeta</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese un número de tarjeta!">
+            <input id="identifier" class="rounded input-field" type="text" nz-input formControlName="identifier"
+              placeholder="Ingrese un número de tarjeta" appUppercase />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- NUMERO DE TELEFONO -->
+      <div class="col-sm-3" *ngIf="showPhone">
+        <label class="label-title text-sm">Número de telefono</label>
+        <nz-form-item>
+          <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese un número de telefono!">
+            <input id="phone" class="rounded input-field" type="text" nz-input formControlName="phone"
+              placeholder="Ingrese un número de telefono"
+              (keypress)="($event.charCode === 8 || $event.charCode === 0) ? null : $event.charCode >= 48 && $event.charCode <= 57;"
+              (paste)="preventPaste($event)" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+</ng-container>
+
+<div>
+  <!-- HEADER-RECHARGE -->
+  <div nz-col [nzSpan]="24" *ngIf="accountData"
+    style="text-align: -webkit-center; border: 1px solid #E9EEFA; border-radius: 8px;">
+    <nz-page-header-content nz-col [nzSpan]="22">
+      <nz-descriptions nzSize="small" [nzColumn]="3">
+        <nz-descriptions-item nzTitle="Nombre" [nzSpan]="1">{{accountData.nombre ? accountData.nombre : 'Tarjeta Anónima'}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Numero de cuenta"
+          [nzSpan]="1"><a>{{accountData.cuenta}}</a></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Saldo" [nzSpan]="1">{{accountData.saldo ? (accountData.saldo | currency) : 'No
+          disponible'}}</nz-descriptions-item>
+      </nz-descriptions>
+    </nz-page-header-content>
+  </div>
+
+  <!-- DATA -->
+  <div *ngIf="accountData" class="p-3"
+    style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px; align-items: center;">
+    <form nz-form [formGroup]="form" id="CreateForm" (ngSubmit)="recargar()">
+      <h2 class="title-secundary">Llene los siguientes campos, para finalizar presione el botón Aceptar.</h2>
+      <div nz-row [nzGutter]="24" nzJustify="center" style="justify-content: flex-start;">
+        <!-- PERFIL DE LA CUENTA -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Perfil de la cuenta</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23"
+              [nzErrorTip]="pqrAsociadas && validarPqr ? 'Debe registrar pqr para ajustar aumentar saldo!' : 'Por favor seleciona tu perfil de cuenta!'">
+              <nz-select nzAutoFocus id="tipoAjuste" formControlName="tipoAjuste" nzPlaceHolder="Seleccione un perfil"
+                (nzOpenChange)="typeChange($event)">
+                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccionar tipo ajuste"></nz-option>
+                <nz-option *ngFor="let item of tiposAjuste" [nzValue]="item.value" nzLabel="{{item.label}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- CASO DE FRAUDE -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Caso de fraude</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="Por favor ingrese caso de fraude!">
+              <input class="input-field" id="casoFraude" type="text" nz-input formControlName="casoFraude"
+                placeholder="Ingrese caso de fraude" required inputmode="numeric" (input)="cleanInput($event)" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- MOTIVO -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Motivo</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="Por favor seleciona tu motivo!">
+              <nz-select nzAutoFocus id="motivo" formControlName="motivo" nzPlaceHolder="Seleccione un motivo"
+                (nzOpenChange)="selectMotivo($event)">
+                <nz-option disabled [nzValue]="undefined" nzLabel="Seleccionar motivo"></nz-option>
+                <nz-option *ngFor="let item of motivos" [nzValue]="item.id" nzLabel="{{item.description}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- VALOR POR AJUSTAR -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Valor por ajustar</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="Por favor ingrese valor ajuste!">
+              <input class="input-field" id="valor" type="number" nz-input formControlName="valor" inputmode="numeric"
+                placeholder="Ingrese valor ajuste" (input)="cleanInput($event)" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- SERVICIO -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">Descripción</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="Please write something here!">
+              <textarea nz-input rows="2" formControlName="descripcion" placeholder=""></textarea>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- PQR -->
+        <div nz-col [nzSpan]="8">
+          <label class="label-title">PQR</label>
+          <nz-form-item>
+            <nz-form-control nz-col [nzSpan]="23" nzErrorTip="Por favor ingrese pqr!">
+              <nz-select nzAutoFocus id="pqr" formControlName="pqr" nzPlaceHolder="Seleccione un servicio">
+                <!-- <nz-option disabled [nzValue]="undefined" nzLabel="#PQR"></nz-option> -->
+                <nz-option *ngFor="let item of pqr" [nzValue]="item.id" nzLabel="REF00{{item.id}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+      <!-- GUARDAR -->
+      <div nz-row class="d-flex justify-content-end">
+        <button nz-button class="button-black" style="margin-top: 29px; margin-right: 10px;" [nzType]="'primary'"
+          form="CreateForm"
+          (click)="validateForm.reset();accountData = undefined;showCard = false;showPhone = false;">Cancelar
+        </button>
+        <button nz-button class="button-green" style="margin-top: 29px; margin-right: 15px;" [nzType]="'primary'"
+          form="CreateForm">Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+  <!-- NO DATA -->
+  <div *ngIf="!accountData && searchInput" nz-col [nzSpan]="24" style="text-align: -webkit-center;">
+    <div nz-col [nzSpan]="12">
+      <img draggable="false" style="margin: 20px 0px;" src="../../../../../assets/icon/Featured_icon.svg"
+        alt="icono-buscar">
+      <div nz-col [nzSpan]="18">
+        <h1 class="title-form" style="justify-content: center !important;">
+          Resultados no encontrados
+        </h1>
+        <h1 class="title-secundary">
+          Tu búsqueda no ha coincidido con ningún resultado.
+          Por favor, intenta de nuevo o ingresa una nueva búsqueda.
+        </h1>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!accountData && !searchInput" nz-col [nzSpan]="24" style="text-align: -webkit-center;">
+    <div nz-col [nzSpan]="12">
+      <img draggable="false" style="margin: 20px 0px;" src="../../../../../assets/icon/Featured_icon.svg"
+        alt="icono-buscar">
+      <div nz-col [nzSpan]="18">
+        <h1 class="title-form" style="justify-content: center !important;">Ingrese un numero de cuenta</h1>
+        <h1 class="title-secundary">No hay datos para mostrar.</h1>
+      </div>
+    </div>
+  </div>
+</div>

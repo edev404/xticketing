@@ -1,0 +1,217 @@
+<div class="p-2" style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px;">
+    <div class="row mt-2">
+        <div class="col-sm-12 row">
+                <!-- titel -->
+                <div class="col-sm-12">
+                    <label>Nombre de la lista</label>
+                </div>
+                <!-- select -->
+                <div class="col-sm-6">
+                    <select class="form-control" (change)="loadDataTable(idlista)" [(ngModel)]="idlista">
+                        <option *ngFor="let lista of listCombo" [value]="lista.id">
+                        {{lista.name | uppercase}}</option>
+                    </select>
+                </div>
+                <!-- + -->
+                <div class="col-sm-1 d-flex justify-content-center align-items-center">
+                    <button 
+                        class="redondo bd-highlight btn btn-primary text-white font-white"
+                        type="button" data-bs-toggle="modal" data-bs-target="#addList"
+                    >
+                        <div class="signoplus">+</div>
+                    </button>
+                </div>
+                <!-- - -->
+                <div class="col-sm-1 d-flex justify-content-center align-items-center">
+                    <button 
+                        class="redondo bd-highlight btn btn-primary text-white font-white"
+                        type="button" (click)="changeStateList()"
+                    >
+                        <div class="signomenos">-</div>
+                    </button>
+                </div>
+                <!-- button -->
+                <div class="col-sm-4 d-flex justify-content-end">
+                    <button nz-button class="mx-3 button-green" (click)="isEdit=false; reset()" [nzType]="'primary'" data-bs-toggle="modal" data-bs-target="#addValores">
+                        Añadir Valores
+                    </button>
+                </div>
+        </div>
+    </div>
+    <nz-divider class="my-3"></nz-divider>
+    <!-- TABLA -->
+    <ng-container *ngIf="dataTable.length > 0; then data; else noData"></ng-container>
+    <ng-template #data>
+        <div class="row mt-2">
+            <nz-table #listTable [nzData]="dataTable" [nzPageSize]="5" [nzFrontPagination]="false" [nzScroll]="{ x: '1000px', y: '311px'}">
+                <thead>
+                  <tr style="background: #F5F7FA;">
+                        <th nzWidth="100px"></th>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                        <th>Indice de relación</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of listTable.data | paginate : { id: 'table', itemsPerPage: numberRow, currentPage: page }">
+                    <td style="display: revert;">
+                      <div style="display: flex;">
+                          <div class="form-check form-switch form-switch-sm m-0 mt-1">
+                            <input class="form-check-input" type="checkbox" [checked]="data.active" nz-tooltip="Activar/Inactivar" (click)="changeStatesList(data)">
+                          </div>
+                          <img draggable="false" style="cursor: pointer;" class="mx-3" src="../../../../../assets/icon/fi_edit-2.svg" data-bs-toggle="modal" data-bs-target="#addValores" (click)="loadUpdateValues(data.id)" nz-tooltip="Editar">
+                      </div>
+                    </td>
+                    <td>{{data.code}}</td>
+                    <td>{{data.description}}</td>
+                    <td>{{data.order}}</td>
+                  </tr>
+                </tbody>
+            </nz-table>
+            <!-- PAGINADO DE LA TABLA -->
+            <div class="row d-flex align-items-center" *ngIf="dataTable.length > 0">
+                <div class="col-sm-4 ps-4">
+                <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+                    <div>
+                    <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+                    </div>
+        
+                    <div class="px-1">
+                    <nz-form-control>
+                        <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow" (ngModelChange)="onChangeRowPerPage($event)">
+                        <nz-option *ngFor="let item of tableSizes" [nzValue]="item" [nzLabel]="item"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                    </div>
+        
+                    <div>
+                    <label class="label-title" style="margin-top: 7px;">entradas</label>
+                    </div>
+                </nz-form-item>
+                </div>
+                <div class="col-sm d-flex justify-content-end pe-4">
+                <pagination-controls id="table" previousLabel="Anterior" nextLabel="Siguiente" (pageChange)="onChangePage($event)"
+                    (pageBoundsCorrection)="onChangePage($event)">
+                </pagination-controls>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #noData>
+        <div nz-row class="card-aling-center mb-4">
+          <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+            <div nz-col nzXs="24" nzSm="20" nzMd="14">
+        
+              <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../assets/icon/info_icon.svg" alt="icono-buscar">
+              <div nz-col nzSm="24" nzMd="18">
+                <h1 class="title-form" style="place-content: center !important;">
+                  No hay datos existentes
+                </h1>
+                <h1 class="title-secundary" style="margin-top: 0px;">
+                  No existen datos para visualizar en esta tabla.
+                </h1>
+              </div>
+            </div>
+          </div>
+        </div>
+    </ng-template>    
+</div>
+
+<!-- MODAL 1 -->
+<div class="modal fade" id="addList" tabindex="-1" aria-labelledby="addList" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content p-3">
+            <!-- header -->
+            <div class="row-md d-flex justify-content-end">
+              <button type="button" class="btn-close me-2" #closebutton2 data-bs-dismiss="modal" aria-label="Close" style="height: 23px; width: 23px;"></button>
+            </div>
+            <!-- body -->
+            <div class="row-md">
+                <!-- titel -->
+                <h1 class="modal-title fs-5 mb-3" id="staticBackdropLabel">Crear nueva lista</h1>
+                <nz-divider class="my-3"></nz-divider>
+                <label style="padding-bottom: 3%;">Nombre</label>
+                <input 
+                    required 
+                    name="name" 
+                    type="text"
+                    #name="ngModel" 
+                    class="form-control input-field"
+                    [(ngModel)]="nameList.name"
+                >           
+            </div>
+            <!-- footer -->
+            <div class="row-md d-flex justify-content-center">
+                <button nz-button class=" button-black mx-1 my-3" [nzType]="'primary'" data-bs-dismiss="modal" aria-label="Close">
+                    Cancelar
+                </button>
+                <button nz-button class="button-green my-3" [nzType]="'primary'" (click)="saveNewList()">
+                    Guardar
+                </button>
+            </div>
+          </div>
+    </div>
+</div>
+
+<!-- MODAL 2 -->
+<div class="modal fade" id="addValores" tabindex="-1" aria-labelledby="addValores" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content p-3">
+            <!-- header -->
+            <div class="row-md d-flex justify-content-end">
+              <button type="button" class="btn-close me-2" #closebutton data-bs-dismiss="modal" aria-label="Close" style="height: 23px; width: 23px;"></button>
+            </div>
+            <!-- body -->
+            <div class="row-md">
+                <!-- titel -->
+                <h1 class="modal-title fs-5 mb-3" id="staticBackdropLabel">{{!isEdit ?'Agregar valores' : 'Editar valores'}}</h1>
+                <nz-divider class="my-3"></nz-divider>
+                <!-- CODIGO -->
+                <label style="padding-bottom: 3%">Código</label>
+                <input 
+                    required 
+                    name="code"
+                    type="text"
+                    #code="ngModel"
+                    class="form-control input-field"
+                    [(ngModel)]="dataValues.code"
+                    [ngClass]="{'disabled-select': dataValues.code}"
+                    [disabled]="isEdit"
+                >
+                <!-- DESCRIPTION -->
+                <label style="padding-bottom: 3%; padding-top: 3%;">Descripción</label>
+                <input 
+                    required 
+                    type="text"
+                    name="description"
+                    class="form-control input-field"
+                    #description="ngModel" 
+                    [(ngModel)]="dataValues.description" 
+                >
+                <!-- ORDEN -->
+                <label style="padding-bottom: 3%; padding-top: 3%;">Orden</label>
+                <input 
+                    required 
+                    name="order"
+                    type="number"
+                    #order="ngModel" 
+                    class="form-control input-field" 
+                    [(ngModel)]="dataValues.order"
+                >              
+            </div>
+            <!-- footer -->
+            <div class="row-md d-flex justify-content-center">
+                <button nz-button class=" button-black mx-1 my-3" [nzType]="'primary'" data-bs-dismiss="modal" (click)="isEdit=false" aria-label="Close">
+                    Cancelar
+                </button>
+                <button *ngIf="!isEdit" nz-button class="button-green my-3" [nzType]="'primary'" (click)="saveNewValues()">
+                    Guardar
+                </button>
+                <button *ngIf="isEdit" nz-button class="button-green my-3" [nzType]="'primary'" (click)="UpdateValues()">
+                    Editar
+                </button>
+            </div>
+          </div>
+    </div>
+</div>

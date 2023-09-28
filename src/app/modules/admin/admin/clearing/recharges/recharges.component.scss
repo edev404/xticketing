@@ -1,0 +1,37 @@
+nz-input-group{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: 8px;
+  }
+
+.button-green{
+  background: #00AE8D;
+  border-radius: 8px;
+  border-color: #00AE8D !important;
+  height: 40px;
+  font-family: 'Taylor Sans';
+  font-style: italic;
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0px 10px;
+}
+
+.button-black{
+  background: #415364;
+  border-radius: 8px;
+  border-color: #415364 !important;
+  height: 40px;
+  // width: 40px;
+  font-family: 'Taylor Sans';
+  font-style: italic;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.text-md{
+  font-family: 'Taylor Sans' !important;
+  font-size: 16px;
+  line-height: 24px;
+}

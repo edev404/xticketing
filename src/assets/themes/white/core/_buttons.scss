@@ -1,0 +1,95 @@
+// BUTTONS
+.login-form-button {
+  width: 97% !important;
+  margin-bottom: 16px;
+}
+
+.button-white {
+  background: #fff;
+  border-radius: 8px;
+  border-color: #00AE8D !important;
+  height: 40px;
+  font-family: 'Taylor Sans';
+  font-style: italic;
+  font-weight: 600;
+  font-size: 15px;
+  color: #00AE8D;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background: #fff !important;
+    border-color: #00AE8D !important;
+    color: #00AE8D;
+  }
+}
+
+.button-green {
+  background: #00AE8D;
+  border-radius: 8px;
+  border-color: #00AE8D 1px solid !important;
+  height: 40px;
+  font-family: 'Taylor Sans';
+  font-style: italic;
+  font-weight: 600;
+  font-size: 15px;
+  outline: none;
+
+  &:disabled {
+    background-color: #CBD7E5 !important;
+    border: #CBD7E5 1px solid !important;
+    color: #798CA5 !important;
+  }
+}
+
+.button-black {
+  background: #415364;
+  border-radius: 8px;
+  border-color: #415364 !important;
+  height: 40px;
+  font-family: 'Taylor Sans';
+  font-style: italic;
+  font-weight: 600;
+  font-size: 15px;
+  outline: none;
+
+  &:disabled {
+    background-color: #CBD7E5 !important;
+    border: #CBD7E5 1px solid !important;
+    color: #798CA5 !important;
+  }
+}
+
+.button-black:hover,
+.button-black:focus {
+  background: #415364 !important;
+  border-color: #415364 !important;
+}
+
+
+.button-green-white {
+  background: #F0FAF8;
+  border-radius: 8px;
+  border-color: #F0FAF8 !important;
+  height: 40px;
+  font-family: "Taylor Sans";
+  font-style: italic;
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0px 10px;
+  color: #00AE8D;
+}
+
+.button-upload {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #AEBBCE;
+  height: 49px;
+  width: 100%;
+  padding: 0px 0px;
+  font-family: 'Taylor Sans';
+  font-style: italic;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+}

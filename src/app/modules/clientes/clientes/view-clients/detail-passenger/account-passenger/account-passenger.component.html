@@ -1,0 +1,245 @@
+<div class="card">
+    <div class="p-4">
+        <div class="mb-3">
+            <p class="col-form-label my-title-form">Información de la Cuenta</p>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <!-- NUMERO DE CUENTA -->
+                    <div class="form-group col-sm-4">
+                        <label for="numberPhone" class="fontsemibold neutral-500">Número de cuenta</label>
+                        <input type="text" class="form-control" id="numberPhone" name="numberPhone"
+                            [(ngModel)]="passenger.phone" disabled>
+                    </div>
+                    <!-- TIPO DE CUENTA -->
+                    <div class="form-group col-sm-4">
+                        <label for="typeAccount" class="fontsemibold neutral-500">Tipo de cuenta</label>
+                        <input type="text" class="form-control" id="typeAccount" name="typeAccount"
+                            [(ngModel)]="tipoCuenta" disabled>
+                        <!--<select name="typeAccount" id="typeAccount"
+                                class="form-control"
+                                [(ngModel)]="passenger.type"
+                                disabled>
+                            <option *ngFor="let item of typeAccount" value="{{item.id}}">
+                                {{item.name}}
+                            </option>
+                        </select>-->
+                    </div>
+                    <!-- ESTADO DE LA CUENTA -->
+                    <div class="form-group col-sm-4">
+                        <label for="state" class="fontsemibold neutral-500">Estado de la cuenta</label>
+                        <select id="stateAccount" name="stateAccount" class="form-control"
+                            [(ngModel)]="passenger.idStateAccount" #stateAccount="ngModel"
+                            (change)="openModalChangeStateAccount(stateAccount.value)">
+                            <option value="{{item.id}}" *ngFor="let item of stateCombo">
+                                {{item.name}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- NUMERO DE CUENTA CORE BANKING -->
+                    <div class="form-group col-sm-4">
+                        <label for="numberAccountCore" class="fontsemibold neutral-500">Número de cuenta Core
+                            Banking</label>
+                        <input type="text" class="form-control" id="numberAccountCore" name="numberAccountCore"
+                            [(ngModel)]="passengerAccount.accountNo" disabled>
+                    </div>
+                    <!-- PERFIL DE LA CUENTA -->
+                    <div class="form-group col-sm-4">
+                        <label for="profileAccount" class="fontsemibold neutral-500">Perfil de la cuenta</label>
+                        <select id="profileAccount" name="profileAccount" class="form-control"
+                            [(ngModel)]="passenger.accountProfile" disabled>
+                            <option *ngFor="let profile of clientsProfiles" [value]="profile.id">
+                                {{profile.name}}
+                            </option>
+                        </select>
+                    </div>
+                    <!-- FEHCA DE CREACION -->
+                    <div class="form-group col-sm-4">
+                        <label for="dateInit" class="fontsemibold neutral-500">Fecha de creación</label>
+                        <input type="text" class="form-control" id="toDate" name="toDate" [(ngModel)]="toDate" disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <!-- IZQUIERDA -->
+    <div class="col-md-7">
+        <div class="card p-3 mb-3" style="height: 96%;">
+            <!--HEADER-->
+            <div class="my-header">
+                <ul class="list-group header no-padding">
+                    <li class="d-flex justify-content-between align-items-center dark">
+                        <h6 class="taylorfontbold dark">Movimientos de la cuenta {{exportDetailAccount.numberAccount}}
+                        </h6>
+                        <span class="bagde">
+                            <button (click)="movimientosCuentas()" *ngIf="!mostrarGrafica" type="button" class="btn btn-primary-new text-white">
+                                <span nz-icon nzType="download" nzTheme="outline" ></span>
+                            </button>
+                            <button (click)="mostrarGrafica = false" *ngIf="mostrarGrafica" type="button" class="btn btn-primary-new text-white">
+                                <span nz-icon nzType="table" nzTheme="outline"></span>
+                            </button>
+                            <button type="button" class="btn btn-secundary-new mx-sm-2 text-white">
+                                <span nz-icon nzType="search" nzTheme="outline"></span>
+                                <input type="text" class="input-search" placeholder="Buscar" [(ngModel)]="filterValue"
+                                    (ngModelChange)="search()" />
+                            </button>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            <ng-container *ngIf="!mostrarGrafica">
+                <ng-container
+                    *ngIf="dataTableStatementAccount && dataTableStatementAccount.length > 0; then withData; else notData">
+                </ng-container>
+
+                <!-- Tabla -->
+                <ng-template #withData>
+                    <div class="my-responsive-table mt-3" id="contentPrint">
+                        <nz-table #tablaRegist [nzData]="dataTableStatementCopy" [nzFrontPagination]="false"
+                            [nzShowPagination]="false" [nzPageSize]="5" [nzScroll]="{y: '320px', x: '600px' }">
+                            <thead>
+                                <tr>
+                                    <th [nzWidth]="'140px'" (click)="orderColumn('id')">Transacciones</th>
+                                    <th [nzWidth]="'130px'" (click)="orderColumn('date')">Fecha de transacción</th>
+                                    <th [nzWidth]="'150px'" (click)="orderColumn('lugar')">Lugar</th>
+                                    <th [nzWidth]="'180px'" (click)="orderColumn('transferdescription')">Descripción
+                                    </th>
+                                    <th [nzWidth]="'130px'" (click)="orderColumn('trasferid')">Referencia</th>
+                                    <th [nzWidth]="'130px'" (click)="orderColumn('amount')">Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of tablaRegist.data" class="data-table-fonts">
+                                    <td>{{
+                                        data.id == '1' ? 'Depósito' :
+                                        data.id == '2' ? 'Retirada/Pasajes' :
+                                        data.id == '3' ? 'Retener cantidad' : data.transactionType.id
+                                        }}
+                                    </td>
+                                    <td>{{ data.date ? data.date : 'N/A' }}</td>
+                                    <td>{{ data.lugar != '-' ? data.lugar : 'N/A' }}</td>
+                                    <td style="text-align: left !important;">{{ data.transferdescription ? data.transferdescription : 'N/A' }}</td>
+                                    <td>{{ data.trasferid ? data.trasferid : 'N/A' }}</td>
+                                    <td>{{ data.amount ? (data.amount | currency) : 'N/A' }}</td>
+                                </tr>
+                            </tbody>
+                        </nz-table>
+                    </div>
+                </ng-template>
+
+                <ng-template #notData>
+                    <div nz-col [nzSpan]="24" class="mt-5" style="text-align: -webkit-center;">
+                        <div nz-col>
+
+                            <img draggable="false" style="margin: 40px 0px 20px 0px;"
+                                src="../../../../../assets/icon/info_icon.svg" alt="icono-buscar">
+
+                            <div nz-col>
+                                <h5 class="title-form" style="place-content: center !important;">
+                                    No hay datos para mostrar
+                                </h5>
+                                <h5 class="title-secundary" style="margin-top: 0px;">
+                                    No existen movimientos de la cuenta.
+                                </h5>
+                            </div>
+
+                        </div>
+                    </div>
+                </ng-template>
+            </ng-container>
+            <ng-container *ngIf="mostrarGrafica">
+                <div class="my-responsive-table mt-3" id="contentPrint">
+                    <apx-chart [series]="chartOptions.series!" [chart]="chartOptions.chart!" [dataLabels]="chartOptions.dataLabels!"
+                    [plotOptions]="chartOptions.plotOptions!" [yaxis]="chartOptions.yaxis!" [xaxis]="chartOptions.xaxis!"
+                    [legend]="chartOptions.legend!" [colors]="chartOptions.colors!" [grid]="chartOptions.grid!"
+                    [title]="chartOptions.title!"></apx-chart>
+                </div>
+            </ng-container>
+        </div>
+
+    </div>
+    <!-- DERECHA -->
+    <div class="col-md-5">
+        <!-- CARD 1 -->
+        <div class="card bg-green">
+            <div class="p-3">
+                <div class="d-flex justify-content-between">
+                    <h6>Saldo de la cuenta</h6>
+                    <h2 class="taylorfontbold font-green">
+                        {{passengerAccount.summary.accountBalance | currency}}
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <!-- CARD 2 -->
+        <div class="card mt-3 mb-3" style="height: 20em;">
+            <div class="p-3">
+                <h6 class="taylorfontbold dark">Histórico estado de la cuenta</h6>
+                <!-- Tabla -->
+                <div class="my-responsive-table historic-data mt-3" id="contentPrint">
+                    <nz-table #tablaHistorico [nzData]="dataTableHistoricalState" [nzFrontPagination]="false"
+                        [nzShowPagination]="false" [nzPageSize]="5" [nzScroll]="{y: '150px' }">
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of tablaHistorico.data" class="data-table-fonts">
+                                <td>{{ data.nameState }}</td>
+                                <td>{{ data.dateCreation | date:'dd/MM/yyyy'}}</td>
+                            </tr>
+                        </tbody>
+                    </nz-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<nz-modal [(nzVisible)]="modalChangeState" (nzOnCancel)="modalChangeState = !modalChangeState">
+    <div class="row-md" *nzModalContent>
+        <!-- TITLE -->
+        <div class="col-sm-12 ps-2">
+            <h5 class="modal-title fs-5 mt-4" style="color: #415364">Cambiar estado de la cuenta</h5>
+        </div>
+        <!-- BODY -->
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <label for="motivo" class="fontsemibold neutral-500">Motivo</label>
+                    <select name="motive" id="motive" class="form-control" [(ngModel)]="stateAccountForm.motiveId">
+                        <option disabled value="undefined">Seleccione un motivo</option>
+                        <option *ngFor="let motive of motivos" value="{{motive.id}}">{{motive.description}}</option>
+                    </select>
+                </div>
+                <div class="col-md-12 form-group">
+                    <label for="comment" class="fontsemibold neutral-500">Comentario</label>
+                    <textarea class="form-control" id="comment" name="comment" rows="3"
+                        placeholder="Ingrese un comentario" [(ngModel)]="stateAccountForm.description"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *nzModalFooter class="p-0">
+        <div class="row-md">
+            <div class="col-sm-12 d-flex justify-content-center mb-3">
+                <button nz-button class="button-black me-1" [nzType]="'primary'" (click)="closeModalChange()">
+                    cancelar
+                </button>
+                <button nz-button class="button-green mx-1" [nzType]="'primary'" (click)="changeStateAccount()">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</nz-modal>

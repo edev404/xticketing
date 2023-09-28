@@ -1,0 +1,107 @@
+<div nz-row class="second-password-card">
+  
+  <nz-card nz-col [nzXs]="24" [nzSm]="20" [nzMd]="16" [nzLg]="10"
+    style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px;">
+
+    <h2 class="title-secundary">Contraseña</h2>
+
+    <h1 class="subtitle-secundary">Digite su segunda clave para acceder al módulo.</h1>
+
+    <form nz-form [formGroup]="form">
+
+      <nz-form-item>
+        <nz-form-control [nzErrorTip]="errores">
+          <nz-input-group [nzSuffix]="suffixTemplate" nzPrefixIcon="lock" class="type-control">
+            <input [type]="passwordVisible ? 'text' : 'password'" nz-input formControlName="password"
+              placeholder="Ingrese su contraseña" />
+            <ng-template #errores let-control>
+              <ng-container *ngIf="control.hasError('required')">¡Por favor ingresar su contraseña!</ng-container>
+              <ng-container *ngIf="control.hasError('minlength')">¡Debe ingresar más de 5 carácteres!</ng-container>
+            </ng-template>
+          </nz-input-group>
+          <ng-template #suffixTemplate>
+            <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+              (click)="passwordVisible = !passwordVisible"></i>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <div>
+        <button nz-button class="button-black mx-2" nzType="primary" form="notForm" (click)="cancel()">
+          Cancelar
+        </button>
+        <button nz-button class="button-green" nzType="primary" (click)="submit()">
+          Aceptar
+        </button>
+      </div>
+
+    </form>
+
+  </nz-card>
+
+</div>
+<!-- modal -->
+<nz-modal [(nzVisible)]="isVisible" (nzOnCancel)="isVisible = !isVisible">
+  <div class="row-md" *nzModalContent>
+    <!-- titel -->
+    <div class="col-sm-12 ps-2">
+      <h1 class="modal-title fs-5 mt-4">{{isRestore?'Restaurar segunda contraseña':'Crear segunda contraseña'}}</h1>
+      <div class="my-3 text-md">
+        {{isRestore?msgRestore:msgCreate}}
+      </div>
+    </div>
+    <!-- form -->
+    <div class="col-sm-12 d-flex justify-content-center">
+      <form nz-form [formGroup]="passwordForm" class="login-form row">
+          <!-- Contraseña actual -->
+          <div class="col-sm-12">
+            <label style="color: #80888e;">Contraseña actual</label>
+            <nz-form-item>
+              <nz-form-control [nzErrorTip]="errorTip1">
+                <nz-input-group nzPrefixIcon="lock" class="type-control">
+                  <input type="password" (keypress)="error()" nz-input formControlName="passwordActual" placeholder="Ingrese su contraseña actual" />
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <!-- Nueva contraseña -->
+          <div class="col-sm-6">
+            <label style="color: #80888e;">Nueva contraseña</label>
+            <nz-form-item>
+              <nz-form-control [nzErrorTip]="errorTip2">
+                <nz-input-group nzPrefixIcon="lock" class="type-control">
+                  <input type="password" (keypress)="error()" nz-input formControlName="password" placeholder="Ingrese nueva contraseña" />
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <!-- Confirmar nueva contraseña -->
+          <div class="col-sm-6">
+            <label style="color: #80888e;">Confirmar nueva contraseña</label>
+            <nz-form-item>
+              <nz-form-control [nzErrorTip]="errorTip3">
+                <nz-input-group nzPrefixIcon="lock" class="type-control">
+                  <input type="password" (keypress)="error()" nz-input formControlName="passwordconfirmar" placeholder="¡Ingrese nueva contraseña!" />
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </form>
+    </div>
+  </div>
+  <div *nzModalFooter class="p-0">
+    <div class="row-md">
+      <div class="col-sm-12 d-flex justify-content-center mb-3">
+        <button nz-button (click)="cancelPassword()" class="button-black me-1" [nzType]="'primary'" data-bs-dismiss="modal" aria-label="Close">
+          Cancelar
+        </button>
+        <button *ngIf="!isRestore" nz-button class="button-green mx-1" [nzType]="'primary'" (click)="createSecondPassword()">
+          Crear
+        </button> 
+        <button *ngIf="isRestore" nz-button class="button-green mx-1" [nzType]="'primary'" (click)="restoreSecondPassword()">
+          Restaurar
+        </button>             
+    </div>
+    </div>
+  </div>
+</nz-modal>

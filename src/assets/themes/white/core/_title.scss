@@ -1,0 +1,46 @@
+.title-home {
+  font-family: 'Taylor Sans';
+  font-style: italic;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 22px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.01em;
+  color: #415364;
+}
+
+.title-secundary {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 22px;
+  color: #798CA5;
+  
+}
+
+.home-title-page {
+  position: static;
+  width: 100%;
+  height: 40px;
+  left: 0px;
+  top: 0px;
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+  margin: 5px 0px;
+}
+
+.title-card{
+  font-family: 'Taylor Sans';
+  text-transform: capitalize;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  align-items: center;
+  letter-spacing: -0.01em;
+  color: #364456;
+}

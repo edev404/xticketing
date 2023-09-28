@@ -1,0 +1,216 @@
+<div class="p-3" style="border: 1px solid #E9EEFA; border-radius: 8px; margin: 20px 0px; ">
+    <div class="home-title-page mb-2" style="display: flex; justify-content: space-between; ">
+        <h1 class="title-home">General</h1>
+        <div>
+            <button nz-button class="login-form-button login-form-margin button-green" [nzType]="'primary'"
+                (click)="saveData()">Guardar
+            </button>
+        </div>
+    </div>
+    <nz-divider style="margin: 0px 0 !important;"></nz-divider>
+    <h2 class="text-sm my-3 title-secundary">Digite los siguientes campos</h2>
+    <!-- CONFIG -->
+    <nz-card nzHoverable class="mt-2" style="border-radius: 8px; border: 1px solid #CBD7E5; height: auto;">
+        <div class="row">
+            <p class="col-lg-4 col-sm-6 text-sm title-home">Config:</p>
+        </div>
+        <div class="row mt-2">
+            <div class="col-sm-4 row">
+                <label class="col-sm-12">Transbordos permitidos por ruta</label>
+                <div class="col-sm">
+                    <input type="number" name="numberTransferAllowed" class="form-control input-field"
+                        [ngClass]="{'invalidInput': numberTransferAllowed.touched && !numberTransferAllowed.valid}"
+                        [(ngModel)]="generalForm.transferNumber" placeholder="Número de transbordos"
+                        #numberTransferAllowed="ngModel" pattern="[0-9]{1,200}" required />
+                </div>
+            </div>
+            <!-- Limite datos a mostrar -->
+            <div class="col-sm-4 row">
+                <label class="col-sm-12">Limite datos a mostrar</label>
+                <div class="form-group col-sm">
+                    <input type="number" name="limitDataToDisplay" class="form-control input-field"
+                        placeholder="Ingrese un valor" [(ngModel)]="generalForm.limitDataToDisplay"
+                        #limitDataToDisplay="ngModel" required pattern="[0-9]{1,200}" />
+                </div>
+                <div class="form-group col-sm">
+                    <input type="text" name="maxInactivityTime" class="form-control input-field disable-input"
+                        value="Registros" disabled pattern="[0-9]{1,200}" />
+                </div>
+            </div>
+            <!-- Tiempo limite de sesión -->
+            <div class="col-sm-4 row">
+                <label class="col-sm-12">Tiempo limite de sesión</label>
+                <div class="form-group col-sm">
+                    <input type="number" name="limitTimeSession" class="form-control input-field"
+                        placeholder="Ingrese un valor" [(ngModel)]="generalForm.limitTimeSession"
+                        #limitTimeSession="ngModel" required min="1" pattern="^[0-9]+" />
+                </div>
+                <div class="form-group col-sm">
+                    <input type="text" name="maxInactivityTime" class="form-control input-field disable-input"
+                        value="Minutos" disabled pattern="[0-9]{1,200}" />
+                </div>
+            </div>
+        </div>
+    </nz-card>
+    <!-- LISTA NEGRA Y BLANCAS -->
+    <nz-card nzHoverable class="mt-2" style="border-radius: 8px; border: 1px solid #CBD7E5; height: auto;">
+        <div class="row">
+            <!-- listas negras -->
+            <div class="col-sm-6 row pe-5">
+                <p class="col-lg-12 col-sm-12 text-sm title-home">Listas:</p>
+                <!-- Tiempo máximo de inactividad -->
+                <!-- <div class="form-group col-sm-6">
+                    <label>Tiempo máximo de inactividad</label>
+                    <input type="number" name="maxInactivityTime" class="form-control input-field"
+                        placeholder="Ingrese un valor"
+                        [ngClass]="{'invalidInput': maxInactivityTime.touched && !maxInactivityTime.valid}"
+                        [(ngModel)]="generalForm.inactivityTime" #maxInactivityTime="ngModel" required
+                        pattern="[0-9]{1,200}" />
+                </div> -->
+                <!-- unidad -->
+                <!-- <div class="form-group col-sm-6">
+                    <label>Unidad</label>
+                    <select class="form-control" [(ngModel)]="generalForm.inactivityTimeUnity" #selectUnity="ngModel"
+                        required name="selectUnity">
+                        <option *ngFor="let time of timeUnity" [value]="time.value">
+                            {{time.key}}
+                        </option>
+                    </select>
+                </div> -->
+                <div class="form-group col-sm-12">
+                    <label>Tiempo actualización listas en segundos</label>
+                    <div>
+                        <input type="number" name="maxInactivityTime" class="form-control input-field"
+                            placeholder="Ingrese un valor"
+                            [ngClass]="{'invalidInput': maxInactivityTime.touched && !maxInactivityTime.valid}"
+                            [(ngModel)]="generalForm.tiempo_listas" #maxInactivityTime="ngModel" required
+                            pattern="[0-9]{1,200}" />
+
+                        <!-- <select class="form-control" name="selectUnityClave" required>
+                            <option disabled value="undefined">Seleccionar unidad</option>
+                            <option *ngFor="let time of timeUnity" value="{{time.value}}">{{time.key}}</option>
+                        </select> -->
+                    </div>
+
+                </div>
+            </div>
+            <!-- listas blancas -->
+            <div class="col-sm-4 row">
+                <p class="col-lg-12 col-sm-12 text-sm title-home mt-2"></p>
+                <!-- Saldo minimo -->
+                <div class="col-sm-12 row mb-2">
+                    <label class="col-sm-12">Saldo minimo listas blancas</label>
+                    <div class="form-group col-sm-6">
+                        <input type="number" name="maxBalance" class="form-control input-field"
+                            placeholder="Ingrese un valor"
+                            [ngClass]="{'invalidInput': maxBalance.touched && !maxBalance.valid}"
+                            [(ngModel)]="generalForm.minimunBalance" #maxBalance="ngModel" required
+                            pattern="[0-9]{1,200}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nz-card>
+    <div style="display: flex; gap: 12px;">
+        <nz-card nzHoverable class="mt-2"
+            style="border-radius: 8px; border: 1px solid #CBD7E5; height: auto; width: 50%;">
+            <div class="row">
+                <!-- listas negras -->
+                <div class="col-sm-6 row">
+                    <p class="text-sm title-home mt-2">Validador:</p>
+                    <!-- Tiempo máximo de inactividad -->
+                    <div class="form-group col-sm-12">
+                        <label>Timeout validador</label>
+                        <input type="number" name="maxInactivityTime" class="form-control input-field"
+                            placeholder="Ingrese un valor"
+                            [ngClass]="{'invalidInput': maxInactivityTime.touched && !maxInactivityTime.valid}"
+                            [(ngModel)]="generalForm.espera_validador" #maxInactivityTime="ngModel" required
+                            pattern="[0-9]{1,200}" />
+                    </div>
+                </div>
+            </div>
+        </nz-card>
+        <nz-card nzHoverable class="mt-2"
+            style="border-radius: 8px; border: 1px solid #CBD7E5; height: auto; width: 50%;">
+            <div class="row">
+                <!-- listas negras -->
+                <div class="col-sm-4">
+                    <p class="text-sm title-home mt-2">Permite crédito:</p>
+                    <div>
+                        <div class="form-check form-switch form-switch-md">
+                            <input class="form-check-input" type="checkbox" [checked]="generalForm.allowsCredit"
+                                [(ngModel)]="generalForm.allowsCredit" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <p class="text-sm title-home mt-2">Valor de la tarjeta:</p>
+                    <div>
+                        <div class="form-check form-switch form-switch-md">
+                            <input type="number" name="maxInactivityTime" class="form-control input-field"
+                            placeholder="Ingrese un valor"
+                            [ngClass]="{'invalidInput': maxInactivityTime.touched && !maxInactivityTime.valid}"
+                            [(ngModel)]="generalForm.valor_tarjeta" #maxInactivityTime="ngModel" required
+                            pattern="[0-9]{1,200}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nz-card>
+    </div>
+    <!-- RECAUDO -->
+    <!-- <nz-card nzHoverable class="mt-2" style="border-radius: 8px; border: 1px solid #CBD7E5; height: auto;">
+        <div class="row">
+            <p class="col-lg-4 col-sm-6 text-sm title-home">Recaudo:</p>
+        </div>
+        <div class="row mt-1">
+            Conductor va a caja
+            <div class="col-sm-4 row">
+                <label class="col-sm-12 mt-1">Conductor va a caja</label>
+                <div class="form-group col-sm">
+                    <select name="driverGoesToCheckout" class="form-control input-field"
+                        [(ngModel)]="generalForm.collectTypeId" #driverGoesToCheckout="ngModel" required>
+                        <option *ngFor="let row of collectTypesList" value={{row.id}}>{{row.name}}</option>
+                    </select>
+                    <span
+                        *ngIf="driverGoesToCheckout.touched && !driverGoesToCheckout.valid && driverGoesToCheckout.value == null"
+                        class="messagewarning">
+                        Valor inválido
+                    </span>
+                </div>
+            </div>
+            Total de pasajeros
+            <div class="col-sm-4 row">
+                <label class="col-sm-12 mt-1">Total de pasajeros</label>
+                <div class="form-group col-sm">
+                    <select name="totalpassengers" class="form-control input-field"
+                        [(ngModel)]="generalForm.collectPassengersCantId" #totalpassengers="ngModel" required>
+                        <option *ngFor="let row of collectPassengersCantList" value={{row.id}}>{{row.name}}</option>
+                    </select>
+                    <span *ngIf="totalpassengers.touched && !totalpassengers.valid && totalpassengers.value == null"
+                        class="messagewarning">
+                        Valor inválido
+                    </span>
+                </div>
+            </div>
+            Saldo minimo
+            <div class="col-sm-4 row">
+                <label class="col-sm-12 mt-1">Saldo minimo</label>
+                <div class="form-group col-sm">
+                    <input type="number" name="maxBalance" class="form-control input-field"
+                        placeholder="Ingrese un valor"
+                        [ngClass]="{'invalidInput': maxBalance.touched && !maxBalance.valid}"
+                        [(ngModel)]="generalForm.minimunBalance" #maxBalance="ngModel" required pattern="[0-9]{1,200}">
+                    <span *ngIf="maxBalance.touched && !maxBalance.valid" class="messagewarning">
+                        !Ingrese un saldo minimo¡
+                    </span>
+                </div>
+                <div class="form-group col-sm">
+                    <input type="text" name="maxInactivityTime" class="form-control input-field disable-input"
+                        value="Pesos" disabled pattern="[0-9]{1,200}">
+                </div>
+            </div>
+        </div>
+    </nz-card> -->
+</div>

@@ -1,0 +1,90 @@
+<div class="home-title-page mb-4" style="display: flex; justify-content: space-between; ">
+  <h1 class="title-home">{{isEdit?'Editar Tipo de Actor':'Crear Tipo de Actor'}}</h1>
+  <div>
+    <button nz-button class=" button-black mx-2" [nzType]="'primary'" (click)="cancelCompany()">
+      Cancelar
+    </button>
+    <button *ngIf="!isEdit" nz-button class="button-green mx-2" [nzType]="'primary'"
+      (click)="saveData()">
+      Guardar
+    </button>
+    <button *ngIf="isEdit" nz-button class="button-green mx-2" [nzType]="'primary'"
+      (click)="saveData()">
+      Editar
+    </button>
+  </div>
+</div>
+<nz-divider style="margin: 0px 0 !important;"></nz-divider>
+<div class="row my-3">
+  <!-- CODIGO -->
+  <div class="col-sm">
+    <label for="codeLabel" class="col-sm-12">C&oacute;digo</label>
+    <input type="text" class="form-control input-field" id="codeLabel" required name="codeLabel"
+      placeholder="Ingrese un C&oacute;digo" [(ngModel)]="typeActor.code" #code="ngModel"
+      [ngClass]="{'not-valid-input':code.touched && code.invalid,'disable-input':typeActor.id != undefined}" 
+      [pattern]="'^[.]?[0-9]+[.]?[0-9]*$'">
+    <span *ngIf="code.touched && code.invalid" class="messagewarning">
+      !Por favor ingrese un código¡
+    </span>
+  </div>
+  <!-- NOMBRE RESPONSABLE -->
+  <div class="col-sm">
+    <label for="ownerName" class="col-sm-12">Nombre responsable</label>
+    <input type="text" class="form-control input-field" id="ownerName" required name="ownerName"
+      placeholder="Ingrese el nombre del responsable" [(ngModel)]="typeActor.responsableName" #ownerName="ngModel"
+      [ngClass]="{'not-valid-input':ownerName.touched && ownerName.invalid}">
+    <span *ngIf="ownerName.touched && ownerName.invalid" class="messagewarning">
+      !Por favor ingrese un nombre de responsable¡
+    </span>
+  </div>
+  <!-- CONTACTO RESPONSABLE -->
+  <div class="col-sm">
+    <label for="ownerContact" class="col-sm-12">Contacto responsable</label>
+    <input type="text" class="form-control input-field" id="ownerContact" required name="ownerContact"
+      mask="(000) 000-00-00" prefix="+57" placeholder="Ingrese un número de contacto" [(ngModel)]="typeActor.responsableCellphone"
+      #ownerContact="ngModel" [ngClass]="{'not-valid-input':ownerContact.touched && ownerContact.invalid}">
+    <span *ngIf="ownerContact.touched && ownerContact.invalid" class="messagewarning">
+      !Por favor ingrese un número de teléfono válido¡
+    </span>
+  </div>
+</div>
+
+<div class="row my-1">
+  <!-- NOMBRE -->
+  <div class="col-sm">
+    <label for="nameLabel" class="col-sm-12">Nombre</label>
+    <input type="text" class="form-control input-field col-sm-12" id="nameLabel" required name="nameLabel"
+      placeholder="Ingrese un nombre" [(ngModel)]="typeActor.name" #name="ngModel"
+      [ngClass]="{'not-valid-input':name.touched && name.invalid}">
+    <span *ngIf="name.touched && name.invalid" class="messagewarning">
+      !Por favor ingrese un nombre¡
+    </span>
+  </div>
+  <!-- CORREO ELECTRONICO -->
+  <div class="col-sm">
+    <label for="ownerMail" class="col-sm-12">Correo electrónico</label>
+    <input type="email" class="form-control input-field col-sm-12" id="ownerMail" required name="ownerMail"
+      pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="Ingrese un correo electrónico"
+      [(ngModel)]="typeActor.responsableEmail" #ownerMail="ngModel"
+      [ngClass]="{'not-valid-input':ownerMail.touched && ownerMail.invalid}" (ngModelChange)="emailLowerCase()">
+    <span *ngIf="ownerMail.touched && ownerMail.invalid" class="messagewarning">
+      !Por favor ingresen un correo electrónico válido!
+    </span>
+  </div>
+  <div class="col-sm">
+    <label>Tipo de empresa</label>
+    <nz-form-control>
+      <nz-select [(ngModel)]="typeActor.typeCompanyId" nzPlaceHolder="Seleccione un tipo de empresa" id="typeCompanies">
+        <nz-option [nzValue]="undefined" [nzLabel]="'Seleccione un tipo de empresa'"></nz-option>
+        <nz-option *ngFor="let item of typeCompanies" [nzValue]="item.id" [nzLabel]="item.description"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </div>
+  <!-- EMAIL -->
+  <div class="col-sm">
+    <label for="ownerMail" class="col-sm-5 col-form-label"></label>
+    <div class="col-sm">
+      <input type="email" hidden>
+    </div>
+  </div>
+</div>

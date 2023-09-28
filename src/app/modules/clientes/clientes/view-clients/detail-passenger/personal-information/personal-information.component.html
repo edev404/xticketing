@@ -1,0 +1,246 @@
+<div class="card">
+    <div class="p-4">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- SECTION 1 -->
+                <div class="row">
+                    <!-- COD CLIENTE -->
+                    <div class="form-group col-sm-4">
+                        <label for="name" class="fontsemibold neutral-500">Código de cliente</label>
+                        <input type="text" class="form-control" id="identificationNumber" name="identificationNumber"
+                            [(ngModel)]="passenger.id" disabled>
+                    </div>
+                    <!-- EMPRESA -->
+                    <div class="form-group col-sm-4" *ngIf="false">
+                        <label for="name" class="fontsemibold neutral-500">Empresa</label>
+                        <select name="company" id="company" class="form-control" [(ngModel)]="passenger.idCompany"
+                            disabled>
+                            <option value="{{item.id}}" *ngFor="let item of comboCompanies">
+                                {{item.name}}
+                            </option>
+                        </select>
+                    </div>
+                    <!-- PERFIL DE LA CUENTA -->
+                    <div class="form-group col-sm-4">
+                        <label for="name" class="fontsemibold neutral-500">Perfil de la cuenta</label>
+                        <select name="account" id="account" class="form-control" [(ngModel)]="passenger.accountProfile"
+                            disabled>
+                            <option value="{{item.id}}" *ngFor="let item of profileCombo">
+                                {{item.name}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <div class="row">
+                            <!-- TIPO -->
+                            <div class="form-group col-sm-7">
+                                <label for="nitType" class="fontsemibold neutral-500">Tipo</label>
+                                <select name="nitType" id="nitType" class="form-control"
+                                    [(ngModel)]="passenger.identificationType" disabled>
+                                    <option value="{{item.name}}" *ngFor="let item of comboNit">
+                                        {{item.name}}
+                                    </option>
+                                </select>
+                            </div>
+                            <!-- DOCUMENTO -->
+                            <div class="form-group col-sm-5">
+                                <label for="identificationNumber" class="fontsemibold neutral-500">Documento</label>
+                                <input type="text" class="form-control" id="identificationNumber"
+                                    name="identificationNumber" [(ngModel)]="passenger.identification" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- SECTION 2 -->
+                <div class="row mt-2">
+                    <!-- PRIMER NOMBRE -->
+                    <div class="form-group col-sm-3">
+                        <label for="name" class="fontsemibold neutral-500">Primer nombre</label>
+                        <input type="text" class="form-control" id="firtsname" name="firtsname"
+                            [(ngModel)]="passenger.firstName" disabled>
+                    </div>
+                    <!-- SEGUNDO NOMBRE -->
+                    <div class="form-group col-sm-3">
+                        <label for="name" class="fontsemibold neutral-500">Segundo nombre</label>
+                        <input type="text" class="form-control" id="secondName" name="secondName"
+                            [(ngModel)]="passenger.secondName" disabled>
+                    </div>
+                    <!-- PRIMER APELLIDO -->
+                    <div class="form-group col-sm-3">
+                        <label for="lastName" class="fontsemibold neutral-500">Primer apellido</label>
+                        <input type="text" class="form-control" id="lastName" name="lastName"
+                            [(ngModel)]="passenger.lastName" disabled>
+                    </div>
+                    <!-- SEGUNDO APELLIDO -->
+                    <div class="form-group col-sm-3">
+                        <label for="secondLastName" class="fontsemibold neutral-500">Segundo apellido</label>
+                        <input type="text" class="form-control" id="secondLastName" name="secondLastName"
+                            [(ngModel)]="passenger.secondLastName" disabled>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="p-4">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="mb-3">
+                    <p class="col-form-label my-title-form">Información de contacto</p>
+                </div>
+                <!-- SECTION 1 -->
+                <div class="row">
+                    <!-- CORREO ELECTRONICO -->
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="mail" class="fontsemibold neutral-500">Correo electrónico</label>
+                            <input type="email" [(ngModel)]="passenger.email" class="form-control" name="mail" disabled>
+                        </div>
+                    </div>
+                    <!-- CELULAR -->
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="cellPhone" class="fontsemibold neutral-500">Celular</label>
+                            <input type="text" [(ngModel)]="passenger.cellPhone" class="form-control" name="cellPhone"
+                                disabled>
+                        </div>
+                    </div>
+                    <!-- PROFESION -->
+                    <div class="col-sm-4 form-group">
+                        <label for="profession" class="fontsemibold neutral-500">Profesión</label>
+                        <input type="text" class="form-control" id="profession" name="profession"
+                            [(ngModel)]="passenger.occupation" disabled>
+                    </div>
+                </div>
+                <!-- SECTION 2 -->
+                <div class="row">
+                    <!-- FEHCA DE NACIEMNTO -->
+                    <div class="form-group col-sm-4">
+                        <label for="born" class="fontsemibold neutral-500">Fecha de nacimiento</label>
+                        <input type="date" [(ngModel)]="passenger.bornDate" class="form-control" name="born" disabled>
+                    </div>
+                    <!-- ESTADO CIVIL -->
+                    <div class="col-sm-4 form-group">
+                        <label for="civilStatus" class="fontsemibold neutral-500">Estado civil</label>
+                        <select id="civilStatus" name="civilStatus" class="form-control"
+                            [(ngModel)]="passenger.maritalStateId" disabled>
+                            <option [value]="state.id" *ngFor="let state of maritalStatesCombo">
+                                {{state.name}}
+                            </option>
+                        </select>
+                    </div>
+                    <!-- GENERO -->
+                    <div class="form-group col-sm-4">
+                        <label class="fontsemibold neutral-500">Género</label>
+                        <select name="account" id="account" class="form-control" [(ngModel)]="passenger.genderId"
+                            disabled>
+                            <option value="{{item.id}}" *ngFor="let item of genderChecks">
+                                {{item.name}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-3 mb-3">
+    <div class="p-4">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="mb-3">
+                    <p class="col-form-label my-title-form">Información de residencia</p>
+                </div>
+                <!-- DIRECCION DE RESIDENCIA -->
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <label for="address" class="fontsemibold neutral-500">Dirección de residencia</label>
+                        <input class="form-control" type="text" [(ngModel)]="passenger.address" name="address" disabled>
+                    </div>
+                </div>
+                <!-- LUGAR DE RESIDENCIA -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="fontsemibold neutral-500">Lugar de residencia</label>
+                        <div class="row">
+                            <!-- PAIS -->
+                            <div class="col-sm-4 form-group">
+                                <select name="countryResidenceLocation" id="countryResidenceLocation"
+                                    class="form-control" #countryResidenceLocation="ngModel"
+                                    [(ngModel)]="passenger.residenceLocation!.country.id" disabled>
+                                    <option *ngFor="let countries of countryCombo" [value]="countries.id"
+                                        [disabled]="countries.disabled">
+                                        {{countries.name}}
+                                    </option>
+                                </select>
+                            </div>
+                            <!-- DEPARTAMENTO -->
+                            <div class="col-sm-4 form-group ">
+                                <select name="departmentResidenceLocation" id="departmentResidenceLocation"
+                                    class="form-control" #departmentResidenceLocation="ngModel"
+                                    [(ngModel)]="passenger.residenceLocation!.department.id" disabled>
+                                    <option *ngFor="let deparment of departmentResidenceCombo" [value]="deparment.id">
+                                        {{deparment.name}}
+                                    </option>
+                                </select>
+                            </div>
+                            <!-- CIUDAD -->
+                            <div class="col-sm-4 form-group ">
+                                <select name="municipalityResidenceLocation" id="municipalityResidenceLocation"
+                                    class="form-control" #municipalityResidenceLocation="ngModel"
+                                    [(ngModel)]="passenger.residenceLocation!.city.id" disabled>
+                                    <option *ngFor="let city of cityResidenceCombo" [value]="city.id">
+                                        {{city.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- LUGAR DE NACIMENTO -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="fontsemibold neutral-500">Lugar de nacimiento</label>
+                        <div class="row ">
+                            <!-- PAIS -->
+                            <div class="col-sm-4 form-group ">
+                                <select name="countryBornLocation" id="countryBornLocation" class="form-control"
+                                    #countryBornLocation="ngModel" [(ngModel)]="passenger.bornLocation!.country.id"
+                                    disabled>
+                                    <option *ngFor="let countries of countryCombo" [value]="countries.id"
+                                        [disabled]="countries.disabled">
+                                        {{countries.name}}
+                                    </option>
+                                </select>
+                            </div>
+                            <!-- DEPARTAMENTO -->
+                            <div class="col-sm-4 form-group ">
+                                <select name="departmentBornLocation" id="departmentBornLocation" class="form-control"
+                                    #departmentBornLocation="ngModel"
+                                    [(ngModel)]="passenger.bornLocation!.department.id" disabled>
+                                    <option *ngFor="let deparment of departmentBornCombo" [value]="deparment.id">
+                                        {{deparment.name}}
+                                    </option>
+                                </select>
+                            </div>
+                            <!-- CIUDAD -->
+                            <div class="col-sm-4 form-group ">
+                                <select name="municipalityBornLocation" id="municipalityBornLocation"
+                                    class="form-control" #municipalityBornLocation="ngModel"
+                                    [(ngModel)]="passenger.bornLocation!.city.id" disabled>
+                                    <option *ngFor="let city of cityBornCombo" [value]="city.id">
+                                        {{city.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+<!-- BREADCRUMB -->
+<nz-breadcrumb style="margin-bottom: 20px;">
+    <nz-breadcrumb-item> 
+        <span class="title-modulo">
+            <i nz-icon nzType="setting" style="font-size: 25px; margin-bottom: 1px;"></i>
+        </span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item> 
+        <span class="title-modulo">Administración</span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+        <span class="title-submodulo">Usuarios</span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+        <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">{{titelBreadcrumb}}</span>
+    </nz-breadcrumb-item>
+</nz-breadcrumb>
+<!-- TABS -->
+<nz-tabset nzType="card">
+    <nz-tab *ngFor="let item of listTabs" [nzTitle]="item.name" (nzClick)="tabSelect(item)">
+        <ng-container [ngSwitch]="true">
+            <div *ngSwitchCase="tabSelecte === 'ACS'">
+                <app-services></app-services>
+            </div>
+            <div *ngSwitchCase="tabSelecte === 'ACCS'">
+                <app-characteristics-services></app-characteristics-services>
+            </div>
+          </ng-container>
+    </nz-tab>
+</nz-tabset>

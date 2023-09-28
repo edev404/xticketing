@@ -1,0 +1,90 @@
+.bg-green {
+    background-color: #F0FAF8;
+    border-color: #F0FAF8;
+}
+  
+.font-green {
+color: #009F7C;
+}
+
+.btn-primary-new {
+    font-family: 'TaylorSans-Regular', serif;
+    font-size: 14px !important;
+    background-color: #00AE8D !important;
+}
+  
+.btn-secundary-new {
+    font-family: 'TaylorSans-Regular', serif;
+    font-size: 14px !important;
+    background-color: #415364 !important;
+}
+
+// Boton buscar
+.input-search {
+    width: 0em;
+    background-color: #415364;
+    border: 0;
+    font-family: "TaylorSans-Bold";
+    letter-spacing: 0.5px;
+    color: #fff;
+    transition: all 0.6s ease;
+}
+
+.input-search:hover {
+    width: 5em !important;
+}
+
+.input-search:focus {
+    width: 7em !important;
+}
+
+.input-search::placeholder {
+    color: #fff;
+    opacity: 0.7;
+}
+
+.button-white{
+    background: #fff;
+    border-radius: 8px;
+    border-color: #00AE8D !important;
+    height: 40px;
+    font-family: 'Taylor Sans';
+    font-style: italic;
+    font-weight: 600;
+    font-size: 15px;
+    color: #00AE8D;
+}
+
+.modal-title{
+    font-family: 'Taylor Sans' !important;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 22px;
+    align-items: center;
+    letter-spacing: -0.01em;
+    color: #415364;
+  }
+  
+.text-md{
+    font-family: 'Taylor Sans' !important;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+input.form-control, select {
+    height: 46px;
+}
+
+::ng-deep .ant-modal-content{
+    border-radius: 8px;
+}
+
+
+input:disabled,
+select:disabled{
+    background: #E9EEFA;
+    color: #798CA5 !important;
+    border: 1px solid #BDC8D9 !important;
+    border-radius: 6px !important;
+}

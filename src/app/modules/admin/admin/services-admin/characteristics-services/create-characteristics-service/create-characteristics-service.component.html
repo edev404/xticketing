@@ -1,0 +1,124 @@
+<div class="custom-card p-3">
+    <div class="home-title-page mb-4" style="display: flex; justify-content: space-between; ">
+        <h1 class="title-home">{{isEdit?'Editar característica del servicio':'Crear característica del servicio'}}</h1>
+        <div>
+            <button nz-button class=" button-black mx-2" [nzType]="'primary'" (click)="cancelService()">
+                Cancelar
+            </button>
+            <button *ngIf="!isEdit" nz-button class="mx-2 button-green" [nzType]="'primary'"
+                form="CreateForm" (click)="saveService()">Guardar
+            </button>
+            <button *ngIf="isEdit" nz-button class="mx-2 button-green" [nzType]="'primary'"
+                form="CreateForm" (click)="editService()">Editar
+            </button>
+        </div>
+    </div>
+
+    <nz-divider style="margin: 0px 0 !important;"></nz-divider>
+    <!-- form code, nombre -->
+    <form nz-form [formGroup]="validateForm" id="CreateForm" style="margin: 10px 0px;">
+        <div class="row gx-3">
+            <!-- codigo -->
+            <div class="col-sm-6" *ngIf="isEdit">
+                <label class="label-title text-sm">Codigo</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24" nzErrorTip="Por favor ingrese el código!">
+                        <input id="code" class="rounded input-field" type="text" nz-input formControlName="code"
+                            placeholder="Ingrese el código" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <!-- nombre -->
+            <div class="col-sm-6">
+                <label class="label-title text-sm">Nombre</label>
+                <nz-form-item>
+                    <nz-form-control nz-col [nzSpan]="24" nzErrorTip="Por favor ingrese el nombre!">
+                        <input id="nombre" class="rounded input-field" type="text" nz-input formControlName="nombre"
+                            placeholder="Ingrese el nombre" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+    </form>
+    <!-- values characteristics -->
+    <div *ngIf="isEdit" class="frame-to-option p-2 rounded my-3">
+        <div class="row">
+            <p class="col-sm-12 text-sm title-secundary">Creación de valores de la característica</p>
+        </div>
+        <form nz-from [formGroup]="validateFormCharacteristics">
+            <div class="row">
+                <div class="col-sm-5">
+                    <label class="label-title text-sm">Código</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="24" nzErrorTip="Por favor ingrese el código!">
+                            <input id="code" class="rounded input-field" type="text" formControlName="code" nz-input placeholder="Ingrese el código" />
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div class="col-sm-5">
+                    <label class="label-title text-sm">Valor</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="24" nzErrorTip="Por favor ingrese el Valor!">
+                            <input id="value" class="rounded input-field" type="text" formControlName="valor" nz-input placeholder="Ingrese el valor" />
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <div class="col-sm-2 p-0 d-flex align-items-center">
+                    <button nz-button [nzType]="'primary'" (click)="saveCharacterics()" class="button-green" style="margin-top: 3px;">
+                        <i nz-icon nzType="plus" nzTheme="outline" class="align-middle pb-1"></i>
+                        Agregar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- tabla de characteristics -->
+    <ng-container *ngIf="listOfData2.length > 0; then data; else noData"></ng-container>
+    <ng-template #data>
+        <div class="custom-card">
+            <nz-table *ngIf="isEdit" #basicTable2 [nzData]="listOfData2" [nzPageSize]="5" [nzShowPagination]="false" [nzPageSize]="listOfData2.length" [nzScroll]="{ y: '311px'}">
+                <thead>
+                  <tr style="background: #F5F7FA;">
+                    <th nzWidth="150px"></th>
+                    <th>Codigo</th>
+                    <th>Valor</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of basicTable2.data">
+                    <td style="display: revert;">
+                      <div style="display: flex;">
+                        <div class="form-check form-switch form-switch-sm m-0 mt-1">
+                          <input class="form-check-input" type="checkbox" [checked]="data.status" (click)="changeStatus($event,data.id)">
+                        </div>
+                      </div>
+                    </td>
+                    <td>{{ data.code }}</td>
+                    <td>{{ data.value }}</td>
+                  </tr>
+                </tbody>
+            </nz-table>
+        </div>
+    </ng-template>
+
+    <ng-template #noData>
+        <div nz-row class="card-aling-center mb-4">
+          <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+            <div nz-col nzXs="24" nzSm="20" nzMd="14">
+
+              <img draggable="false" style="margin: 40px 0px 20px 0px;" src="../../../../../assets/icon/info_icon.svg" alt="icono-buscar">
+              <div nz-col nzSm="24" nzMd="18">
+                <h1 class="title-form" style="place-content: center !important;">
+                  No hay datos existentes
+                </h1>
+                <h1 class="title-secundary" style="margin-top: 0px;">
+                  No existen datos para visualizar en esta tabla.
+                </h1>
+              </div>
+            </div>
+          </div>
+        </div>
+    </ng-template>
+
+</div>

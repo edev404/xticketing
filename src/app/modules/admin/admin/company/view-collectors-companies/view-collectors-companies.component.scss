@@ -1,0 +1,7 @@
+@import url('../../../../../../assets/themes/white/white-theme.scss');
+::ng-deep .ant-modal-footer {
+    padding: 0px 0px !important;
+    text-align: right;
+    background: transparent;
+    border-top: none !important;
+}

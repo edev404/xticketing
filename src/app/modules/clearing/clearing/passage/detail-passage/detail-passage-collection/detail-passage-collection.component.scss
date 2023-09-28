@@ -1,0 +1,83 @@
+.text-md {
+    font-family: 'Taylor Sans' !important;
+    font-size: 24px;
+    line-height: 28px;
+    letter-spacing: -0.01em;
+}
+
+.text-xs {
+    font-family: 'Taylor Sans' !important;
+    font-size: 18px;
+    line-height: 22px;
+    letter-spacing: -0.01em;
+}
+
+.w-80{
+    width: 80% !important;
+}
+
+.w-20{
+    width: 20%;
+}
+
+.custom-card {
+    border: 1px solid #cbd7e5 !important;
+}
+
+.card-aling-center {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    height: 100%;
+}
+
+.module-title {
+    background-color: white;
+
+    font-family: 'Taylor Sans';
+    font-style: italic;
+    font-size: 14px;
+    line-height: 20px;
+    color: #009F7C;
+    padding: 9px 0px;
+}
+
+.module-title:focus {
+    color: #009F7C;
+}
+
+.text-green {
+    color: #009F7C;
+}
+
+.ft-ligth {
+    color: #AEBBCE;
+}
+
+.button-white {
+    border-color: #415364 !important;
+}
+
+.text-bg-danger {
+    background-color: #FEF2F2 !important;
+    padding: 2px 12px !important;
+
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 18px;
+    color: #EF4444 !important;
+}
+
+.text-bg-success {
+    background-color: #F0FAF8 !important;
+    padding: 2px 12px !important;
+
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 18px;
+    color: #00AE8D !important;
+}

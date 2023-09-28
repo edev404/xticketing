@@ -1,0 +1,232 @@
+<div class="home-title-page mb-4" style="display: flex; justify-content: space-between; ">
+    <h1 class="title-home">{{isSettlement ? 'Revisar / Registrar hallazgos':'Revisar hallazgos'}}</h1>
+    <div>
+        <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cancelConfig()">
+            Cancelar
+        </button>
+        <button nz-button class="button-green mx-2" [nzType]="'primary'" (click)="saveFinding()" *ngIf="isSettlement">
+            Guardar
+        </button>
+    </div>
+</div>
+<nz-divider style="margin: 0px 0 !important;"></nz-divider>
+<h2 class="text-sm my-3" *ngIf="isSettlement">Agrege los datos en los campos correspondientes para registrar el hallazgo
+</h2>
+<!-- FORMULARIO -->
+<form nz-form [formGroup]="validateForm" id="CreateForm" style="margin: 10px 0px;" class="row" *ngIf="isSettlement">
+    <div class="col-sm-12 row">
+        <!-- HALLAZGOS -->
+        <div class="col-sm-4">
+            <label class="label-title">Hallazgo</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24">
+                    <nz-select id="hallaszgo" nzPlaceHolder="Seleccione un hallaszgo" formControlName="hallasgos">
+                        <nz-option disabled [nzValue]="null" nzLabel="Seleccione un hallaszgo"></nz-option>
+                        <nz-option *ngFor="let find of findings" [nzLabel]="find.description"
+                            [nzValue]="find"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <!-- DESCRIPCION -->
+        <div class="col-sm-4">
+            <label class="label-title">Descripción</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese la descripción!">
+                    <input id="descripcion" type="text" nz-input placeholder="Ingrese una descripción"
+                        class="input-field" formControlName="descripcion" />
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <!-- RESPONSABLE -->
+        <div class="col-sm-4">
+            <label class="label-title">Responsable</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24">
+                    <nz-select id="responsable" nzPlaceHolder="Seleccione un responsable" formControlName="responsable">
+                        <nz-option disabled [nzValue]="null" nzLabel="Seleccione un responsable"></nz-option>
+                        <nz-option *ngFor="let user of userList" [nzLabel]="user.firstName+' '+user.lastName"
+                            [nzValue]="user"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+    </div>
+
+    <div class="col-sm-12 row">
+        <!-- SOLUCION PROPUESTA -->
+        <div class="col-sm-8">
+            <label class="label-title">Solución propuesta</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24">
+                    <textarea nz-input rows="1" formControlName="soluPropuesta"
+                        placeholder="Por favor ingrese su solución propuesta">
+                    </textarea>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <!-- FECHA ESTIMADA -->
+        <div class="col-sm-4">
+            <label class="label-title">Fecha estimada</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione una fecha estimada!">
+                    <nz-date-picker id="fechaEstimada" formControlName="fechaEstimada"
+                        nzPlaceHolder="Seleccione una fecha estimada">
+                    </nz-date-picker>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+    </div>
+
+    <div class="col-sm-12 row" *ngIf="showOtherInputs">
+        <!-- SOLUCION EJECUTADA -->
+        <div class="col-sm-8">
+            <label class="label-title">Solución ejecutada</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24">
+                    <textarea nz-input rows="5" placeholder="Por favor ingrese la solución ejecutada"
+                        style="height: 139px !important;" formControlName="soluEjecutada">
+                    </textarea>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <!-- FECHA / SOLUCIONADO POR -->
+        <div class="col-sm-4">
+            <!-- FECHA SOLUCION -->
+            <label class="label-title">Fecha solución</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="23" nzErrorTip="¡Por favor seleccione una fecha estimada!">
+                    <nz-date-picker id="born" formControlName="fechaSolucion"
+                        nzPlaceHolder="Seleccione una fecha estimada">
+                    </nz-date-picker>
+                </nz-form-control>
+            </nz-form-item>
+            <!-- SOLUCIONADO POR -->
+            <label class="label-title">Solucionado por</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24">
+                    <nz-select nzBorderless nzAutoFocus nzServerSearch id="solicionadoPor"
+                        nzPlaceHolder="Seleccione una persona" formControlName="solucionadoPor">
+                        <nz-option disabled [nzValue]="null" nzLabel="Seleccione una persona"></nz-option>
+                        <nz-option *ngFor="let user of userList" [nzLabel]="user.firstName+' '+user.lastName"
+                            [nzValue]="user"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+    </div>
+</form>
+<!-- TABLA  -->
+<div class="col-sm-12" style="border: 1px solid #E9EEFA; border-radius: 8px;">
+    <!-- FILTRO DE TABLA -->
+    <div style="display: flex; justify-content: space-between;margin: 0px 20px; margin-top: 20px;">
+        <form nz-form>
+            <nz-form-item>
+                <nz-form-control>
+                    <nz-input-group nzPrefixIcon="search" style="color: #798CA5;" class="type-control">
+                        <input nz-input name="search" type="search" id="search" placeholder="Buscar">
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </div>
+    <!-- TABLA -->
+    <ng-container *ngIf="listOfData.length > 0; then data; else noData"></ng-container>
+    <ng-template #data>
+        <nz-table #basicTable [nzData]="listOfData" [nzPageSize]="5" [nzFrontPagination]="false"
+            [nzScroll]="{ x: '1000px', y: '311px'}">
+            <thead>
+                <tr style="background: #F5F7FA;">
+                    <th nzWidth="100px"></th>
+                    <th nzWidth="100px">Hallaszgo</th>
+                    <th nzWidth="120px">Descripción</th>
+                    <th nzWidth="110px">Estado</th>
+                    <th nzWidth="250px">Solución propuesta</th>
+                    <th nzWidth="250px">Fecha estimada solución</th>
+                    <th nzWidth="150px">Responsable</th>
+                    <th nzWidth="200px">Solución ejecutada</th>
+                    <th nzWidth="150px">Fecha solución</th>
+                    <th nzWidth="160px">Solucionado por</th>
+                    <th nzWidth="130px">Creado por</th>
+                    <th nzWidth="150px">Fecha creación</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let data of basicTable.data | paginate : { id: 'table', itemsPerPage: numberRow, currentPage: page }">
+                    <td style="display: revert;">
+                        <div style="display: flex;">
+                            <img draggable="false" *ngIf="!data.solved" style="cursor: pointer;"
+                                src="../../../../../../assets/icon/fi_info.svg" class="mx-3" nz-tooltip="Solucionar"
+                                (click)="setCurrentFinding(data)">
+                            <img draggable="false" *ngIf="data.solved" style="cursor: pointer;"
+                                src="../../../../../../assets/icon/fi_check_green.svg" class="mx-3">
+                        </div>
+                    </td>
+                    <td>{{ data.type.description }}</td>
+                    <td>{{ data.description }}</td>
+                    <td>{{ !data.solved ? 'Pendiente': 'Solucionado' }}</td>
+                    <td>{{ data.proposalSolution }}</td>
+                    <td>{{ data.proposalDate | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ data.responsible.name }} {{ data.responsible.lastName }}</td>
+                    <td>{{ data.solved ? data.solution : '' }}</td>
+                    <td>{{ data.solved ? (data.solutionDate | date:'dd/MM/yyyy') : '' }}</td>
+                    <td>{{ data.solved ? data.solutioner.name : '' }} {{ data.solved ? data.solutioner.lastName : '' }}
+                    </td>
+                    <td>{{ this.data.creator.name}} {{this.data.creator.lastName}}</td>
+                    <td>{{ data.date |date:'dd/MM/yyyy'}}</td>
+                </tr>
+            </tbody>
+        </nz-table>
+        <!-- PAGINADO DE LA TABLA -->
+        <div class="row d-flex align-items-center" *ngIf="listOfData.length > 0">
+            <div class="col-sm-4 ps-4">
+                <nz-form-item nz-col nzSpan="24" class="d-sm-flex justify-content-sm-start">
+                    <div>
+                        <label class="label-title" style="margin-top: 7px;">Mostrando</label>
+                    </div>
+
+                    <div class="px-1">
+                        <nz-form-control>
+                            <nz-select class="select-pag" nzBorderless [(ngModel)]="numberRow"
+                                (ngModelChange)="onChangeRowPerPage($event)">
+                                <nz-option *ngFor="let item of tableSizes" [nzValue]="item"
+                                    [nzLabel]="item"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </div>
+
+                    <div>
+                        <label class="label-title" style="margin-top: 7px;">entradas</label>
+                    </div>
+                </nz-form-item>
+            </div>
+            <div class="col-sm d-flex justify-content-end pe-4">
+                <pagination-controls id="table" previousLabel="Anterior" nextLabel="Siguiente"
+                    (pageChange)="onChangePage($event)" (pageBoundsCorrection)="onChangePage($event)">
+                </pagination-controls>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #noData>
+        <div nz-row class="card-aling-center mb-4">
+            <div nz-col [nzSpan]="24" class="" style="text-align: -webkit-center;">
+                <div nz-col nzXs="24" nzSm="20" nzMd="14">
+
+                    <img draggable="false" style="margin: 40px 0px 20px 0px;"
+                        src="../../../../../assets/icon/info_icon.svg" alt="icono-buscar">
+                    <div nz-col nzSm="24" nzMd="18">
+                        <h1 class="title-form" style="place-content: center !important;">
+                            No hay datos existentes
+                        </h1>
+                        <h1 class="title-secundary" style="margin-top: 0px;">
+                            No existen datos para visualizar en esta tabla.
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+</div>

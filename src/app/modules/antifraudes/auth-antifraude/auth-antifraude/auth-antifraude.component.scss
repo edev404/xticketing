@@ -1,0 +1,102 @@
+:host ::ng-deep .ant-card-body {
+    padding: 53px 32px 61px 32px !important;
+}
+
+.second-password-card {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    height: 100%;
+}
+
+.title-secundary {
+    font-family: 'Taylor Sans';
+    font-style: italic;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    color: #415364;
+}
+
+.subtitle-secundary {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+    color: #798CA5;
+    margin-top: 24px;
+}
+
+.type-control{
+    border: 1px solid #AEBBCE;
+    box-sizing: border-box;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 46px;
+    font-family: 'Taylor Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: -0.01em;
+    color: #798CA5;
+}
+
+.button-green{
+    background: #00AE8D;
+    border-radius: 8px;
+    border-color: #00AE8D !important;
+    height: 40px;
+    font-family: 'Taylor Sans';
+    font-style: italic;
+    font-weight: 600;
+    font-size: 15px;
+    margin-right: 10px;
+}
+
+.button-black{
+    background: #415364;
+    border-radius: 8px;
+    border-color: #415364 !important;
+    height: 40px;
+    // width: 40px;
+    font-family: 'Taylor Sans';
+    font-style: italic;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.button-white{
+    background: #fff;
+    border-radius: 8px;
+    border-color: #00AE8D !important;
+    height: 40px;
+    font-family: 'Taylor Sans';
+    font-style: italic;
+    font-weight: 600;
+    font-size: 15px;
+    color: #00AE8D;
+}
+
+.modal-title{
+    font-family: 'Taylor Sans' !important;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 22px;
+    align-items: center;
+    letter-spacing: -0.01em;
+    color: #415364;
+  }
+  
+.text-md{
+    font-family: 'Taylor Sans' !important;
+    font-size: 16px;
+    line-height: 24px;
+}
+::ng-deep .ant-modal-content{
+    border-radius: 8px;
+}

@@ -1,0 +1,10 @@
+<!-- gear -->
+<a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
+  <span nz-icon nzType="setting" style="border: 0px; background: none; font-size: 20px; margin-right: 0px;"></span>
+</a>
+<!-- menu -->
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <ul nz-menu>
+      <li nz-menu-item *ngFor="let accion of acciones" (click)="openModal(accion)">{{ accion.descripcion }}</li>
+  </ul>
+</nz-dropdown-menu>

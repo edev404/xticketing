@@ -1,0 +1,63 @@
+<!--HEADER-->
+<div class="my-header">
+    <ul class="list-group header no-padding">
+        <li class="d-flex justify-content-between align-items-center dark">
+            <h5 class="taylorfontbold dark">
+                {{client.firstName}} {{client.secondName}} 
+                {{client.lastName}} {{client.secondLastName}} - 
+                {{client.id}}
+            </h5>
+            <span class="badge">
+                <button     
+                    *ngIf="isActive === navDetail[2].code" 
+                    nz-button [nzType]="'primary'" 
+                    class="button-green" 
+                    (click)="activeTarjeta()"
+                >
+                    Vincular tarjeta
+                </button>
+                <button
+                    nz-button [nzType]="'primary'" 
+                    class="button-black" 
+                    (click)="showSearch()"
+                >
+                    Volver
+                </button>
+            </span>
+        </li>
+            
+    </ul>
+</div>
+
+<nz-divider></nz-divider>
+
+<div class="nav">
+    <button class="module-title nav-item btn font-btn" *ngFor="let nav of navDetail"
+            [ngClass]="{'active': isActive === nav.code }"
+            (click)="isActive = nav.code">
+        {{nav.name}}
+    </button>
+</div>
+
+<div class="pt-3">
+    <app-personal-information *ngIf="isActive == navDetail[0].code"
+                            [client]="client">
+    </app-personal-information>
+
+    <app-account-passenger *ngIf="isActive === navDetail[1].code" 
+                            [client]="client">
+    </app-account-passenger>
+
+    <app-card-passenger #cardPassenger *ngIf="isActive === navDetail[2].code"
+                        [client]="client">
+    </app-card-passenger>
+
+    <app-discount-passenger *ngIf="isActive === navDetail[3].code"
+                            [dataTable]="dataTable"
+                            [btnProperties]="btnProperties">
+    </app-discount-passenger> 
+</div>
+
+
+
+

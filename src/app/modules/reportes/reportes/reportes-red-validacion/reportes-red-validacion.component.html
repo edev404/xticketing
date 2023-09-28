@@ -1,0 +1,286 @@
+<app-breadcrumb [icons]="'file-search'" [modulo]="'Reportes'" [subModulo]="'Ver Reportes'"
+    [subModuloText]="'Reportes de red de validación'"></app-breadcrumb>
+<app-tabset [reports]="reportes" (emitir)="recibirEmiter($event)"></app-tabset>
+
+<div class="d-flex justify-content-end mb-0 mt-2 gap-2">
+    <ng-container *ngIf="disponible">
+        <button nz-button class="button-green" (click)="renderFileInTemplate()" [nzType]="'primary'">Generar
+            documento
+        </button>
+        <button nz-button class="button-green" [nzType]="'primary'" [disabled]="!descargar">Descargar
+            documento
+        </button>
+    </ng-container>
+</div>
+
+<ng-container *ngIf="reportes[2].estado!">
+    <ng-container *ngIf="disponible">
+        <form nz-form>
+            <div nz-row [nzGutter]="24"
+                style="margin-top: 25px; margin-bottom: 25px; display: flex; justify-content: flex-start;">
+                <div nz-col [nzSpan]="12">
+                    <label class="label-title">Empresas</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <nz-select [ngClass]="!companiaModel && enviarFormulario ? 'error-form' : ''" nzAutoFocus
+                                nzPlaceHolder="Seleccione una empresa: " [(ngModel)]="companiaModel"
+                                [ngModelOptions]="{standalone: true}" (ngModelChange)="cargarData()">
+                                <nz-option [nzValue]="'Todos'"
+                                [nzLabel]="'Todos'"></nz-option>
+                                <nz-option *ngFor="let company of companies" [nzValue]="company.code"
+                                    [nzLabel]="company.name"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <div *ngIf="enviarFormulario && !companiaModel" class="text-danger" style="margin-top: -15px;">
+                        ¡Por favor seleccione una empresa!
+                    </div>
+                </div>
+
+                <div nz-col [nzSpan]="12">
+                    <label class="label-title">Periodo</label>
+                    <nz-form-item>
+                        <nz-form-control [ngClass]="!fechaRango && enviarFormulario ? 'error-form' : ''" nz-col
+                            [nzSpan]="23">
+                            <nz-range-picker nzFormat="yyyy-MM-dd" [(ngModel)]="fechaRango"
+                                [ngModelOptions]="{standalone: true}">
+                            </nz-range-picker>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <div *ngIf="enviarFormulario && (!fechaRango || !fechaRango)" class="text-danger"
+                        style="margin-top: -15px;">
+                        ¡Por favor seleccione un periodo!
+                    </div>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+</ng-container>
+
+<ng-container *ngIf="reportes[3].estado!">
+    <ng-container *ngIf="disponible">
+        <form nz-form>
+            <div nz-row [nzGutter]="24"
+                style="margin-top: 25px; margin-bottom: 25px; display: flex; justify-content: flex-start;">
+                <div nz-col [nzSpan]="12">
+                    <label class="label-title">Empresas</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <nz-select [ngClass]="!companiaModel && enviarFormulario ? 'error-form' : ''" nzAutoFocus
+                                nzPlaceHolder="Seleccione una empresa: " [(ngModel)]="companiaModel"
+                                [ngModelOptions]="{standalone: true}" (ngModelChange)="cargarData()">
+                                <nz-option [nzValue]="'Todos'"
+                                [nzLabel]="'Todos'"></nz-option>
+                                <nz-option *ngFor="let company of companies" [nzValue]="company.code"
+                                    [nzLabel]="company.name"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <div *ngIf="enviarFormulario && !companiaModel" class="text-danger" style="margin-top: -15px;">
+                        ¡Por favor seleccione una empresa!
+                    </div>
+                </div>
+
+                <div nz-col [nzSpan]="12">
+                    <label class="label-title">Periodo</label>
+                    <nz-form-item>
+                        <nz-form-control [ngClass]="!fechaRango && enviarFormulario ? 'error-form' : ''" nz-col
+                            [nzSpan]="23">
+                            <nz-range-picker nzFormat="yyyy-MM-dd" [(ngModel)]="fechaRango"
+                                [ngModelOptions]="{standalone: true}">
+                            </nz-range-picker>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <div *ngIf="enviarFormulario && (!fechaRango || !fechaRango)" class="text-danger"
+                        style="margin-top: -15px;">
+                        ¡Por favor seleccione un periodo!
+                    </div>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+</ng-container>
+
+<ng-container *ngIf="reportes[0].estado!">
+    <ng-container *ngIf="disponible">
+        <form nz-form>
+            <div nz-row [nzGutter]="24"
+                style="margin-top: 25px; margin-bottom: 25px; display: flex; justify-content: flex-start;">
+                <div nz-col [nzSpan]="8">
+                    <label class="label-title">Empresas</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <nz-select [ngClass]="!company && enviarFormulario ? 'error-form' : ''" nzAutoFocus nzPlaceHolder="Seleccione una empresa: " [(ngModel)]="company"
+                                [ngModelOptions]="{standalone: true}" (ngModelChange)="cargarRutas($event);cargarVehiculos($event);cargarConductor($event);">
+                                <nz-option *ngFor="let company of companiess" [nzValue]="company.proceso"
+                                    [nzLabel]="company.empresa"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <div *ngIf="enviarFormulario && !company" class="text-danger" style="margin-top: -15px;">
+                        ¡Por favor seleccione una empresa!
+                    </div>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <label class="label-title">Rutas</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <nz-select [ngClass]="!rutas && enviarFormulario ? 'error-form' : ''"[(ngModel)]="rutas" [ngModelOptions]="{standalone: true}" nzAutoFocus nzPlaceHolder="Seleccione una ruta: ">
+                                <nz-option *ngFor="let trav of travel" [nzValue]="trav.idruta"
+                                    [nzLabel]="trav.ruta"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <div *ngIf="enviarFormulario && !rutas" class="text-danger" style="margin-top: -15px;">
+                        ¡Por favor seleccione una ruta!
+                    </div>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <label class="label-title">Vehiculo</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <nz-select nzAutoFocus [(ngModel)]="idVehiculo" [ngModelOptions]="{standalone: true}"
+                                nzPlaceHolder="Seleccione un vehículo: "
+                                [ngClass]="!idVehiculo && enviarFormulario ? 'error-form' : ''">
+                                <nz-option *ngFor="let veh of vehiculos" [nzValue]="veh.idvehiculo" [nzLabel]="veh.placa"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <div *ngIf="enviarFormulario && !idVehiculo" class="text-danger" style="margin-top: -15px;">
+                        ¡Por favor seleccione un vehículo!
+                    </div>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <label class="label-title">ID Conductor</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <nz-select nzAutoFocus [(ngModel)]="idConductors" [ngModelOptions]="{standalone: true}"
+                                nzPlaceHolder="Seleccione un conductor: "
+                                [ngClass]="idConductors == '' && enviarFormulario ? 'error-form' : ''">
+                                <nz-option *ngFor="let con of conduct" [nzValue]="con.idconductor" [nzLabel]="con.conductor"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <div *ngIf="enviarFormulario && !idConductors" class="text-danger" style="margin-top: -15px;">
+                        ¡Por favor seleccione un conductor!
+                    </div>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <label class="label-title">Periodo</label>
+                    <nz-form-item nz-col [nzSpan]="23">
+                        <nz-range-picker  [ngClass]="!fechaRango && enviarFormulario ? 'error-form' : ''" nzFormat="yyyy-MM-dd" [(ngModel)]="fechaRango"
+                            [ngModelOptions]="{standalone: true}">
+                        </nz-range-picker>
+                    </nz-form-item>
+                    <div *ngIf="enviarFormulario && !fechaRango" class="text-danger" style="margin-top: -15px;">
+                        ¡Por favor seleccione un periodo!
+                    </div>
+                </div>
+                <div nz-col [nzSpan]="8">
+                    <label class="label-title">Día de semana</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <nz-select
+                                [(ngModel)]="diaModel" [ngModelOptions]="{standalone: true}"
+                                nzPlaceHolder="Seleccione un día de la semana: ">
+                                <nz-option [nzValue]="'Todos'"
+                                [nzLabel]="'Todos'"></nz-option>
+                                <nz-option *ngFor="let day of dias; let i = index" [nzValue]="i"
+                                    [nzLabel]="day"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+</ng-container>
+
+<ng-container *ngIf="reportes[1].estado!">
+    <ng-container *ngIf="disponible">
+        <form nz-form>
+            <div nz-row [nzGutter]="24"
+                style="margin-top: 25px; margin-bottom: 25px; display: flex; justify-content: flex-start;">
+                <div nz-col [nzSpan]="12">
+                    <label class="label-title">Empresas</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <nz-select [ngClass]="!companiaModel && enviarFormulario ? 'error-form' : ''" nzAutoFocus
+                                nzPlaceHolder="Seleccione una empresa: " [(ngModel)]="companiaModel"
+                                [ngModelOptions]="{standalone: true}">
+                                <nz-option [nzValue]="'Todos'"
+                                [nzLabel]="'Todos'"></nz-option>
+                                <nz-option *ngFor="let company of companies" [nzValue]="company.code"
+                                    [nzLabel]="company.name"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <div *ngIf="enviarFormulario && !companiaModel" class="text-danger" style="margin-top: -15px;">
+                        ¡Por favor seleccione una empresa!
+                    </div>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <label class="label-title">Periodo</label>
+                    <nz-form-item>
+                        <nz-form-control [ngClass]="!fechaRango && enviarFormulario ? 'error-form' : ''" nz-col
+                            [nzSpan]="23">
+                            <nz-range-picker nzFormat="yyyy-MM-dd" [(ngModel)]="fechaRango"
+                                [ngModelOptions]="{standalone: true}">
+                            </nz-range-picker>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <div *ngIf="enviarFormulario && (!fechaRango || !fechaRango)" class="text-danger"
+                        style="margin-top: -15px;">
+                        ¡Por favor seleccione un periodo!
+                    </div>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+</ng-container>
+<ng-container *ngIf="reportes[4].estado!">
+    <ng-container *ngIf="disponible">
+        <form nz-form>
+            <div nz-row [nzGutter]="24"
+                style="margin-top: 25px; margin-bottom: 25px; display: flex; justify-content: flex-start;">
+                <div nz-col [nzSpan]="12">
+                    <label class="label-title">Empresas</label>
+                    <nz-form-item>
+                        <nz-form-control nz-col [nzSpan]="23">
+                            <nz-select [ngClass]="!companiaModel && enviarFormulario ? 'error-form' : ''" nzAutoFocus
+                                nzPlaceHolder="Seleccione una empresa: " [(ngModel)]="companiaModel"
+                                [ngModelOptions]="{standalone: true}" (ngModelChange)="cargarData()">
+                                <nz-option [nzValue]="'Todos'"
+                                [nzLabel]="'Todos'"></nz-option>
+                                <nz-option *ngFor="let company of companies" [nzValue]="company.code"
+                                    [nzLabel]="company.name"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <div *ngIf="enviarFormulario && !companiaModel" class="text-danger" style="margin-top: -15px;">
+                        ¡Por favor seleccione una empresa!
+                    </div>
+                </div>
+
+                <div nz-col [nzSpan]="12">
+                    <label class="label-title">Periodo</label>
+                    <nz-form-item>
+                        <nz-form-control [ngClass]="!fechaRango && enviarFormulario ? 'error-form' : ''" nz-col
+                            [nzSpan]="23">
+                            <nz-range-picker nzFormat="yyyy-MM-dd" [(ngModel)]="fechaRango"
+                                [ngModelOptions]="{standalone: true}">
+                            </nz-range-picker>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <div *ngIf="enviarFormulario && (!fechaRango || !fechaRango)" class="text-danger"
+                        style="margin-top: -15px;">
+                        ¡Por favor seleccione un periodo!
+                    </div>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+</ng-container>
+
+<nz-divider style="margin: 0px 0 !important;"></nz-divider>
+<app-viewer-pdf [urlFile]="urlFile"></app-viewer-pdf>

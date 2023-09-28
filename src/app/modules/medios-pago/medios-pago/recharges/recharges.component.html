@@ -1,0 +1,116 @@
+<!-- BREADCRUMB -->
+<nz-breadcrumb style="margin-bottom: 20px;">
+    <nz-breadcrumb-item>
+        <span class="title-modulo">
+            <i nz-icon nzType="credit-card" style="font-size: 25px; margin-bottom: 1px;"></i>
+        </span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+        <span class="title-modulo">Medios de pago</span>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+        <span class="title-submodulo" style="color: #00AE8D !important; font-weight: 700;">recargas</span>
+    </nz-breadcrumb-item>
+</nz-breadcrumb>
+<!-- TITEL AND BUTTON -->
+<div class="home-title-page" style="display: flex; justify-content: space-between; ">
+    <h1 class="title-home">Recargas</h1>
+    <div>
+        <button nz-button class="button-black mx-2" [nzType]="'primary'" (click)="cleanForm()">
+            Limpiar
+        </button>
+        <button nz-button class="button-green mx-2" [nzType]="'primary'" (click)="saveRecharge()">
+            Guardar
+        </button>
+    </div>
+</div>
+<nz-divider></nz-divider>
+<!-- FORMS -->
+<h2 class="text-sm my-3 title-secundary">Digite los siguientes campos</h2>
+<form [formGroup]="validateForm">
+    <div class="row">
+        <!-- EMPRESA -->
+        <div class="col-sm-3">
+            <label class="label-title text-sm">Empresa</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione una empresa!">
+                    <nz-select nzAutoFocus nzServerSearch id="company" formControlName="company" (ngModelChange)="viewAllOffices($event)"
+                        nzPlaceHolder="Seleccione una empresa">
+                        <nz-option disabled [nzValue]="null" nzLabel="Seleccione una empresa"></nz-option>
+                        <nz-option *ngFor="let company of listOfData" [nzLabel]="company.name"
+                            [nzValue]="company.id"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <!-- SUCURSAL -->
+        <div class="col-sm-3">
+            <label class="label-title text-sm">Sucursales</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione una sucursal!">
+                    <nz-select nzAutoFocus nzServerSearch id="branchOffices" formControlName="branchOffices"
+                        nzPlaceHolder="Seleccione una sucursal" [ngClass]="{'disabled-select':this.listDataSucurasles.length <= 0}">
+                        <nz-option disabled [nzValue]="null" nzLabel="Seleccione una sucursal"></nz-option>
+                        <nz-option *ngFor="let branchOffices of listDataSucurasles" [nzLabel]="branchOffices.name"
+                            [nzValue]="branchOffices.code"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <!-- TIPO DE RECARGA -->
+        <div class="col-sm-3">
+            <label class="label-title text-sm">Tipo de recarga</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor seleccione un tipo de recarga!">
+                    <nz-select nzAutoFocus nzServerSearch id="typeRecharge" formControlName="typeRecharge" (ngModelChange)="handlerTypeRecharge($event)"
+                        nzPlaceHolder="Seleccione un tipo de recarga">
+                        <nz-option disabled [nzValue]="null" nzLabel="Seleccione un tipo de recarga"></nz-option>
+                        <nz-option *ngFor="let recharge of typeRecharge" [nzLabel]="recharge.description"
+                            [nzValue]="recharge.code"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <!-- NUMERO DE TARJETA -->
+        <div class="col-sm-3" *ngIf="showCard">
+            <label class="label-title text-sm">Número de tarjeta</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese un número de tarjeta!">
+                    <input id="numberCard" class="rounded input-field" type="text" nz-input formControlName="numberCard"
+                        placeholder="Ingrese un número de tarjeta" appUppercase/>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <!-- NUMERO DE TELEFONO -->
+        <div class="col-sm-3" *ngIf="showPhone">
+            <label class="label-title text-sm">Número de telefono</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese un número de telefono!">
+                    <input id="phone" class="rounded input-field" type="text" nz-input formControlName="phone"
+                        placeholder="Ingrese un número de telefono" />
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <!-- VALOR -->
+        <div class="col-sm-3">
+            <label class="label-title text-sm">Valor de recarga</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese el valor a recargar!">
+                    <input id="name" class="rounded input-field" type="number" nz-input
+                        formControlName="ValueRecharge" placeholder="Ingrese el valor a recarga" min="1"
+                        (keypress)="($event.charCode === 8 || $event.charCode === 0 || $event.charCode === 13) ? null : $event.charCode >= 48 && $event.charCode <= 57" />
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <!-- CODIGO -->
+        <!-- <div class="col-sm-3">
+            <label class="label-title text-sm">Código de confirmación</label>
+            <nz-form-item>
+                <nz-form-control nz-col [nzSpan]="24" nzErrorTip="¡Por favor ingrese el código de confirmación!">
+                    <input id="code" class="rounded input-field" type="text" nz-input formControlName="code"
+                        placeholder="Ingrese un código de confirmación" />
+                </nz-form-control>
+            </nz-form-item>
+        </div> -->
+    </div>
+</form>

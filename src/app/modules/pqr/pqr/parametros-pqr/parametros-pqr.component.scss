@@ -1,0 +1,132 @@
+.title-secundary {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 510;
+  font-size: 14px;
+  line-height: 18px;
+  color: #556A83;
+}
+
+.modal-title {
+  font-family: 'Taylor Sans' !important;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px;
+  align-items: center;
+  letter-spacing: -0.01em;
+  color: #415364;
+}
+
+.title-card {
+  font-family: 'Taylor Sans';
+  text-transform: capitalize;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  align-items: center;
+  letter-spacing: -0.01em;
+  color: #364456;
+
+}
+.contenedor-cards {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  place-items: center;
+  gap: 20px;
+}
+
+nz-card {
+  width: 270px;
+}
+
+.tarjeta {
+  height: 180px;
+  overflow-y: scroll;
+}
+
+.scrollable-container {
+  height: auto;
+  max-height: 400px;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.button-green-white {
+  background: #F0FAF8;
+  border-radius: 8px;
+  border-color: #F0FAF8 !important;
+  height: 40px;
+  font-family: "Taylor Sans";
+  font-style: italic;
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0px 10px;
+  color: #00AE8D;
+}
+
+.module-title {
+  background-color: white;
+
+  font-family: 'Taylor Sans';
+  font-style: italic;
+  font-size: 14px;
+  line-height: 20px;
+  color: #009F7C;
+
+  &:hover {
+    color: #415364;
+  }
+
+  &:focus {
+    color: #415364;
+  }
+
+  &:active {
+    color: #415364;
+  }
+}
+
+.tarjeta {
+  height: 180px;
+  overflow-y: scroll;
+}
+
+.cards {
+  border-radius: 8%;
+}
+
+.icons-list>.anticon {
+  margin-right: 6px;
+  font-size: 30px;
+}
+
+p {
+  font-family: 'Taylor Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 25px;
+  letter-spacing: -0.01em;
+  color: #FFFFFF;
+}
+
+span {
+  font-family: "Taylor Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 25px;
+  letter-spacing: -0.01em;
+  color: #FFFFFF;
+}
+
+.selected-row {
+  color: rgba(0, 0, 0, 0.25);
+  background: #cfcfcf;
+}
+
+
