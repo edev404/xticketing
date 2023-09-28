@@ -7,13 +7,9 @@ phases:
       - npm install -g @angular/cli@13.0.3
   pre_build:
     commands:
-      - node -v
-      - ng version
       - npm i --legacy-peer-deps --force
   build:
     commands:
-      - node -v
-      - ng version
       - ng build --prod
 artifacts:
   base-directory: dist/dist-calidad
