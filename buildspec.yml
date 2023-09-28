@@ -4,7 +4,7 @@ phases:
     runtime-versions:
       nodejs: 16
     commands:
-      - npm install -g @angular/cli@14.2.12
+      - npm install -g @angular/cli@13.0.4
   pre_build:
     commands:
       - npm i --legacy-peer-deps --force
