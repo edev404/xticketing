@@ -4,16 +4,14 @@ phases:
     runtime-versions:
       nodejs: 16
     commands:
-      - npm install -g @angular/cli@13.0.3
+      - npm install -g @angular/cli@16.2.4
   pre_build:
     commands:
-      - npm i --legacy-peer-deps --force
+      - npm i --legacy-peer-deps
   build:
     commands:
-      - ls -la
       - ng build
 artifacts:
   base-directory: dist/dist-calidad
   files:
     - '**/*'
-      
