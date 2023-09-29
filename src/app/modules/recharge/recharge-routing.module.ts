@@ -12,10 +12,7 @@ const routes:Routes = [
   {
     path: 'recharge-settlement', 
     component: RechargeComponent,
-  },
-  {
-    path: 'ficticio', 
-  }    
+  }   
 ];
 
 @NgModule({

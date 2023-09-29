@@ -393,19 +393,19 @@ export class ModalsAccionesComponent implements OnInit {
     let respuesta = "";
 
     // mientras se hace la llamada a la respuesta se muestra el mensaje
-    this.form.get("descripcion_respuesta")?.setValue("Cargando respuesta...");
+    this.form.get("descripcion_respuesta")?.setValue("Cargando respuesta..." as never);
 
     // llamada al servicio para guardar los datos en la pqr
     let request = await this.pqrService.getRespuestaPQR(`${cod_pqr.toString()}?idEntidad=${this.pqr.idEntidad}&codEmpr=${this.pqr.codEmpr}`);
 
     if (request.data.pqr.fecRes) {
       respuesta = request.data.pqr.descripSolu;
-      this.form.get("fecha_respuesta")?.setValue(request.data.pqr.fecRes);
-      this.form.get("descripcion_respuesta")?.setValue(respuesta);
+      this.form.get("fecha_respuesta")?.setValue(request.data.pqr.fecRes as never);
+      this.form.get("descripcion_respuesta")?.setValue(respuesta as never);
     }
     else {
-      this.form.get("fecha_respuesta")?.setValue(today);
-      this.form.get("descripcion_respuesta")?.setValue("");
+      this.form.get("fecha_respuesta")?.setValue(today as never);
+      this.form.get("descripcion_respuesta")?.setValue("" as never);
     }
     return respuesta;
     

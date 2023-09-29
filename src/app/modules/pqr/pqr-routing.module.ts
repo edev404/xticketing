@@ -33,10 +33,7 @@ const routes:Routes = [
     {
         path: 'reports-pqr', 
         component: ReportesPqrComponent ,
-    },
-    {
-        path: 'ficticio', 
-    },
+    }
 ];
 
 @NgModule({

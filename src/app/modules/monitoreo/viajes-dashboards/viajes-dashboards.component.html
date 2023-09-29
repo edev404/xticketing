@@ -12,6 +12,12 @@
         <nz-option [nzValue]="null" nzLabel="Seleccione una fecha"></nz-option>
         <nz-option *ngFor="let item of fechasCopy" [nzLabel]="item" [nzValue]="item"></nz-option>
     </nz-select>
+    <!-- FITRO POR FECHAS -->
+    <nz-select nzPlaceHolder="Seleccione una fecha para filtrar" (ngModelChange)="cambioEnElSelectRutas($event)"
+        [(ngModel)]="ruta">
+        <nz-option [nzValue]="null" nzLabel="Seleccione una ruta"></nz-option>
+        <nz-option *ngFor="let item of rutasCopy" [nzLabel]="item" [nzValue]="item"></nz-option>
+    </nz-select>
 </div>
 
 <!-- CONTENEDOR DE CARDS Y GRAFICAS -->

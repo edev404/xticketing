@@ -22,7 +22,7 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
       errorMsg: "Campo no válido, por favor complete.",
       label: "ID usuario",
       validations: [],
-      tipo: "number", 
+      tipo: "number",
     },
     {
       name: "cod_empr",
@@ -30,23 +30,23 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
       errorMsg: "Campo no válido, por favor complete.",
       label: "",
       validations: [Validators.required, Validators.minLength(1)],
-      tipo: "hidden", 
+      tipo: "hidden",
     },
     {
       name: "cod_tpqr",
       defaultValue: "",
       errorMsg: "Campo no válido, por favor complete.",
       label: "Tipo de solicitud",
-      validations: [Validators.required, ],
-      tipo: "select", 
+      validations: [Validators.required,],
+      tipo: "select",
     },
     {
       name: "cod_mpqr",
       defaultValue: "",
       errorMsg: "Campo no válido, por favor complete.",
       label: "Motivo de solicitud",
-      validations: [Validators.required, ],
-      tipo: "select", 
+      validations: [Validators.required,],
+      tipo: "select",
     },
     {
       name: "nro_docu",
@@ -54,37 +54,37 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
       errorMsg: "Campo no válido, por favor complete.",
       label: "Número de documento",
       validations: [Validators.required, Validators.minLength(4)],
-      tipo: "number", 
+      tipo: "number",
     },
     {
       name: "tipo_docu",
       defaultValue: "",
       errorMsg: "Campo no válido, por favor complete.",
       label: "Tipo de documento",
-      validations: [Validators.required, ],
-      tipo: "select", 
+      validations: [Validators.required,],
+      tipo: "select",
     },
     {
       name: "cod_mrec",
       defaultValue: "",
       errorMsg: "Campo no válido, por favor complete.",
       label: "Medio de recepción",
-      validations: [Validators.required, ],
-      tipo: "select", 
+      validations: [Validators.required,],
+      tipo: "select",
     },
     {
       name: "cod_usua_regi",
       defaultValue: this.auth["user"].id,
       label: "Usuario que registra",
-      validations: [Validators.required, ],
-      tipo: "number", 
+      validations: [Validators.required,],
+      tipo: "number",
     },
     {
       name: "fec_soli",
       defaultValue: this.today,
       label: "Fecha de solicitud",
-      validations: [Validators.required, ],
-      tipo: "date", 
+      validations: [Validators.required,],
+      tipo: "date",
     },
     {
       name: "nom_solicitante",
@@ -92,7 +92,7 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
       errorMsg: "Campo no válido, por favor complete.",
       label: "Nombre del solicitante",
       validations: [Validators.required, Validators.min(1)],
-      tipo: "text", 
+      tipo: "text",
     },
     {
       name: "dir_solicitante",
@@ -100,7 +100,7 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
       errorMsg: "Campo no válido, por favor complete.",
       label: "Dirección",
       validations: [Validators.required, Validators.min(1)],
-      tipo: "text", 
+      tipo: "text",
     },
     {
       name: "descripcion",
@@ -108,7 +108,7 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
       errorMsg: "Campo no válido, por favor complete.",
       label: "Descripción de solicitud",
       validations: [Validators.required, Validators.minLength(20)],
-      tipo: "text", 
+      tipo: "text",
     },
     {
       name: "mail",
@@ -116,7 +116,7 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
       errorMsg: "Campo no válido, por favor complete.",
       label: "Correo electrónico",
       validations: [Validators.required, Validators.min(1)],
-      tipo: "email", 
+      tipo: "email",
     },
     {
       name: "nro_celular",
@@ -124,23 +124,23 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
       errorMsg: "Campo no válido, por favor complete.",
       label: "Celular",
       validations: [Validators.required, Validators.min(1)],
-      tipo: "number", 
+      tipo: "number",
     },
     {
       name: "med_noti",
       defaultValue: "4",
       errorMsg: "Campo no válido, por favor complete.",
       label: "Medio de notificación",
-      validations: [Validators.required, ],
-      tipo: "select", 
+      validations: [Validators.required,],
+      tipo: "select",
     },
     {
       name: "cod_gc_pqr",
       defaultValue: "",
       errorMsg: "Campo no válido, por favor complete.",
       label: "Grupo causal",
-      validations: [Validators.required, ],
-      tipo: "select", 
+      validations: [Validators.required,],
+      tipo: "select",
     },
     // {
     //   name: "politicaEmpresa",
@@ -159,14 +159,14 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
       errorMsg: "Campo no válido, por favor complete.",
       label: "Número de documento",
       validations: [Validators.required, Validators.minLength(2), Validators.pattern("^[0-9]*$")],
-      tipo: "number", 
+      tipo: "number",
     },
   ];
 
   codPqr = "";
 
-  files!:File;
-  
+  files!: File;
+
   asuntoCorreo = "¡Gracias por contactarnos! Tu solicitud ha sido registrada.";
   mensajeCorreo = `
   <!DOCTYPE html>
@@ -189,8 +189,8 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
 
 
   // formulario general
-  formPqr =       new FormGroup({});
-  formPasajero =  new FormGroup({});
+  formPqr = new FormGroup({});
+  formPasajero = new FormGroup({});
 
   setCheckboxValue(evento) {
     this.checkboxValue = evento.target.checked;
@@ -199,7 +199,7 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
   // construccion del reactive form
   buildFormPqr() {
     const formControls = {};
-    this.camposPqr.forEach( (campo) => {
+    this.camposPqr.forEach((campo) => {
       formControls[campo.name] = this.formBuilder.control(campo.defaultValue, campo.validations);
     });
     this.formPqr = this.formBuilder.group(formControls);
@@ -207,7 +207,7 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
 
   buildFormPasajero() {
     const formControls = {};
-    this.camposPasajero.forEach( (campo) => {
+    this.camposPasajero.forEach((campo) => {
       formControls[campo.name] = this.formBuilder.control(campo.defaultValue, campo.validations);
     });
     this.formPasajero = this.formBuilder.group(formControls);
@@ -218,65 +218,65 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
   companies = [];
 
   // variables para las opciones de los select
-  checkboxValue:boolean = true;
-  optionsTipoDoc:any;
-  optionsTipoPqr:any;
-  optionsMotivoPqr:any;
-  optionsGrupoCausal:any;
-  optionsMedioRecepcion:any;
-  pasajeroInfo:any;
-  pasajeros:any;
+  checkboxValue: boolean = true;
+  optionsTipoDoc: any;
+  optionsTipoPqr: any;
+  optionsMotivoPqr: any;
+  optionsGrupoCausal: any;
+  optionsMedioRecepcion: any;
+  pasajeroInfo: any;
+  pasajeros: any;
   modalVisibleBuscarPasajero = false;
   modalVisiblePasajero = false;
   errorTip = "Ingrese un número de documento válido.";
-  modalTablaPasajeroStyle = {width: "100%", height: "100%"};
+  modalTablaPasajeroStyle = { width: "100%", height: "100%" };
 
-  get id_pasajero():string {
+  get id_pasajero(): string {
     return this.formPqr.value["id_pasajero"];
   }
-  
-  get today():string {
-    return new Date().toISOString().slice(0,10);
+
+  get today(): string {
+    return new Date().toISOString().slice(0, 10);
   }
 
 
   // funciones para obtener los valores de atributos del array de formControls
-  textoPqr(name:string): string {
-    return this.camposPqr.find( campo => campo.name === name)!.label.trim();
+  textoPqr(name: string): string {
+    return this.camposPqr.find(campo => campo.name === name)!.label.trim();
   }
-  tipoPqr(name:string): string {
-    return this.camposPqr.find( campo => campo.name === name)!.tipo.trim();
+  tipoPqr(name: string): string {
+    return this.camposPqr.find(campo => campo.name === name)!.tipo.trim();
   }
 
-  errorMessage(name:string) {
-    return this.camposPqr.find( campo => campo.name === name)!.errorMsg?.trim();
+  errorMessage(name: string) {
+    return this.camposPqr.find(campo => campo.name === name)!.errorMsg?.trim();
   }
 
   // funcion del modal para buscar el pasajero
-  setModalVisible(evento:Event) {
+  setModalVisible(evento: Event) {
     evento.preventDefault();
     this.modalVisibleBuscarPasajero = !this.modalVisibleBuscarPasajero;
   }
 
 
   // Elementos HTML a mostrar u ocultar
-  @ViewChild("messageNoCompany") messageNoCompany:ElementRef =  this.elementRef.nativeElement.querySelector("#messageNoCompany");
-  @ViewChild("formVisible") formVisible:ElementRef =            this.elementRef.nativeElement.querySelector("#formVisible");
-  @ViewChild("selectEmpresas") selectEmpresas:ElementRef =      this.elementRef.nativeElement.querySelector("#selectEmpresas");
-  @ViewChild("select_cod_mpqr") select_cod_mpqr:ElementRef =    this.elementRef.nativeElement.querySelector("#select_cod_mpqr");
+  @ViewChild("messageNoCompany") messageNoCompany: ElementRef = this.elementRef.nativeElement.querySelector("#messageNoCompany");
+  @ViewChild("formVisible") formVisible: ElementRef = this.elementRef.nativeElement.querySelector("#formVisible");
+  @ViewChild("selectEmpresas") selectEmpresas: ElementRef = this.elementRef.nativeElement.querySelector("#selectEmpresas");
+  @ViewChild("select_cod_mpqr") select_cod_mpqr: ElementRef = this.elementRef.nativeElement.querySelector("#select_cod_mpqr");
 
 
   constructor(
-    private formBuilder:FormBuilder,
+    private formBuilder: FormBuilder,
     private router: Router,
-    private elementRef:ElementRef,
-    private pqrService:PqrServiceService,
+    private elementRef: ElementRef,
+    private pqrService: PqrServiceService,
     private _api: AuthServiceService,
-    private utilsService:UtilsService,
-    ) { }
+    private utilsService: UtilsService,
+  ) { }
 
   // al crear el componente
-  ngOnInit():void {
+  ngOnInit(): void {
     this.buildFormPqr();
     this.buildFormPasajero();
     this.getOptionsTipoDocumento();
@@ -287,7 +287,7 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
     this.getMedioNotificacion();
     this.getAllCompanies();
   }
-  
+
   // al terminar de renderizar el componente
   ngAfterViewInit(): void {
     this.hideElements(); // apariencia por defecto del componente
@@ -301,48 +301,48 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
   mapFormRequest() {
     const idPasajero = isNaN(parseInt(this.formPqr.value["id_pasajero"])) || parseInt(this.formPqr.value["id_pasajero"]) === 0 ? null : parseInt(this.formPqr.value["id_pasajero"]);
     const requestBody = {
-      "idPasajero":     idPasajero,
-      "codTpqr":        parseInt(this.formPqr.value["cod_tpqr"]),
-      "codEmpr":        this.formPqr.value["cod_empr"],
-      "codMpqr":        parseInt(this.formPqr.value["cod_mpqr"]),
-      "nroDocu":        this.formPqr.value["nro_docu"],
-      "tipoDocu":       this.formPqr.value["tipo_docu"],
-      "codMrec":        this.formPqr.value["cod_mrec"],
-      "codUsuaRegi":    this.formPqr.value["cod_usua_regi"],
-      "fecSoli":        this.formPqr.value["fec_soli"],
+      "idPasajero": idPasajero,
+      "codTpqr": parseInt(this.formPqr.value["cod_tpqr"]),
+      "codEmpr": this.formPqr.value["cod_empr"],
+      "codMpqr": parseInt(this.formPqr.value["cod_mpqr"]),
+      "nroDocu": this.formPqr.value["nro_docu"],
+      "tipoDocu": this.formPqr.value["tipo_docu"],
+      "codMrec": this.formPqr.value["cod_mrec"],
+      "codUsuaRegi": this.formPqr.value["cod_usua_regi"],
+      "fecSoli": this.formPqr.value["fec_soli"],
       "nomSolicitante": this.formPqr.value["nom_solicitante"],
       "dirSolicitante": this.formPqr.value["dir_solicitante"],
       "telSolicitante": this.formPqr.value["nro_celular"],
-      "descripcion":    this.formPqr.value["descripcion"],
-      "mail":           this.formPqr.value["mail"],
-      "nroCelular":     this.formPqr.value["nro_celular"],
-      "codGcPqr":       this.formPqr.value["cod_gc_pqr"],
-      "codBarrio":      "null",
-      "idEntidad":      `${this.auth["user"].entities[0].id}`
+      "descripcion": this.formPqr.value["descripcion"],
+      "mail": this.formPqr.value["mail"],
+      "nroCelular": this.formPqr.value["nro_celular"],
+      "codGcPqr": this.formPqr.value["cod_gc_pqr"],
+      "codBarrio": "null",
+      "idEntidad": `${this.auth["user"].entities[0].id}`
     };
     return requestBody;
   }
 
-  controlValidPqr(controlName:string) {
+  controlValidPqr(controlName: string) {
     return this.formPqr.controls[controlName].status == 'INVALID' && this.formPqr.controls[controlName].touched;
   }
-  controlValidPasajero(controlName:string) {
+  controlValidPasajero(controlName: string) {
     return this.formPasajero.controls[controlName].status == 'INVALID' && this.formPasajero.controls[controlName].touched;
   }
 
   // funciones de los botones del fomrulario
-  async enviar(evento:Event) {
+  async enviar(evento: Event) {
     evento.preventDefault();
     let isValidForm = this.formPqr.valid;
 
     if (!isValidForm || !this.checkboxValue) {
       this.utilsService.openErrorAlert("Debe completar todos los campos del formulario.")
-      .then(() => this.formPqr.markAllAsTouched());
+        .then(() => this.formPqr.markAllAsTouched());
     }
     else {
       let requestBody = this.mapFormRequest();
       let response = await this.pqrService.createPQR(requestBody);
-      
+
       if (response.status == "success") {
         await this.utilsService.openSuccessAlert(`PQR No. ${response.data.Pqr.id} registrada exitosamente.`);
         this.codPqr = response.data.Pqr.id;
@@ -357,26 +357,26 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
   }
 
   async enviarEmail() {
-    const asunto =  this.asuntoCorreo;
-    const correo =  this.formPqr.controls["mail"].value;
+    const asunto = this.asuntoCorreo;
+    const correo = this.formPqr.controls["mail"].value;
     const mensaje = this.replaceVariables(this.mensajeCorreo);
 
     const response = await this.pqrService.enviarEmail(correo, asunto, mensaje);
 
-    (response.status === "success" && response.data?.pqr) ? 
-      null : 
+    (response.status === "success" && response.data?.pqr) ?
+      null :
       this.utilsService.openErrorAlert("No se ha podido enviar el mensaje de registro al usuario.");
   }
 
-  replaceVariables(mensaje:string) {
+  replaceVariables(mensaje: string) {
     // se construye el array con las variables que existen en las plantllas y su respecivo reemplazo
     const variables_reemplazos = [
-      { name: "\\[variable_cod_pqr\\]",           reemplazo: this.codPqr, },
-      { name: "\\[variable_nombre\\]",            reemplazo: this.formPqr.controls["nom_solicitante"].value.trim(), },
-      { name: "\\[variable_respuesta_pqr\\]",     reemplazo: "", },
-      { name: "\\[variable_empresa\\]",           reemplazo: this.auth["user"].entities[0].name, },
-      { name: "\\[variable_nombre_responsable\\]",reemplazo: "", },
-      { name: "\\[variable_usuario_actual\\]",    reemplazo: "", },
+      { name: "\\[variable_cod_pqr\\]", reemplazo: this.codPqr, },
+      { name: "\\[variable_nombre\\]", reemplazo: this.formPqr.controls["nom_solicitante"].value.trim(), },
+      { name: "\\[variable_respuesta_pqr\\]", reemplazo: "", },
+      { name: "\\[variable_empresa\\]", reemplazo: this.auth["user"].entities[0].name, },
+      { name: "\\[variable_nombre_responsable\\]", reemplazo: "", },
+      { name: "\\[variable_usuario_actual\\]", reemplazo: "", },
     ]
     let mensajeReemplazado = mensaje;
     for (let variable of variables_reemplazos) {
@@ -408,32 +408,32 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
       const fileName = nowId.toString() + '-' + this.files.name;
 
       const urlParams = new URLSearchParams({
-        codePqr:    this.codPqr,
-        codEmpr:    `${this.selectedCompany}`,
-        usuarioBd:  `${this.auth["user"].username}`,
-        idEntidad:  `${this.auth["user"].entities[0].id}`,
-        filename:   fileName,
+        codePqr: this.codPqr,
+        codEmpr: `${this.selectedCompany}`,
+        usuarioBd: `${this.auth["user"].username}`,
+        idEntidad: `${this.auth["user"].entities[0].id}`,
+        filename: fileName,
       });
 
-      const formData:FormData = new FormData();
+      const formData: FormData = new FormData();
       formData.append("filename", this.files, fileName);
-  
+
       // llamado al servicio
-      this.pqrService.subirArchivoPqr(urlParams.toString(), formData).then( response => {
-        (response.status === "success" && response.data?.pqr.fileKey) ? 
-          null : 
+      this.pqrService.subirArchivoPqr(urlParams.toString(), formData).then(response => {
+        (response.status === "success" && response.data?.pqr.fileKey) ?
+          null :
           this.utilsService.openErrorAlert("No se ha podido cargar el archivo adjunto.");
       });
     }
   }
 
   // reset del formulario de registro de pqr
-  reset(evento:Event | null): void {
+  reset(evento: Event | null): void {
     if (evento) evento.preventDefault();
     this.formPqr.reset();
     // se asigna el valor de la empresa escogida para el hidden codEmpr
-    this.formPqr.get("cod_empr")!.setValue(this.selectedCompany);
-    this.formPqr.get("cod_usua_regi")!.setValue(this.auth["user"].id);
+    this.formPqr.get("cod_empr")!.setValue(this.selectedCompany as never);
+    this.formPqr.get("cod_usua_regi")!.setValue(this.auth["user"].id as never);
   }
 
   // funcion para validar que el motivo de la pqr esté relacionado con el tipo de pqr
@@ -444,22 +444,22 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
 
     if (cod_tpqr_mpqr != cod_tpqr) {
       this.utilsService.openInfoAlert("El motivo escogido no corresponde al tipo de solicitud seleccionado.")
-      .then( response => {
-        this.formPqr.get("cod_mpqr")!.setValue("")
-      });
+        .then(response => {
+          this.formPqr.get("cod_mpqr")!.setValue("" as never)
+        });
     }
   }
 
   // cuando se escoge un pasajero para registrar la pqr a su nombre
-  choosePassenger(pasajero:any) {
+  choosePassenger(pasajero: any) {
     this.modalVisiblePasajero = !this.modalVisiblePasajero;
-    this.formPqr.get("id_pasajero")?.setValue(pasajero.id);
-    this.formPqr.get("nom_solicitante")?.setValue((pasajero.firstName || '') + " " + (pasajero.secondName || '') + " " + (pasajero.lastName || '') + " " + (pasajero.secondLastName || ''));
-    this.formPqr.get("nro_docu")?.setValue(pasajero.identification);
-    this.formPqr.get("tipo_docu")?.setValue(pasajero.identificationTypeId);
-    this.formPqr.get("nro_celular")?.setValue(pasajero.cellPhone);
-    this.formPqr.get("mail")?.setValue(pasajero.email);
-    this.formPqr.get("dir_solicitante")?.setValue(pasajero.address);
+    this.formPqr.get("id_pasajero")?.setValue(pasajero.id as never);
+    this.formPqr.get("nom_solicitante")?.setValue((pasajero.firstName || '') as never + " " + (pasajero.secondName || '') as never + " " + (pasajero.lastName || '') as never + " " + (pasajero.secondLastName || '') as never);
+    this.formPqr.get("nro_docu")?.setValue(pasajero.identification as never);
+    this.formPqr.get("tipo_docu")?.setValue(pasajero.identificationTypeId as never);
+    this.formPqr.get("nro_celular")?.setValue(pasajero.cellPhone as never);
+    this.formPqr.get("mail")?.setValue(pasajero.email as never);
+    this.formPqr.get("dir_solicitante")?.setValue(pasajero.address as never);
   }
 
   // funciones para obtener las opciones de los select
@@ -487,10 +487,10 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
     let isValidForm = this.formPasajero.valid;
     if (!isValidForm) {
       this.utilsService.openErrorAlert("Debe completar todos los campos del formulario.")
-      .then(() => this.formPasajero.markAllAsTouched());
+        .then(() => this.formPasajero.markAllAsTouched());
     }
     else {
-      this.pasajeroInfo =  await this.pqrService.getPassengerByDoc(this.formPasajero.value["doc_pasajero"]);
+      this.pasajeroInfo = await this.pqrService.getPassengerByDoc(this.formPasajero.value["doc_pasajero"]);
       if (this.pasajeroInfo.status == "success") {
         this.modalVisiblePasajero = !this.modalVisiblePasajero;
       }
@@ -503,13 +503,13 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
   }
 
   // lo que hay en localStorage
-  get auth():JSON {
+  get auth(): JSON {
     return JSON.parse(localStorage.getItem('auth')!);
-  } 
+  }
 
-  get selectedCompany():JSON {
+  get selectedCompany(): JSON {
     return JSON.parse(localStorage.getItem('selectedCompany')!);
-  } 
+  }
 
 
   // obtener las compañías del usuario para cargar el select de compañias
@@ -524,9 +524,9 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
       "type-id": "",
     });
 
-    this.pqrService.getAllCompanies(urlParams.toString()).then( response => {
-      if ( response.status === "success") {
-        if ( response.data.companies.length > 0 ) {
+    this.pqrService.getAllCompanies(urlParams.toString()).then(response => {
+      if (response.status === "success") {
+        if (response.data.companies.length > 0) {
           this.companies = response.data.companies;
         }
         else {
@@ -539,7 +539,7 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
     });
   }
 
-  setSelectedCompany(companyId:Event):void {
+  setSelectedCompany(companyId: Event): void {
     // companyId es el valor elegido del select
     localStorage.setItem('selectedCompany', JSON.stringify(companyId));
 
@@ -555,8 +555,8 @@ export class PqrRegistroComponent implements OnInit, AfterViewInit {
     }
 
     // se asigna el valor de la empresa escogida para el hidden codEmpr
-    this.formPqr.get("cod_empr")!.setValue(companyId);
-    this.formPqr.get("cod_usua_regi")!.setValue(this.auth["user"].id);
+    this.formPqr.get("cod_empr")!.setValue(companyId as never);
+    this.formPqr.get("cod_usua_regi")!.setValue(this.auth["user"].id as never);
   }
 
   redirectTo(uri: string) {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PqrServiceService } from '../../services/pqr-service.service';
 import { UtilsService } from 'src/app/myUtils/utils.service';
 import { IReporte, IPQR, IAcciones, AccionesEstados, IEstados, IPerfilRelacion, IPerfilRelacionAccionesEstados, TipoPqr, MotivoPqr } from './models/reporte.interface';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+// import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-parametros-pqr',

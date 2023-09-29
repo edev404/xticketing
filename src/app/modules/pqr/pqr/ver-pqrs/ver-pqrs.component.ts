@@ -237,13 +237,18 @@ export class VerPqrsComponent implements OnInit {
   }
 
   filtrarPqrs() {
-    this.filtro_listar_pqr.pqr = (this.formFiltro.get("cod_pqr")?.value ?? "") == "" ? 0 : parseInt(this.formFiltro.get("cod_pqr")?.value);
-    this.filtro_listar_pqr.idinti = (this.formFiltro.get("documento")?.value ?? "");
-    this.filtro_listar_pqr.motivo = (this.formFiltro.get("motivo")?.value ?? "") == "" ? 0 : parseInt(this.formFiltro.get("motivo")?.value);
-    this.filtro_listar_pqr.tipo = (this.formFiltro.get("tipo")?.value ?? "") == "" ? 0 : parseInt(this.formFiltro.get("tipo")?.value);
-    this.filtro_listar_pqr.medio = (this.formFiltro.get("medio")?.value ?? "") == "" ? 0 : parseInt(this.formFiltro.get("medio")?.value);
-    this.filtro_listar_pqr.estado = (this.formFiltro.get("estado")?.value ?? "") == "" ? 0 : parseInt(this.formFiltro.get("estado")?.value);
-    this.filtro_listar_pqr.tfecha = (this.formFiltro.get("tipo_fecha")?.value ?? "") == "" ? 0 : parseInt(this.formFiltro.get("tipo_fecha")?.value);
+    try {
+      this.filtro_listar_pqr.pqr = (this.formFiltro.get("cod_pqr")?.value ?? "") == "" ? 0 : parseInt(this.formFiltro.get("cod_pqr")!.value);
+      this.filtro_listar_pqr.idinti = (this.formFiltro.get("documento")?.value ?? "");
+      this.filtro_listar_pqr.motivo = (this.formFiltro.get("motivo")?.value ?? "") == "" ? 0 : parseInt(this.formFiltro.get("motivo")!.value);
+      this.filtro_listar_pqr.tipo = (this.formFiltro.get("tipo")?.value ?? "") == "" ? 0 : parseInt(this.formFiltro.get("tipo")!.value);
+      this.filtro_listar_pqr.medio = (this.formFiltro.get("medio")?.value ?? "") == "" ? 0 : parseInt(this.formFiltro.get("medio")!.value);
+      this.filtro_listar_pqr.estado = (this.formFiltro.get("estado")?.value ?? "") == "" ? 0 : parseInt(this.formFiltro.get("estado")!.value);
+      this.filtro_listar_pqr.tfecha = (this.formFiltro.get("tipo_fecha")?.value ?? "") == "" ? 0 : parseInt(this.formFiltro.get("tipo_fecha")!.value);
+    } catch (e) {
+      console.log(e)
+    }
+
 
     // validación para necesitar el rango de fechas cuando se escoge un tipo de fecha
     if (this.filtro_listar_pqr.tfecha != 0) {
@@ -252,8 +257,13 @@ export class VerPqrsComponent implements OnInit {
         return;
       }
       else {
-        this.filtro_listar_pqr.fecha_inicio = this.formFiltro.get("fecha_inicial")?.value;
-        this.filtro_listar_pqr.fecha_final = this.formFiltro.get("fecha_final")?.value;
+        try {
+          this.filtro_listar_pqr.fecha_inicio = this.formFiltro.get("fecha_inicial")!.value;
+          this.filtro_listar_pqr.fecha_final = this.formFiltro.get("fecha_final")!.value;
+        } catch (e) {
+          console.log(e)
+        }
+
       }
     }
 
@@ -300,8 +310,8 @@ export class VerPqrsComponent implements OnInit {
     // llamada al servicio para guardar los datos en la pqr
     let request = await this.pqrService.getRespuestaPQR(cod_pqr.toString());
     if (request.data.pqr.fecRes) {
-      this.formResponder.get("fecha_respuesta")?.setValue(request.data.pqr.fecRes);
-      this.formResponder.get("descripcion_respuesta")?.setValue(request.data.pqr.descripSolu);
+      this.formResponder.get("fecha_respuesta")!.setValue(request.data.pqr.fecRes as never);
+      this.formResponder.get("descripcion_respuesta")!.setValue(request.data.pqr.descripSolu as never);
     }
   }
 
@@ -363,49 +373,49 @@ export class VerPqrsComponent implements OnInit {
   // se obtienen todas las acciones para pqr en sistema
   getAllAcciones() {
     this.pqrService.listarAcciones()
-    .then( response => {
-      if ( response.data?.pqr ) {
-        this.allAccionesPqr = response.data.pqr.filter( accion => accion.idEntidad === this.auth.user.entities[0].id);
-      }
-    });
+      .then(response => {
+        if (response.data?.pqr) {
+          this.allAccionesPqr = response.data.pqr.filter(accion => accion.idEntidad === this.auth.user.entities[0].id);
+        }
+      });
   }
 
 
   // la funcion trabaja asumiendo que las acciones sobre las pqr están ordenadas con el campo listasparametros.orden_posicion
-  setAccionesFromEstadoPqr(pqr:any) {
+  setAccionesFromEstadoPqr(pqr: any) {
     // se buscan todas las relaciones de acciones-estados disponibles para la entidad
     this.pqrService.listEstadosAcciones(this.auth.user.entities[0].id)
-    .then( response => {
-      if ( response.data?.pqr ) {
-        // todas las acciones-estados
-        const allAccionesEstados = response.data.pqr;
+      .then(response => {
+        if (response.data?.pqr) {
+          // todas las acciones-estados
+          const allAccionesEstados = response.data.pqr;
 
-        // accion para partir el array ordenado de acciones existentes
-        const accionRecienEjecutada = allAccionesEstados.find( accionEstado => accionEstado.idEstado.toString() === pqr.idEstado );
+          // accion para partir el array ordenado de acciones existentes
+          const accionRecienEjecutada = allAccionesEstados.find(accionEstado => accionEstado.idEstado.toString() === pqr.idEstado);
 
-        // si no hay accionRecienEjecutada es porque es registrada, entocnes se permiten todas las acciones from perfil
-        if ( !accionRecienEjecutada ) {
-          this.accionesPqr = this.accionesPermitidasPqr;
+          // si no hay accionRecienEjecutada es porque es registrada, entocnes se permiten todas las acciones from perfil
+          if (!accionRecienEjecutada) {
+            this.accionesPqr = this.accionesPermitidasPqr;
+          }
+          else {
+            const allAccionesOrdenadas = this.allAccionesPqr
+              .sort((accionAnterior, accionSiguiente) => accionAnterior.ordenPosicion - accionSiguiente.ordenPosicion);
+
+            const ordenPosicionAccionRecienEjecutada = allAccionesOrdenadas
+              .find(accionOrdenada => accionOrdenada.id === accionRecienEjecutada.idAccion)
+              .ordenPosicion;
+
+            const accionesOrdenadasSiguientes = allAccionesOrdenadas
+              .filter(accionOrdenada => accionOrdenada.ordenPosicion > ordenPosicionAccionRecienEjecutada);
+
+            this.accionesPqr = accionesOrdenadasSiguientes;
+          }
         }
-        else {
-          const allAccionesOrdenadas = this.allAccionesPqr
-                .sort( (accionAnterior, accionSiguiente) => accionAnterior.ordenPosicion - accionSiguiente.ordenPosicion );
-
-          const ordenPosicionAccionRecienEjecutada = allAccionesOrdenadas
-                .find( accionOrdenada => accionOrdenada.id === accionRecienEjecutada.idAccion )
-                .ordenPosicion;
-
-          const accionesOrdenadasSiguientes = allAccionesOrdenadas
-                .filter( accionOrdenada => accionOrdenada.ordenPosicion > ordenPosicionAccionRecienEjecutada );
-          
-          this.accionesPqr = accionesOrdenadasSiguientes;
-        }
-      }
-    });
+      });
   }
 
 
-  dateDifference(initDateString: string, endDateString: string):number {
+  dateDifference(initDateString: string, endDateString: string): number {
     const initDateTimestamp = new Date().getTime();
     const endDateTimestamp = new Date(endDateString).getTime();
     return Math.floor((endDateTimestamp - initDateTimestamp) / (1000 * 60 * 60 * 24));

@@ -7,7 +7,7 @@ export interface Viajes {
     id_viaje: number;
     deuda: number;
     id_ruta: number;
-    ruta: string;
+    nombre_ruta: string;
     id_vehiculo: string;
     conductor: string;
     estado_viaje: string;

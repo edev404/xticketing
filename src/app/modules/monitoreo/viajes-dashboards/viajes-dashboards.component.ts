@@ -26,11 +26,15 @@ export class ViajesDashboardsComponent implements OnInit {
   fechaCopy: any;
   fechaCopyVig: any;
 
-  deuda: number = 0;
-
   empresas: any[] = [];
   empresasCopy: any[] = [];
   empresa: any;
+
+  rutas: any[] = [];
+  rutasCopy: any[] = [];
+  ruta: any;
+
+  deuda: number = 0;
 
   totalRecaudado: number = 0;
   totalRecaudadoCopy: number = 0;
@@ -409,6 +413,10 @@ export class ViajesDashboardsComponent implements OnInit {
     }
   }
 
+  async cambioEnElSelectRutas(event: any) {
+    // 
+  }
+
 
   async filtrarPorViaje(event) {
     // Paso 1: Verificar si el evento es igual al viaje seleccionado previamente.
@@ -464,18 +472,20 @@ export class ViajesDashboardsComponent implements OnInit {
             this.listOfData = this.listOfData.filter((element) => element.fecha == this.fecha);
             this.listOfDataFilter = this.listOfData;
 
-            // Paso 7: Recopilar información adicional (fechas, empresas, cantidad de pasajeros, total recaudado y deuda).
+            // Paso 7: Recopilar información adicional (fechas, empresas, rutas,cantidad de pasajeros, total recaudado y deuda).
             this.listOfData.forEach(element => {
               this.fechas.push(element.fecha);
               this.empresas.push(element.empresa);
+              this.rutas.push(element.nombre_ruta);
               this.cantidadPasajeros += element.numero_pasajeros;
               this.totalRecaudado += element.total_pagado;
               this.deuda -= element.deuda;
             });
 
-            // Paso 8: Obtener copias únicas de fechas y empresas.
+            // Paso 8: Obtener copias únicas de fechas y empresas y rutas.
             this.fechasCopy = Array.from(new Set(this.fechas))
             this.empresasCopy = Array.from(new Set(this.empresas))
+            this.rutasCopy = Array.from(new Set(this.rutas))
 
             // Paso 9: Cargar y actualizar los paneles de información (dashboards).
             this.cargarDashbords();

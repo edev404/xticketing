@@ -26,9 +26,6 @@ const routes: Routes = [
   {
     path: 'vehicle',
     component:VehicleComponent
-  },
-  {
-    path:'ficticio'
   }
 ];
 

@@ -80,8 +80,8 @@
           <td>{{data.id}}</td>
           <td>{{data.creation_date}}</td>
           <!-- <td>-</td> -->
-          <td>{{(data.initUser?(data.initUser?.name+' '+data.initUser?.last_name+' - '+data.initUser?.profile_name) :
-            data.assigned_user)}}</td>
+          <td>{{(data.initUser ?((data.initUser.name || '')+' '+(data.initUser.last_name || '')+' - '+(data.initUser.profile_name || '')) :
+            (data.assigned_user || ''))}}</td>
             <!-- <td>-</td> -->
             <td>Mappings {{data.id_mapping}}</td>
           <td> {{(data.initialized_quantity || 0)}} / {{data.requested_quantity }}</td>
